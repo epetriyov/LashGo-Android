@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CheckAndroid</string>
+
+    <string name="facebook_app_id">417722991695914</string>
+    <string name="vkontakte_app_id">4201819</string>
+    <string name="vkontakte_secret_key">bRUrRkgalTiHE8tliClK</string>
+    <string name="twitter_consumerKey">JjHQisFOu784Ag7HBAcJg</string>
+    <string name="twitter_consumerSecret">pIkZnc7NJ8CW0WG5sCFLgPD5BOrak2Gtca3hmpy5dg</string>
+    <string name="twitter_callback_url">check://twitter</string>
+
+
+    <!-- login screen strings -->
+    <string name="login">Войти</string>
+    <string name="register">Создать аккаунт</string>
+    <string name="auth_vk">Войти через VK</string>
+    <string name="auth_facebook">Войти через Facebook</string>
+    <string name="auth_twitter">Войти через Twitter</string>
+    <string name="hint_login">Логин</string>
+    <string name="hint_password">Пароль</string>
+
+
+</resources>
