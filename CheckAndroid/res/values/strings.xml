@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">CheckAndroid</string>
+    <string name="app_name">Check</string>
 
     <string name="facebook_app_id">417722991695914</string>
     <string name="vkontakte_app_id">4201819</string>
@@ -13,11 +13,19 @@
     <!-- login screen strings -->
     <string name="login">Войти</string>
     <string name="register">Создать аккаунт</string>
-    <string name="auth_vk">Войти через VK</string>
-    <string name="auth_facebook">Войти через Facebook</string>
-    <string name="auth_twitter">Войти через Twitter</string>
-    <string name="hint_login">Логин</string>
+    <string name="auth_vk">Зарегистрироваться через VK</string>
+    <string name="auth_facebook">Зарегистрироваться через Facebook</string>
+    <string name="auth_twitter">Зарегистрироваться через Twitter</string>
+    <string name="hint_login">Логин или email</string>
     <string name="hint_password">Пароль</string>
+    <string name="error_no_internet">Нет интернет соединения</string>
+    <string name="hint_email">email</string>
+    <string name="error_empty_field">Поле не может быть пустым</string>
+    <string name="server_is_unavailable">Сервер недоступен</string>
+    <string name="auth_success">Пользователь авторизован</string>
+    <string name="password_recover">Восстановить пароль</string>
+    <string name="remember_password">Забыл пароль</string>
+    <string name="wrong_response">Неверный ответ</string>
 
 
 </resources>

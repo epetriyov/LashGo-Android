@@ -1,7 +1,6 @@
 package com.check.android.service;
 
-import com.check.model.dto.LoginInfo;
-import com.check.model.dto.SessionInfo;
+import com.check.model.dto.*;
 import retrofit.http.Body;
 import retrofit.http.Header;
 import retrofit.http.POST;
@@ -15,9 +14,12 @@ import retrofit.http.POST;
  */
 public interface RestService {
     @POST("/login")
-    SessionInfo login(@Header("uuid") String uuid, @Body LoginInfo loginInfo);
+    Response<SessionInfo> login(@Body LoginInfo loginInfo);
 
 
     @POST("/register")
-    SessionInfo register(@Header("uuid") String uuid, @Body LoginInfo loginInfo);
+    Response<SessionInfo> register(@Body RegisterInfo registerInfo);
+
+    @POST("/social-sign-in")
+    Response<SessionInfo> signInWithSocial(@Body SocialInfo socialInfo);
 }

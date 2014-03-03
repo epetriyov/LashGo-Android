@@ -3,7 +3,7 @@
           package="com.check.android">
 
     <uses-sdk
-            android:minSdkVersion="7"
+            android:minSdkVersion="8"
             android:targetSdkVersion="19"/>
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -22,7 +22,13 @@
 
         <activity android:name="com.vk.sdk.VKOpenAuthActivity"/>
 
-        <activity android:name=".ui.login.LoginActivity"
+        <service
+                android:exported="false"
+                android:name=".service.CheckService"/>
+
+        <activity android:name=".ui.auth.RegisterActivity"/>
+
+        <activity android:name=".ui.auth.LoginActivity"
                   android:launchMode="singleTask"
                 >
             <intent-filter>

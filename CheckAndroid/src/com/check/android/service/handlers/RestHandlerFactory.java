@@ -1,0 +1,32 @@
+package com.check.android.service.handlers;
+
+import android.content.Context;
+import com.check.android.service.RestService;
+
+/**
+ * User: eugene.petriyov
+ * Date: 25.06.13
+ * Time: 14:16
+ */
+public class RestHandlerFactory {
+
+
+    public static final String ACTION_LOGIN = "login";
+
+    public static final String ACTION_REGISTER = "register";
+
+    public static final String ACTION_SOCIAL_SIGN_IN = "sign_in_social";
+
+    public static BaseIntentHandler getIntentHandler(Context context, String action, RestService service) {
+        if (action.equals(ACTION_LOGIN)) {
+            return new LoginHandler(context, service);
+        } else if (action.equals(ACTION_REGISTER)) {
+            return new RegisterHandler(context, service);
+        } else if (action.equals(ACTION_SOCIAL_SIGN_IN)) {
+            return new SocialSignInHandler(context, service);
+        }
+        else {
+            throw new IllegalArgumentException("illegal action - " + action);
+        }
+    }
+}

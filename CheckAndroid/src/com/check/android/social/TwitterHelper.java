@@ -5,7 +5,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import com.check.android.R;
+import com.check.android.ui.auth.RegisterActivity;
+import com.check.model.SocialTypes;
+import com.check.model.dto.SocialInfo;
+import junit.framework.Assert;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -25,19 +31,23 @@ public class TwitterHelper {
     public static final String KEY_REQUEST_TOKEN = "key_request_token";
     private RequestToken requestToken;
 
+    private Handler handler;
 
     private SocialErrorShower socialErrorShower;
 
-    public TwitterHelper(SocialErrorShower socialErrorShower, Bundle requestTokenBundle) {
+    private Context context;
+
+    public TwitterHelper(Context context, SocialErrorShower socialErrorShower, Bundle requestTokenBundle) {
         this.socialErrorShower = socialErrorShower;
+        this.context = context;
+        handler = new Handler();
         if (requestTokenBundle != null) {
             this.requestToken = (RequestToken) requestTokenBundle.getSerializable(KEY_REQUEST_TOKEN);
         }
     }
 
 
-    public void loginWithTwitter(final
-                                 Context context) {
+    public void loginWithTwitter() {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -62,7 +72,7 @@ public class TwitterHelper {
         }.execute();
     }
 
-    public void handleCallbackUrl(final Context context, final Uri uri) {
+    public void handleCallbackUrl(final Uri uri) {
         if (uri.toString().startsWith(context.getString(R.string.twitter_callback_url))) {
             new AsyncTask<Void, Void, Void>() {
                 @Override
@@ -75,8 +85,20 @@ public class TwitterHelper {
                         AccessToken accessToken = t.getOAuthAccessToken(requestToken, verifier);
                         long userID = accessToken.getUserId();
                         User user = t.showUser(userID);
-                        String name = user.getName();
-                        //TODO inner login
+                        if (user != null) {
+                            final SocialInfo socialInfo = new SocialInfo();
+                            socialInfo.setSocialType(SocialTypes.TWITTER);
+                            socialInfo.setName(user.getName());
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    context.startActivity(RegisterActivity.buildIntent(context, socialInfo));
+                                }
+                            });
+                            Log.d("Twitter info", user.getName());
+                        } else {
+                            Assert.fail();
+                        }
                     } catch (TwitterException e) {
                         socialErrorShower.onDisplayError(e.toString());
                         e.printStackTrace();

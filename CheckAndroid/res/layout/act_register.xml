@@ -18,9 +18,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_login"
                 android:singleLine="true"
-                android:imeOptions="actionNext"
-                android:inputType="textEmailAddress|text"
-                />
+                android:imeOptions="actionNext"/>
 
         <org.holoeverywhere.widget.EditText
                 android:id="@+id/edit_password"
@@ -32,33 +30,15 @@
                 android:singleLine="true"
                 android:inputType="textPassword"/>
 
-        <org.holoeverywhere.widget.Button
-                android:id="@+id/btn_login"
+        <org.holoeverywhere.widget.EditText
+                android:id="@+id/edit_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/login"
-                android:layout_marginTop="@dimen/vertical_margin"/>
-
-        <org.holoeverywhere.widget.Button
-                android:id="@+id/btn_auth_vk"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/auth_vk"
-                android:layout_marginTop="@dimen/vertical_margin"/>
-
-        <org.holoeverywhere.widget.Button
-                android:id="@+id/btn_auth_facebook"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/auth_facebook"
-                android:layout_marginTop="@dimen/vertical_margin"/>
-
-        <org.holoeverywhere.widget.Button
-                android:id="@+id/btn_auth_twitter"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/auth_twitter"
-                android:layout_marginTop="@dimen/vertical_margin"/>
+                android:layout_marginTop="@dimen/vertical_margin"
+                android:imeOptions="actionDone"
+                android:hint="@string/hint_email"
+                android:singleLine="true"
+                android:inputType="textEmailAddress"/>
 
         <org.holoeverywhere.widget.Button
                 android:id="@+id/btn_register"
@@ -66,14 +46,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/register"
                 android:layout_marginTop="@dimen/vertical_margin"/>
-
-        <org.holoeverywhere.widget.Button
-        android:id="@+id/btn_password_recover"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/remember_password"
-        android:layout_marginTop="@dimen/vertical_margin"/>
-</org.holoeverywhere.widget.LinearLayout>
+    </org.holoeverywhere.widget.LinearLayout>
 
     <include layout="@layout/view_progress_overlay"/>
 </org.holoeverywhere.widget.FrameLayout>

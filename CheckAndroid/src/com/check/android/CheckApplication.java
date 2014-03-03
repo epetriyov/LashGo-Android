@@ -4,8 +4,11 @@ package com.check.android;
 import android.os.Build;
 import android.os.StrictMode;
 import com.check.android.service.CheckErrorHandler;
+import com.check.android.service.CheckInterceptor;
 import com.check.android.service.JacksonConverter;
 import com.check.android.service.RestService;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.holoeverywhere.app.Application;
 import retrofit.RestAdapter;
 
@@ -34,10 +37,13 @@ public class CheckApplication extends Application {
                     .penaltyLog().build());
             StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects().penaltyLog().penaltyDeath().build());
         }
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(CheckConfig.BASE_URL)
-                .setConverter(new JacksonConverter())
+                .setConverter(new JacksonConverter(objectMapper))
                 .setErrorHandler(new CheckErrorHandler())
+                .setRequestInterceptor(new CheckInterceptor())
                 .build();
         service = restAdapter.create(RestService.class);
         instance = this;
