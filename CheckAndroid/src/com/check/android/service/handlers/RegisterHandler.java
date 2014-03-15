@@ -26,8 +26,9 @@ public class RegisterHandler extends BaseIntentHandler {
 
     public static final String SESSION_INFO = "session_info";
 
-    public RegisterHandler(Context context, RestService service) {
-        super(context, service);
+    public RegisterHandler()
+    {
+        super();
     }
 
     @Override
@@ -35,7 +36,7 @@ public class RegisterHandler extends BaseIntentHandler {
         RegisterInfo registerInfo = (RegisterInfo) intent.getSerializableExtra(REGISTER_DTO);
         Response<SessionInfo> sessionInfo = service.register(registerInfo);
         Log.d("SessionInfo", sessionInfo.getResult().getSessionId());
-        SettingsHelper.getInstance(context).login(sessionInfo.getResult(), registerInfo);
+        settingsHelper.login(sessionInfo.getResult(), registerInfo);
         Bundle bundle = new Bundle();
         bundle.putSerializable(SESSION_INFO, sessionInfo);
         return bundle;

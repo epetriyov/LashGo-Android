@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
+import com.check.android.CheckApplication;
+import com.check.android.LoginModule;
 import com.check.android.R;
 import com.check.android.service.handlers.BaseIntentHandler;
 import com.check.android.service.handlers.RestHandlerFactory;
@@ -19,8 +21,13 @@ import com.check.model.dto.LoginInfo;
 import com.facebook.UiLifecycleHelper;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.VKUIHelper;
+import dagger.ObjectGraph;
 import org.holoeverywhere.widget.EditText;
 import org.holoeverywhere.widget.Toast;
+
+import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Eugene on 18.02.14.
@@ -28,15 +35,23 @@ import org.holoeverywhere.widget.Toast;
 public class LoginActivity extends BaseActivity implements View.OnClickListener, SocialErrorShower {
 
     private static final String RECOVER_URL = "";
-    private Handler handler = new Handler();
 
-    private UiLifecycleHelper facebookUiHelper;
+    private ObjectGraph loginGraph;
 
-    private TwitterHelper twitterHelper;
+    @Inject
+    Handler handler;
 
-    private VkontakteListener vkSdkListener;
+    @Inject
+    UiLifecycleHelper facebookUiHelper;
 
-    private FacebookHelper facebookHelper;
+    @Inject
+    TwitterHelper twitterHelper;
+
+    @Inject
+    VkontakteListener vkSdkListener;
+
+    @Inject
+    FacebookHelper facebookHelper;
 
     private EditText login;
 
@@ -44,6 +59,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        loginGraph = CheckApplication.getInstance().getApplicationGraph().plus(getModules().toArray());
+        loginGraph.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_login);
         login = (EditText) findViewById(R.id.edit_login);
@@ -54,12 +71,20 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         findViewById(R.id.btn_auth_twitter).setOnClickListener(this);
         findViewById(R.id.btn_register).setOnClickListener(this);
         findViewById(R.id.btn_password_recover).setOnClickListener(this);
-        facebookHelper = new FacebookHelper(this);
-        facebookUiHelper = new UiLifecycleHelper(this, facebookHelper.getFacebookCallback());
         facebookUiHelper.onCreate(savedInstanceState);
-        vkSdkListener = new VkontakteListener(this, this);
         VKSdk.initialize(vkSdkListener, getString(R.string.vkontakte_app_id), null);
-        twitterHelper = new TwitterHelper(this, this, savedInstanceState);
+        twitterHelper.onCreate(savedInstanceState);
+    }
+
+    /**
+     * Inject the supplied {@code object} using the activity-specific graph.
+     */
+    public void inject(Object object) {
+        loginGraph.inject(object);
+    }
+
+    private List<Object> getModules() {
+        return Arrays.<Object>asList(new LoginModule(this));
     }
 
     @Override
@@ -108,9 +133,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
 //        facebookUiHelper.onDestroy();
         VKUIHelper.onDestroy(this);
+        loginGraph = null;
+        super.onDestroy();
     }
 
     @Override
@@ -146,8 +172,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             }
         } else if (view.getId() == R.id.btn_register) {
             startActivity(RegisterActivity.buildIntent(this));
-        } else if (view.getId() == R.id.btn_password_recover)
-        {
+        } else if (view.getId() == R.id.btn_password_recover) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(RECOVER_URL)));
         }
     }

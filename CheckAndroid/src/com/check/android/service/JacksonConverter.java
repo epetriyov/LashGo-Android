@@ -15,19 +15,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 
-/**
- * A {@link Converter} which uses Jackson for reading and writing entities.
- *
- * @author Kai Waldron (kaiwaldron@gmail.com)
- */
 public class JacksonConverter implements Converter {
     private static final String MIME_TYPE = "application/json; charset=UTF-8";
 
     private final ObjectMapper objectMapper;
-
-    public JacksonConverter() {
-        this(new ObjectMapper());
-    }
 
     public JacksonConverter(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;

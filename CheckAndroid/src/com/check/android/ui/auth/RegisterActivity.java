@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import com.check.android.CheckApplication;
 import com.check.android.R;
 import com.check.android.service.handlers.BaseIntentHandler;
 import com.check.android.service.handlers.RestHandlerFactory;
@@ -45,6 +46,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        CheckApplication.getInstance().inject(this);
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         if (intent != null) {

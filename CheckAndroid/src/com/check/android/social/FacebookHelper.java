@@ -5,6 +5,9 @@ import android.content.Context;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
+import com.check.android.ForActivity;
+import com.check.android.ui.BaseActivity;
+import com.check.android.ui.auth.LoginActivity;
 import com.check.android.ui.auth.RegisterActivity;
 import com.check.model.SocialTypes;
 import com.check.model.dto.SocialInfo;
@@ -16,6 +19,7 @@ import com.facebook.model.GraphUser;
 import junit.framework.Assert;
 import org.holoeverywhere.widget.Toast;
 
+import javax.inject.Inject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -29,12 +33,15 @@ import java.util.Arrays;
  */
 public class FacebookHelper {
 
-    private final Handler handler;
-    private Context context;
+    @Inject
+    Handler handler;
 
-    public FacebookHelper(Context context) {
-        this.context = context;
-        handler = new Handler();
+    @Inject @ForActivity
+    Context context;
+
+    public FacebookHelper(LoginActivity loginActivity)
+    {
+        loginActivity.inject(this);
     }
 
     private Session.StatusCallback facebookCallback = new Session.StatusCallback() {

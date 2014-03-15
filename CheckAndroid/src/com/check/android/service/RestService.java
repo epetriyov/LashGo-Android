@@ -5,6 +5,8 @@ import retrofit.http.Body;
 import retrofit.http.Header;
 import retrofit.http.POST;
 
+import javax.inject.Singleton;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Eugene

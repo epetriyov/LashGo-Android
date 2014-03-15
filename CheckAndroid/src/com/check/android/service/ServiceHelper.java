@@ -11,6 +11,7 @@ import com.check.model.dto.RecoverPasswordDto;
 import com.check.model.dto.RegisterInfo;
 import com.check.model.dto.SocialInfo;
 
+import javax.inject.Singleton;
 import java.lang.ref.WeakReference;
 import java.util.*;
 
@@ -29,21 +30,8 @@ public class ServiceHelper {
 
     private Context context;
 
-    private ServiceHelper(Context context) {
+    public ServiceHelper(Context context) {
         this.context = context;
-    }
-
-    private static volatile ServiceHelper instance;
-
-    public static ServiceHelper getInstance(Context context) {
-        if (instance == null) {
-            synchronized (ServiceHelper.class) {
-                if (instance == null) {
-                    instance = new ServiceHelper(context);
-                }
-            }
-        }
-        return instance;
     }
 
     public void addActionListener(String action, ServiceCallbackListener serviceCallbackListener) {

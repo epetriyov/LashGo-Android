@@ -7,7 +7,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import com.check.android.ForActivity;
 import com.check.android.R;
+import com.check.android.ui.BaseActivity;
+import com.check.android.ui.auth.LoginActivity;
 import com.check.android.ui.auth.RegisterActivity;
 import com.check.model.SocialTypes;
 import com.check.model.dto.SocialInfo;
@@ -18,6 +21,8 @@ import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
+
+import javax.inject.Inject;
 
 /**
  * Created with IntelliJ IDEA.
@@ -31,21 +36,26 @@ public class TwitterHelper {
     public static final String KEY_REQUEST_TOKEN = "key_request_token";
     private RequestToken requestToken;
 
-    private Handler handler;
+    @Inject
+    Handler handler;
 
-    private SocialErrorShower socialErrorShower;
+    @Inject
+    SocialErrorShower socialErrorShower;
 
-    private Context context;
+    @Inject
+    @ForActivity
+    Context context;
 
-    public TwitterHelper(Context context, SocialErrorShower socialErrorShower, Bundle requestTokenBundle) {
-        this.socialErrorShower = socialErrorShower;
-        this.context = context;
-        handler = new Handler();
+    public TwitterHelper(LoginActivity loginActivity)
+    {
+        loginActivity.inject(this);
+    }
+
+    public void onCreate(Bundle requestTokenBundle) {
         if (requestTokenBundle != null) {
             this.requestToken = (RequestToken) requestTokenBundle.getSerializable(KEY_REQUEST_TOKEN);
         }
     }
-
 
     public void loginWithTwitter() {
         new AsyncTask<Void, Void, Void>() {

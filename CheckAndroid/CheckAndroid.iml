@@ -20,6 +20,7 @@
     <orderEntry type="module" module-name="preferences" />
     <orderEntry type="module" module-name="vksdk" />
     <orderEntry type="library" name="libs" level="project" />
+    <orderEntry type="library" name="dagger" level="project" />
   </component>
 </module>
 

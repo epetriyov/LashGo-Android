@@ -2,11 +2,15 @@ package com.check.android.ui;
 
 import android.os.Bundle;
 import android.view.Window;
+import com.check.android.CheckApplication;
 import com.check.android.service.ServiceCallbackListener;
 import com.check.android.service.ServiceHelper;
+import dagger.ObjectGraph;
 import org.holoeverywhere.app.Activity;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -14,17 +18,16 @@ import java.util.List;
  */
 public abstract class BaseActivity extends Activity implements ServiceCallbackListener {
 
-    private boolean isActivityOnForeground;
-
+    @Inject
     protected ServiceHelper serviceHelper;
 
+    private boolean isActivityOnForeground;
     private List<ServiceResult> serviceResultList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
-        serviceHelper = ServiceHelper.getInstance(this);
         registerActionsListener();
     }
 
@@ -66,7 +69,6 @@ public abstract class BaseActivity extends Activity implements ServiceCallbackLi
         processServerResult(serviceResult.getAction(), serviceResult.getResultCode(), serviceResult.getData());
         serviceResultList.remove(serviceResult);
     }
-
 
     protected abstract void processServerResult(String action, int resultCode, Bundle data);
 

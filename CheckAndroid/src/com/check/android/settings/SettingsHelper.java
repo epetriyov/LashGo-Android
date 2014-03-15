@@ -6,6 +6,9 @@ import android.preference.PreferenceManager;
 import com.check.model.dto.LoginInfo;
 import com.check.model.dto.SessionInfo;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * User: eugene.petriyov
  * Date: 27.06.13
@@ -16,22 +19,10 @@ public class SettingsHelper {
     private static final String KEY_SESSION = "session_id";
     private static final String KEY_LOGIN = "login";
     private static final String KEY_PASSWORD = "password";
-    private static volatile SettingsHelper instance;
     private SharedPreferences preferences;
 
-    private SettingsHelper(Context context) {
+    public SettingsHelper(Context context) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
-    }
-
-    public static SettingsHelper getInstance(Context context) {
-        if (instance == null) {
-            synchronized (SettingsHelper.class) {
-                if (instance == null) {
-                    instance = new SettingsHelper(context);
-                }
-            }
-        }
-        return instance;
     }
 
     private float getFloat(String key, float defaultValue) {

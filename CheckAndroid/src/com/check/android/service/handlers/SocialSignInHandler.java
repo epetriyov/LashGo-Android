@@ -26,8 +26,8 @@ public class SocialSignInHandler extends BaseIntentHandler {
 
     public static final String SESSION_INFO = "session_info";
 
-    public SocialSignInHandler(Context context, RestService service) {
-        super(context, service);
+    public SocialSignInHandler() {
+        super();
     }
 
     @Override
@@ -35,7 +35,7 @@ public class SocialSignInHandler extends BaseIntentHandler {
         SocialInfo socialInfo = (SocialInfo) intent.getSerializableExtra(SOCIAL_DTO);
         Response<SessionInfo> sessionInfo = service.signInWithSocial(socialInfo);
         Log.d("SessionInfo", sessionInfo.getResult().getSessionId());
-        SettingsHelper.getInstance(context).login(sessionInfo.getResult(), socialInfo);
+        settingsHelper.login(sessionInfo.getResult(), socialInfo);
         Bundle bundle = new Bundle();
         bundle.putSerializable(SESSION_INFO, sessionInfo);
         return bundle;

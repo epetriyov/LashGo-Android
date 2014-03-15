@@ -11,6 +11,7 @@ import com.check.model.dto.Response;
 import com.check.model.dto.SessionInfo;
 import retrofit.RetrofitError;
 
+import javax.inject.Inject;
 import java.io.IOException;
 
 /**
@@ -24,8 +25,9 @@ public class LoginHandler extends BaseIntentHandler {
 
     public static final String SESSION_INFO = "session_info";
 
-    public LoginHandler(Context context, RestService service) {
-        super(context, service);
+    public LoginHandler()
+    {
+        super();
     }
 
     @Override
@@ -33,7 +35,7 @@ public class LoginHandler extends BaseIntentHandler {
         LoginInfo loginInfo = (LoginInfo) intent.getSerializableExtra(LOGIN_DTO);
         Response<SessionInfo> sessionInfo = service.login(loginInfo);
         Log.d("SessionInfo", sessionInfo.getResult().getSessionId());
-        SettingsHelper.getInstance(context).login(sessionInfo.getResult(), loginInfo);
+        settingsHelper.login(sessionInfo.getResult(), loginInfo);
         Bundle bundle = new Bundle();
         bundle.putSerializable(SESSION_INFO, sessionInfo);
         return bundle;

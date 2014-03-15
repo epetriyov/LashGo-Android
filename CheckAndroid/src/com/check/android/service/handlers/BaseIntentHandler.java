@@ -4,11 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.ResultReceiver;
+import com.check.android.CheckApplication;
+import com.check.android.ForApplication;
 import com.check.android.R;
 import com.check.android.service.RestService;
+import com.check.android.settings.SettingsHelper;
 import com.check.model.dto.Response;
 import retrofit.RetrofitError;
 
+import javax.inject.Inject;
 import java.io.IOException;
 
 /**
@@ -25,12 +29,15 @@ public abstract class BaseIntentHandler {
     public static final String ERROR_EXTRA = "error_extra";
     public static final int SUCCESS_RESPONSE = 1;
     public static final int FAILURE_RESPONSE = 2;
-    protected RestService service;
-    protected Context context;
+    @Inject
+    RestService service;
+    @Inject @ForApplication
+    Context context;
+    @Inject
+    SettingsHelper settingsHelper;
 
-    public BaseIntentHandler(Context context, RestService service) {
-        this.context = context;
-        this.service = service;
+    public BaseIntentHandler() {
+        CheckApplication.getInstance().inject(this);
     }
 
     public final void execute(Intent intent, ResultReceiver callback) {

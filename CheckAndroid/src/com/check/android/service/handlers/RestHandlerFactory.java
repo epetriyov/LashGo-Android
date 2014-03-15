@@ -17,13 +17,13 @@ public class RestHandlerFactory {
 
     public static final String ACTION_SOCIAL_SIGN_IN = "sign_in_social";
 
-    public static BaseIntentHandler getIntentHandler(Context context, String action, RestService service) {
+    public static BaseIntentHandler getIntentHandler(String action) {
         if (action.equals(ACTION_LOGIN)) {
-            return new LoginHandler(context, service);
+            return new LoginHandler();
         } else if (action.equals(ACTION_REGISTER)) {
-            return new RegisterHandler(context, service);
+            return new RegisterHandler();
         } else if (action.equals(ACTION_SOCIAL_SIGN_IN)) {
-            return new SocialSignInHandler(context, service);
+            return new SocialSignInHandler();
         }
         else {
             throw new IllegalArgumentException("illegal action - " + action);

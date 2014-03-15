@@ -4,7 +4,10 @@ import android.content.Context;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
+import com.check.android.ForActivity;
 import com.check.android.R;
+import com.check.android.ui.BaseActivity;
+import com.check.android.ui.auth.LoginActivity;
 import com.check.android.ui.auth.RegisterActivity;
 import com.check.model.SocialTypes;
 import com.check.model.dto.SocialInfo;
@@ -16,6 +19,7 @@ import com.vk.sdk.api.*;
 import junit.framework.Assert;
 import org.holoeverywhere.widget.Toast;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,15 +34,17 @@ import java.util.Date;
  */
 public class VkontakteListener extends VKSdkListener {
 
-    private final Handler handler;
-    private SocialErrorShower socialErrorShower;
+    @Inject
+    Handler handler;
 
-    private Context context;
+    @Inject SocialErrorShower socialErrorShower;
 
-    public VkontakteListener(Context context, SocialErrorShower socialErrorShower) {
-        this.socialErrorShower = socialErrorShower;
-        this.context = context;
-        handler = new Handler();
+    @Inject @ForActivity
+    Context context;
+
+    public VkontakteListener(LoginActivity loginActivity)
+    {
+        loginActivity.inject(this);
     }
 
     @Override

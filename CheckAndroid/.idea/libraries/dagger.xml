@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="dagger">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../dagger" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/../dagger" recursive="false" />
+  </library>
+</component>
