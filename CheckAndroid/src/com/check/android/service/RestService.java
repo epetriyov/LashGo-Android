@@ -20,8 +20,11 @@ public interface RestService {
 
 
     @POST("/register")
-    Response<SessionInfo> register(@Body RegisterInfo registerInfo);
+    Response register(@Body RegisterInfo registerInfo);
 
     @POST("/social-sign-in")
-    Response<SessionInfo> signInWithSocial(@Body SocialInfo socialInfo);
+    Response signInWithSocial(@Body SocialInfo socialInfo);
+
+    @POST("/gcm-register")
+    Response gcmRegister(@Body GcmRegistrationDto gcmRegistrationDto);
 }

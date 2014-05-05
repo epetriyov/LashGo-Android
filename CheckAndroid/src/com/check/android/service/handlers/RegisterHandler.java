@@ -24,21 +24,16 @@ public class RegisterHandler extends BaseIntentHandler {
 
     public static final String REGISTER_DTO = "register_dto";
 
-    public static final String SESSION_INFO = "session_info";
-
-    public RegisterHandler()
-    {
+    public RegisterHandler() {
         super();
     }
 
     @Override
     protected Bundle doExecute(Intent intent) throws RetrofitError, IOException {
         RegisterInfo registerInfo = (RegisterInfo) intent.getSerializableExtra(REGISTER_DTO);
-        Response<SessionInfo> sessionInfo = service.register(registerInfo);
-        Log.d("SessionInfo", sessionInfo.getResult().getSessionId());
-        settingsHelper.login(sessionInfo.getResult(), registerInfo);
+        service.register(registerInfo);
         Bundle bundle = new Bundle();
-        bundle.putSerializable(SESSION_INFO, sessionInfo);
+        bundle.putSerializable(REGISTER_DTO, registerInfo);
         return bundle;
     }
 }

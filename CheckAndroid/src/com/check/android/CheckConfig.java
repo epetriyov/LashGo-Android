@@ -5,7 +5,9 @@ package com.check.android;
  */
 public final class CheckConfig {
 
-    public static final String BASE_URL = "http://192.168.0.17:8080/check-api";
+    public static final String BASE_URL = "http://192.168.0.17:8080/checkapi";
+
+    public static final String GCM_API_KEY = "701321427381";
 
     private CheckConfig() {
 

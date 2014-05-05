@@ -19,6 +19,7 @@ public class SettingsHelper {
     private static final String KEY_SESSION = "session_id";
     private static final String KEY_LOGIN = "login";
     private static final String KEY_PASSWORD = "password";
+    private static final String GCM_REGISTRATION_ID = "gcm_registration_id";
     private SharedPreferences preferences;
 
     public SettingsHelper(Context context) {
@@ -105,4 +106,11 @@ public class SettingsHelper {
         }
     }
 
+    public void saveRegistrationId(String registrationId) {
+        setString(GCM_REGISTRATION_ID, registrationId);
+    }
+
+    public String getRegistrationId() {
+        return getString(GCM_REGISTRATION_ID, "");
+    }
 }

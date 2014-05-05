@@ -1,15 +1,15 @@
 package com.check.android;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import com.check.android.service.*;
-import com.check.android.service.handlers.BaseIntentHandler;
-import com.check.android.service.handlers.LoginHandler;
-import com.check.android.service.handlers.RegisterHandler;
-import com.check.android.service.handlers.SocialSignInHandler;
+import com.check.android.service.handlers.*;
 import com.check.android.settings.SettingsHelper;
 import com.check.android.ui.BaseActivity;
 import com.check.android.ui.auth.LoginActivity;
 import com.check.android.ui.auth.RegisterActivity;
+import com.check.android.ui.start.StartActivity;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
@@ -28,8 +28,10 @@ import javax.inject.Singleton;
 @Module(
         injects = {
                 RegisterActivity.class,
+                StartActivity.class,
                 LoginHandler.class,
                 RegisterHandler.class,
+                GcmRegisterHandler.class,
                 SocialSignInHandler.class
         },
         library = true
@@ -73,5 +75,11 @@ public class CheckModule {
                 .setRequestInterceptor(new CheckInterceptor())
                 .build();
         return restAdapter.create(RestService.class);
+    }
+
+
+    @Provides
+    Handler provideHandler() {
+        return new Handler(Looper.getMainLooper());
     }
 }

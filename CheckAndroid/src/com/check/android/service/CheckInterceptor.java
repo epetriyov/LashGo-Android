@@ -20,4 +20,5 @@ public class CheckInterceptor implements RequestInterceptor {
         requestFacade.addHeader(CheckApiHeaders.UUID, UUID.randomUUID().toString());
         requestFacade.addHeader(CheckApiHeaders.CLIENT_TYPE, ClientTypes.ANDROID);
     }
+
 }

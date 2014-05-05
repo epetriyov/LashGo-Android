@@ -9,10 +9,12 @@ import android.widget.EditText;
 import com.check.android.CheckApplication;
 import com.check.android.R;
 import com.check.android.service.handlers.BaseIntentHandler;
+import com.check.android.service.handlers.RegisterHandler;
 import com.check.android.service.handlers.RestHandlerFactory;
 import com.check.android.service.handlers.SocialSignInHandler;
 import com.check.android.ui.BaseActivity;
 import com.check.android.utils.Md5Util;
+import com.check.model.dto.LoginInfo;
 import com.check.model.dto.RegisterInfo;
 import com.check.model.dto.SocialInfo;
 import org.holoeverywhere.widget.Toast;
@@ -69,15 +71,20 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     protected void unregisterActionsListener() {
+        serviceHelper.removeActionListener(RestHandlerFactory.ACTION_REGISTER);
         serviceHelper.removeActionListener(RestHandlerFactory.ACTION_SOCIAL_SIGN_IN);
     }
 
     @Override
     protected void processServerResult(String action, int resultCode, Bundle data) {
-        if (resultCode == BaseIntentHandler.FAILURE_RESPONSE) {
-            Toast.makeText(this, data.getString(BaseIntentHandler.ERROR_EXTRA), Toast.LENGTH_LONG).show();
+        if (action.equals(RestHandlerFactory.ACTION_SOCIAL_SIGN_IN) || action.equals(RestHandlerFactory.ACTION_REGISTER)) {
+            if (resultCode == BaseIntentHandler.FAILURE_RESPONSE) {
+                Toast.makeText(this, data.getString(BaseIntentHandler.ERROR_EXTRA), Toast.LENGTH_LONG).show();
+            } else {
+                serviceHelper.login((LoginInfo) data.getSerializable(RegisterHandler.REGISTER_DTO));
+            }
         } else {
-            Toast.makeText(this, data.getString(SocialSignInHandler.SESSION_INFO), Toast.LENGTH_LONG).show();
+            //TODO go to main screen
         }
     }
 

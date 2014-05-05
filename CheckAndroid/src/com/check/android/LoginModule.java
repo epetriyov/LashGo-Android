@@ -45,11 +45,6 @@ public class LoginModule {
     }
 
     @Provides
-    Handler provideHandler() {
-        return new Handler(Looper.getMainLooper());
-    }
-
-    @Provides
     @ForActivity
     Context provideContext() {
         return loginActivity;

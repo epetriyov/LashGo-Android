@@ -24,8 +24,6 @@ public class SocialSignInHandler extends BaseIntentHandler {
 
     public static final String SOCIAL_DTO = "social_dto";
 
-    public static final String SESSION_INFO = "session_info";
-
     public SocialSignInHandler() {
         super();
     }
@@ -33,11 +31,9 @@ public class SocialSignInHandler extends BaseIntentHandler {
     @Override
     protected Bundle doExecute(Intent intent) throws RetrofitError, IOException {
         SocialInfo socialInfo = (SocialInfo) intent.getSerializableExtra(SOCIAL_DTO);
-        Response<SessionInfo> sessionInfo = service.signInWithSocial(socialInfo);
-        Log.d("SessionInfo", sessionInfo.getResult().getSessionId());
-        settingsHelper.login(sessionInfo.getResult(), socialInfo);
+        service.signInWithSocial(socialInfo);
         Bundle bundle = new Bundle();
-        bundle.putSerializable(SESSION_INFO, sessionInfo);
+        bundle.putSerializable(SOCIAL_DTO, socialInfo);
         return bundle;
     }
 }

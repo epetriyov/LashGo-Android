@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/CheckAndroid.iml" filepath="$PROJECT_DIR$/CheckAndroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/../HoloEverywhere/HoloEverywhere.iml" filepath="$PROJECT_DIR$/../HoloEverywhere/HoloEverywhere.iml" />
       <module fileurl="file://$PROJECT_DIR$/../facebook/facebook.iml" filepath="$PROJECT_DIR$/../facebook/facebook.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../google-play-services_lib/google-play-services_lib.iml" filepath="$PROJECT_DIR$/../google-play-services_lib/google-play-services_lib.iml" />
       <module fileurl="file://$PROJECT_DIR$/../preferences/preferences.iml" filepath="$PROJECT_DIR$/../preferences/preferences.iml" />
       <module fileurl="file://$PROJECT_DIR$/../vksdk/vksdk.iml" filepath="$PROJECT_DIR$/../vksdk/vksdk.iml" />
     </modules>

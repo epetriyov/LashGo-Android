@@ -90,7 +90,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void registerActionsListener() {
         serviceHelper.addActionListener(RestHandlerFactory.ACTION_LOGIN, this);
-        serviceHelper.addActionListener(RestHandlerFactory.ACTION_SOCIAL_SIGN_IN, this);
     }
 
 
@@ -142,7 +141,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void unregisterActionsListener() {
         serviceHelper.removeActionListener(RestHandlerFactory.ACTION_LOGIN);
-        serviceHelper.removeActionListener(RestHandlerFactory.ACTION_SOCIAL_SIGN_IN);
     }
 
     @Override

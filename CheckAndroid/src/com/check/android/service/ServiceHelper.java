@@ -6,10 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import com.check.android.service.handlers.*;
-import com.check.model.dto.LoginInfo;
-import com.check.model.dto.RecoverPasswordDto;
-import com.check.model.dto.RegisterInfo;
-import com.check.model.dto.SocialInfo;
+import com.check.model.dto.*;
 
 import javax.inject.Singleton;
 import java.lang.ref.WeakReference;
@@ -103,4 +100,9 @@ public class ServiceHelper {
         runRequest(RestHandlerFactory.ACTION_SOCIAL_SIGN_IN, extras);
     }
 
+    public void gcmRegisterId(GcmRegistrationDto gcmRegistrationDto) {
+        Bundle extras = new Bundle();
+        extras.putSerializable(GcmRegisterHandler.GCM_REGISTRATION, gcmRegistrationDto);
+        runRequest(RestHandlerFactory.ACTION_GCM_REGISTER_ID, extras);
+    }
 }

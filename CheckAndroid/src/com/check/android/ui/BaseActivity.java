@@ -5,6 +5,7 @@ import android.view.Window;
 import com.check.android.CheckApplication;
 import com.check.android.service.ServiceCallbackListener;
 import com.check.android.service.ServiceHelper;
+import com.check.android.settings.SettingsHelper;
 import dagger.ObjectGraph;
 import org.holoeverywhere.app.Activity;
 
@@ -20,6 +21,9 @@ public abstract class BaseActivity extends Activity implements ServiceCallbackLi
 
     @Inject
     protected ServiceHelper serviceHelper;
+
+    @Inject
+    protected SettingsHelper settingsHelper;
 
     private boolean isActivityOnForeground;
     private List<ServiceResult> serviceResultList = new ArrayList<>();

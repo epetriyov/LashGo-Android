@@ -8,6 +8,15 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
+    <!-- GCM Permissions-->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <permission android:name="com.check.android.permission.C2D_MESSAGE"
+                android:protectionLevel="signature" />
+    <uses-permission android:name="com.example.gcm.permission.C2D_MESSAGE" />
+
     <application
             android:name=".CheckApplication"
             android:icon="@drawable/icon"
@@ -32,15 +41,34 @@
                   android:launchMode="singleTask"
                 >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
                 <data
                         android:host="twitter"
                         android:scheme="check"/>
             </intent-filter>
         </activity>
+
+        <activity
+                android:name=".ui.start.StartActivity"
+                android:label="@string/app_name"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+                android:name=".gcm.GcmBroadcastReceiver"
+                android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.example.gcm" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".gcm.GcmIntentService" />
     </application>
 </manifest>
