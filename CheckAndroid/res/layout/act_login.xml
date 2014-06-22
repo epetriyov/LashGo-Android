@@ -61,13 +61,6 @@
                 android:layout_marginTop="@dimen/vertical_margin"/>
 
         <org.holoeverywhere.widget.Button
-                android:id="@+id/btn_register"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/register"
-                android:layout_marginTop="@dimen/vertical_margin"/>
-
-        <org.holoeverywhere.widget.Button
         android:id="@+id/btn_password_recover"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Check</string>
+    <string name="app_name">LashGo</string>
 
     <string name="facebook_app_id">417722991695914</string>
     <string name="vkontakte_app_id">4201819</string>
@@ -27,5 +27,16 @@
     <string name="remember_password">Забыл пароль</string>
     <string name="wrong_response">Неверный ответ</string>
 
-
+    <string-array name="menus_array">
+        <item>Задания</item>
+        <item>Новости</item>
+        <item>Подписки</item>
+    </string-array>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="action_websearch">Web search</string>
+    <string name="app_not_available">Sorry, there\'s no web browser available</string>
+    <string name="check_list">Задания</string>
+    <string name="news_list">Новости</string>
+    <string name="subscribes_list">Подписки</string>
 </resources>
