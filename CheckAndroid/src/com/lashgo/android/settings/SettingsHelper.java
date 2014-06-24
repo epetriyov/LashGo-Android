@@ -4,8 +4,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lashgo.model.dto.LoginInfo;
 import com.lashgo.model.dto.SessionInfo;
+import com.lashgo.model.dto.SocialInfo;
+
+import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * User: eugene.petriyov
@@ -18,8 +24,9 @@ public class SettingsHelper {
     private static final String KEY_LOGIN = "login";
     private static final String KEY_PASSWORD = "password";
     private static final String GCM_REGISTRATION_ID = "gcm_registration_id";
+    private static final String KEY_IS_FIRST_LAUNCH = "is_first_launch";
+    private static final String KEY_SOCIAL_INFO = "social_info";
     private SharedPreferences preferences;
-    private boolean isFirstLaunch;
 
     public SettingsHelper(Context context) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -114,11 +121,40 @@ public class SettingsHelper {
     }
 
     public boolean isLoggedIn() {
-        String session = getString(KEY_SESSION,"");
+        String session = getString(KEY_SESSION, "");
         return !TextUtils.isEmpty(session);
     }
 
-    public boolean isFirstLaunch() {
-        return isFirstLaunch;
+    public void setFirstLaunch() {
+        setBoolean(KEY_IS_FIRST_LAUNCH, true);
     }
+
+    public boolean isFirstLaunch() {
+        return getBoolean(KEY_IS_FIRST_LAUNCH, true);
+    }
+
+    public SocialInfo getSocialInfo() {
+        String socialInfoString = getString(KEY_SOCIAL_INFO, null);
+        if (!TextUtils.isEmpty(socialInfoString)) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                return objectMapper.readValue(socialInfoString, SocialInfo.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public void saveSocialInfo(SocialInfo socialInfo) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String socialInfoString = null;
+        try {
+            socialInfoString = objectMapper.writeValueAsString(socialInfo);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        setString(KEY_SOCIAL_INFO, socialInfoString);
+    }
+
 }

@@ -21,8 +21,7 @@ public class LoginHandler extends BaseIntentHandler {
 
     public static final String SESSION_INFO = "session_info";
 
-    public LoginHandler()
-    {
+    public LoginHandler() {
         super();
     }
 
@@ -30,10 +29,10 @@ public class LoginHandler extends BaseIntentHandler {
     public Bundle doExecute(Intent intent) throws RetrofitError, IOException {
         LoginInfo loginInfo = (LoginInfo) intent.getSerializableExtra(LOGIN_DTO);
         ResponseObject<SessionInfo> sessionInfo = service.login(loginInfo);
-        Log.d("SessionInfo", sessionInfo.getResult().getSessionId());
         settingsHelper.login(sessionInfo.getResult(), loginInfo);
         Bundle bundle = new Bundle();
         bundle.putSerializable(SESSION_INFO, sessionInfo);
+        bundle.putSerializable(LOGIN_DTO, loginInfo);
         return bundle;
     }
 }

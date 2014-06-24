@@ -1,14 +1,29 @@
 package com.lashgo.android.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Window;
+import com.facebook.UiLifecycleHelper;
+import com.lashgo.android.LashgoApplication;
+import com.lashgo.android.SocialModule;
+import com.lashgo.android.R;
 import com.lashgo.android.service.ServiceCallbackListener;
 import com.lashgo.android.service.ServiceHelper;
 import com.lashgo.android.settings.SettingsHelper;
+import com.lashgo.android.social.FacebookHelper;
+import com.lashgo.android.social.TwitterHelper;
+import com.lashgo.android.social.VkontakteListener;
+import com.lashgo.android.utils.ContextUtils;
+import com.lashgo.model.dto.SocialInfo;
+import com.vk.sdk.VKSdk;
+import com.vk.sdk.VKUIHelper;
+import dagger.ObjectGraph;
 import org.holoeverywhere.app.Activity;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -16,11 +31,28 @@ import java.util.List;
  */
 public abstract class BaseActivity extends Activity implements ServiceCallbackListener {
 
+    private ObjectGraph loginGraph;
+
     @Inject
     protected ServiceHelper serviceHelper;
 
     @Inject
     protected SettingsHelper settingsHelper;
+
+    @Inject
+    protected UiLifecycleHelper facebookUiHelper;
+
+    @Inject
+    protected TwitterHelper twitterHelper;
+
+    @Inject
+    protected VkontakteListener vkSdkListener;
+
+    @Inject
+    protected FacebookHelper facebookHelper;
+
+    @Inject
+    private Handler handler;
 
     private boolean isActivityOnForeground;
 
@@ -29,16 +61,31 @@ public abstract class BaseActivity extends Activity implements ServiceCallbackLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        loginGraph = LashgoApplication.getInstance().getApplicationGraph().plus(getModules().toArray());
+        loginGraph.inject(this);
         super.onCreate(savedInstanceState);
         registerActionsListener();
+        facebookUiHelper.onCreate(savedInstanceState);
+        VKSdk.initialize(vkSdkListener, getString(R.string.vkontakte_app_id), null);
+        twitterHelper.onCreate(savedInstanceState);
     }
 
     protected abstract void registerActionsListener();
 
     @Override
     protected void onDestroy() {
+        facebookUiHelper.onDestroy();
+        VKUIHelper.onDestroy(this);
+        loginGraph = null;
         super.onDestroy();
         unregisterActionsListener();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        facebookUiHelper.onSaveInstanceState(outState);
+        outState.putSerializable(TwitterHelper.KEY_REQUEST_TOKEN, twitterHelper.getRequestToken());
+        super.onSaveInstanceState(outState);
     }
 
     protected abstract void unregisterActionsListener();
@@ -48,12 +95,15 @@ public abstract class BaseActivity extends Activity implements ServiceCallbackLi
         super.onResume();
         isActivityOnForeground = true;
         deliverServiceResults();
+        facebookUiHelper.onResume();
+        VKUIHelper.onResume(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         isActivityOnForeground = false;
+        facebookUiHelper.onPause();
     }
 
     private void deliverServiceResults() {
@@ -72,7 +122,9 @@ public abstract class BaseActivity extends Activity implements ServiceCallbackLi
         serviceResultList.remove(serviceResult);
     }
 
-    protected abstract void processServerResult(String action, int resultCode, Bundle data);
+    protected void processServerResult(String action, int resultCode, Bundle data) {
+
+    }
 
     @Override
     public void onCommandFinished(String action, int resultCode, Bundle data) {
@@ -88,4 +140,35 @@ public abstract class BaseActivity extends Activity implements ServiceCallbackLi
         serviceResultList.add(new ServiceResult(action, resultCode, data));
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        facebookUiHelper.onActivityResult(requestCode, resultCode, data);
+        VKUIHelper.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void onDisplayError(final String errorMessage) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                ContextUtils.showToast(BaseActivity.this, errorMessage);
+            }
+        });
+    }
+
+    public void onSocialLogin(SocialInfo socialInfo) {
+        settingsHelper.saveSocialInfo(socialInfo);
+        serviceHelper.socialSignIn(socialInfo);
+    }
+
+    /**
+     * Inject the supplied {@code object} using the activity-specific graph.
+     */
+    public void inject(Object object) {
+        loginGraph.inject(object);
+    }
+
+    private List<Object> getModules() {
+        return Arrays.<Object>asList(new SocialModule(this));
+    }
 }

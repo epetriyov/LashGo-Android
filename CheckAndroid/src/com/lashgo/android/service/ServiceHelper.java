@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import com.lashgo.android.service.handlers.*;
+import com.lashgo.model.dto.ExtendedSocialInfo;
 import com.lashgo.model.dto.GcmRegistrationDto;
 import com.lashgo.model.dto.LoginInfo;
 import com.lashgo.model.dto.SocialInfo;
@@ -100,6 +101,12 @@ public class ServiceHelper {
         Bundle extras = new Bundle();
         extras.putSerializable(SocialSignInHandler.SOCIAL_DTO, socialInfo);
         runRequest(RestHandlerFactory.ACTION_SOCIAL_SIGN_IN, extras);
+    }
+
+    public void socialSignUp(ExtendedSocialInfo extendedSocialInfo) {
+        Bundle extras = new Bundle();
+        extras.putSerializable(SocialSignUpHandler.EXTENDED_SOCIAL_DTO, extendedSocialInfo);
+        runRequest(RestHandlerFactory.ACTION_CONFIRM_SOCIAL_SIGN_UP, extras);
     }
 
     public void gcmRegisterId(GcmRegistrationDto gcmRegistrationDto) {

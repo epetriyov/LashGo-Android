@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import com.lashgo.android.ForActivity;
 import com.lashgo.android.R;
+import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.auth.LoginActivity;
 import com.lashgo.model.dto.SocialInfo;
 import com.lashgo.model.dto.SocialNames;
@@ -31,14 +32,11 @@ public class TwitterHelper {
     private RequestToken requestToken;
 
     @Inject
-    SocialErrorShower socialErrorShower;
-
-    @Inject
     @ForActivity
-    LoginActivity loginActivity;
+    private LoginActivity loginActivity;
 
-    public TwitterHelper(LoginActivity loginActivity) {
-        loginActivity.inject(this);
+    public TwitterHelper(BaseActivity baseActivity) {
+        baseActivity.inject(this);
     }
 
     public void onCreate(Bundle requestTokenBundle) {
@@ -57,7 +55,7 @@ public class TwitterHelper {
                     String callbackURL = loginActivity.getString(R.string.twitter_callback_url);
                     requestToken = twitter.getOAuthRequestToken(callbackURL);
                 } catch (Exception e) {
-                    socialErrorShower.onDisplayError(e.toString());
+                    loginActivity.onDisplayError(e.toString());
                     e.printStackTrace();
                 }
                 return null;
@@ -85,9 +83,9 @@ public class TwitterHelper {
                         Twitter twitter = new TwitterFactory().getInstance();
                         twitter.setOAuthConsumer(loginActivity.getResources().getString(R.string.twitter_consumerKey), loginActivity.getResources().getString(R.string.twitter_consumerSecret));
                         AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, verifier);
-                        socialInfo = new SocialInfo(accessToken.getToken(),accessToken.getTokenSecret(),SocialNames.TWITTER);
+                        socialInfo = new SocialInfo(accessToken.getToken(), accessToken.getTokenSecret(), SocialNames.TWITTER);
                     } catch (TwitterException e) {
-                        socialErrorShower.onDisplayError(e.toString());
+                        loginActivity.onDisplayError(e.toString());
                         e.printStackTrace();
                     }
                     return null;

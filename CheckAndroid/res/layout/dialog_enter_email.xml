@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<org.holoeverywhere.widget.LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                        android:orientation="vertical"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:padding="@dimen/horizontal_padding"
+                                        android:gravity="center_horizontal"
+        >
+    <org.holoeverywhere.widget.TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                        android:text="@string/email_for_recovery"
+            />
+    <org.holoeverywhere.widget.EditText android:layout_width="match_parent" android:layout_height="wrap_content"
+                                        android:id="@+id/edit_email"
+                                        android:hint="@string/hint_email"
+                                        android:layout_marginTop="15dp"
+            />
+    <org.holoeverywhere.widget.Button android:layout_width="match_parent" android:layout_height="48dp"
+                                      android:id="@+id/btn_ready"
+                                      android:gravity="center"
+                                      android:text="@string/ready"
+                                      android:layout_marginTop="15dp"
+            />
+</org.holoeverywhere.widget.LinearLayout>

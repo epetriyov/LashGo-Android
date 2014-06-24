@@ -6,6 +6,8 @@ import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
 
+import java.io.Serializable;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Eugene

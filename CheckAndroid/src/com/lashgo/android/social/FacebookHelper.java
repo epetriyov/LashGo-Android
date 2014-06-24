@@ -1,6 +1,7 @@
 package com.lashgo.android.social;
 
 import com.lashgo.android.ForActivity;
+import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.auth.LoginActivity;
 import com.facebook.Session;
 import com.facebook.SessionState;
@@ -21,10 +22,10 @@ public class FacebookHelper {
 
     @Inject
     @ForActivity
-    LoginActivity loginActivity;
+    private BaseActivity loginActivity;
 
-    public FacebookHelper(LoginActivity loginActivity) {
-        loginActivity.inject(this);
+    public FacebookHelper(BaseActivity baseActivity) {
+        baseActivity.inject(this);
     }
 
     private Session.StatusCallback facebookCallback = new Session.StatusCallback() {

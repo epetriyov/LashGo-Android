@@ -1,11 +1,13 @@
 package com.lashgo.android.social;
 
 import com.lashgo.android.ForActivity;
+import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.auth.LoginActivity;
 import com.lashgo.model.dto.SocialInfo;
 import com.lashgo.model.dto.SocialNames;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKCaptchaDialog;
+import com.vk.sdk.VKSdk;
 import com.vk.sdk.VKSdkListener;
 import com.vk.sdk.api.VKError;
 
@@ -21,14 +23,11 @@ import javax.inject.Inject;
 public class VkontakteListener extends VKSdkListener {
 
     @Inject
-    SocialErrorShower socialErrorShower;
-
-    @Inject
     @ForActivity
-    LoginActivity loginActivity;
+    private BaseActivity loginActivity;
 
-    public VkontakteListener(LoginActivity loginActivity) {
-        loginActivity.inject(this);
+    public VkontakteListener(BaseActivity baseActivity) {
+        baseActivity.inject(this);
     }
 
     @Override
@@ -54,11 +53,11 @@ public class VkontakteListener extends VKSdkListener {
 
     @Override
     public void onTokenExpired(VKAccessToken expiredToken) {
-
+        VKSdk.authorize("email");
     }
 
     @Override
     public void onAccessDenied(VKError authorizationError) {
-        socialErrorShower.onDisplayError(authorizationError.errorMessage);
+        loginActivity.onDisplayError(authorizationError.errorMessage);
     }
 }

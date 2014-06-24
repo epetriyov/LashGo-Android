@@ -11,7 +11,9 @@ import com.lashgo.android.service.handlers.LoginHandler;
 import com.lashgo.android.service.handlers.RegisterHandler;
 import com.lashgo.android.service.handlers.SocialSignInHandler;
 import com.lashgo.android.settings.SettingsHelper;
+import com.lashgo.android.ui.auth.LoginActivity;
 import com.lashgo.android.ui.main.MainActivity;
+import com.lashgo.android.ui.start.SplashActivity;
 import com.lashgo.android.ui.start.StartActivity;
 import dagger.Module;
 import dagger.Provides;
@@ -31,6 +33,7 @@ import javax.inject.Singleton;
         injects = {
                 StartActivity.class,
                 MainActivity.class,
+                LoginActivity.class,
                 LoginHandler.class,
                 RegisterHandler.class,
                 GcmRegisterHandler.class,

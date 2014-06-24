@@ -3,13 +3,17 @@ package com.lashgo.android.service.handlers;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.ResultReceiver;
-import com.lashgo.android.LashgoApplication;
 import com.lashgo.android.ForApplication;
+import com.lashgo.android.LashgoApplication;
 import com.lashgo.android.R;
 import com.lashgo.android.service.RestService;
 import com.lashgo.android.settings.SettingsHelper;
-import com.lashgo.android.utils.LogUtils;
+import com.lashgo.android.utils.ContextUtils;
+import com.lashgo.android.utils.NetworkUtils;
+import com.lashgo.model.ErrorCodes;
+import com.lashgo.model.dto.ErrorDto;
 import com.lashgo.model.dto.ResponseObject;
 import retrofit.RetrofitError;
 
@@ -32,8 +36,11 @@ public abstract class BaseIntentHandler {
     public static final int FAILURE_RESPONSE = 2;
     @Inject
     RestService service;
-    @Inject @ForApplication
+    @Inject
+    @ForApplication
     Context context;
+    @Inject
+    Handler handler;
     @Inject
     SettingsHelper settingsHelper;
 
@@ -42,32 +49,35 @@ public abstract class BaseIntentHandler {
     }
 
     public final void execute(Intent intent, ResultReceiver callback) {
-        String errorMessage = null;
+        ErrorDto errorDto = null;
         try {
-            Bundle bundle = doExecute(intent);
-            if (callback != null) {
-                callback.send(SUCCESS_RESPONSE, bundle);
+            if (NetworkUtils.isNetAvailable(context)) {
+                Bundle bundle = doExecute(intent);
+                if (callback != null) {
+                    callback.send(SUCCESS_RESPONSE, bundle);
+                }
+                return;
+            } else {
+                throw new IOException();
             }
-        } catch (RetrofitError e){
+        } catch (RetrofitError e) {
             if (!e.isNetworkError()) {
                 try {
-                    ResponseObject errorResponse = (ResponseObject) e.getBodyAs(ResponseObject.class);
-                    errorMessage = errorResponse.getError().getErrorCode();
+                    errorDto = ((ResponseObject) e.getBodyAs(ResponseObject.class)).getError();
+                    ContextUtils.showToast(context, handler, errorDto.getErrorMessage());
                 } catch (Exception e1) {
-                    errorMessage = context.getString(R.string.server_is_unavailable);
+                    ContextUtils.showToast(context, handler, R.string.server_is_unavailable);
                 }
             } else {
-                errorMessage = context.getString(R.string.error_no_internet);
+                ContextUtils.showToast(context, handler, R.string.error_no_internet);
             }
         } catch (IOException e) {
-            errorMessage = context.getString(R.string.error_no_internet);
+            ContextUtils.showToast(context, handler, R.string.error_no_internet);
         }
-        if (errorMessage != null) {
-            Bundle bundle = new Bundle();
-            bundle.putString(ERROR_EXTRA, errorMessage);
-            if (callback != null) {
-                callback.send(FAILURE_RESPONSE, bundle);
-            }
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ERROR_EXTRA, errorDto);
+        if (callback != null) {
+            callback.send(FAILURE_RESPONSE, bundle);
         }
     }
 

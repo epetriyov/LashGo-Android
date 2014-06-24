@@ -8,9 +8,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingLeft="@dimen/horizontal_padding"
-            android:paddingRight="@dimen/horizontal_padding"
-            android:gravity="center_vertical">
+            android:padding="@dimen/horizontal_padding"
+            android:gravity="center"
+            >
 
         <org.holoeverywhere.widget.EditText
                 android:id="@+id/edit_login"
@@ -32,41 +32,72 @@
                 android:singleLine="true"
                 android:inputType="textPassword"/>
 
-        <org.holoeverywhere.widget.Button
-                android:id="@+id/btn_login"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/login"
-                android:layout_marginTop="@dimen/vertical_margin"/>
+        <org.holoeverywhere.widget.LinearLayout android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:orientation="horizontal"
+                                                android:layout_marginTop="@dimen/vertical_margin">
+            <org.holoeverywhere.widget.Button
+                    android:id="@+id/btn_register"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:text="@string/register"
+                    />
 
-        <org.holoeverywhere.widget.Button
-                android:id="@+id/btn_auth_vk"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/auth_vk"
-                android:layout_marginTop="@dimen/vertical_margin"/>
+            <org.holoeverywhere.widget.View android:layout_width="15dp" android:layout_height="1dp"/>
 
-        <org.holoeverywhere.widget.Button
-                android:id="@+id/btn_auth_facebook"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/auth_facebook"
-                android:layout_marginTop="@dimen/vertical_margin"/>
+            <org.holoeverywhere.widget.Button
+                    android:id="@+id/btn_login"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:text="@string/login"/>
 
-        <org.holoeverywhere.widget.Button
-                android:id="@+id/btn_auth_twitter"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/auth_twitter"
-                android:layout_marginTop="@dimen/vertical_margin"/>
+        </org.holoeverywhere.widget.LinearLayout>
 
-        <org.holoeverywhere.widget.Button
-        android:id="@+id/btn_password_recover"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/remember_password"
-        android:layout_marginTop="@dimen/vertical_margin"/>
-</org.holoeverywhere.widget.LinearLayout>
+        <org.holoeverywhere.widget.TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                            android:text="@string/social_login"
+                                            android:layout_marginTop="25dp"
+                />
+
+        <org.holoeverywhere.widget.LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/vertical_margin"
+                >
+            <org.holoeverywhere.widget.Button
+                    android:id="@+id/btn_auth_vk"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:text="@string/auth_vk"
+                    />
+
+            <org.holoeverywhere.widget.Button
+                    android:id="@+id/btn_auth_facebook"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:text="@string/auth_facebook"
+                    android:layout_marginLeft="10dp"
+                    />
+
+            <org.holoeverywhere.widget.Button
+                    android:id="@+id/btn_auth_twitter"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:text="@string/auth_twitter"
+                    android:layout_marginLeft="10dp"
+                    />
+
+        </org.holoeverywhere.widget.LinearLayout>
+
+        <org.holoeverywhere.widget.TextView
+                android:id="@+id/btn_password_recover"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/remember_password"
+                android:layout_marginTop="@dimen/vertical_margin"/>
+    </org.holoeverywhere.widget.LinearLayout>
 
     <include layout="@layout/view_progress_overlay"/>
 </org.holoeverywhere.widget.FrameLayout>

@@ -16,7 +16,7 @@
 
 package com.lashgo.android.gcm;
 
-import com.lashgo.android.ui.start.StartActivity;
+import com.lashgo.android.ui.start.SplashActivity;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import android.app.IntentService;
@@ -25,9 +25,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 /**
  * This {@code IntentService} does the actual handling of the GCM message.
@@ -68,17 +66,13 @@ public class GcmIntentService extends IntentService {
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 // This loop represents the service doing some work.
                 for (int i = 0; i < 5; i++) {
-                    Log.i(TAG, "Working... " + (i + 1)
-                            + "/5 @ " + SystemClock.elapsedRealtime());
                     try {
                         Thread.sleep(5000);
                     } catch (InterruptedException e) {
                     }
                 }
-                Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
                 // Post notification of received message.
                 sendNotification("Received: " + extras.toString());
-                Log.i(TAG, "Received: " + extras.toString());
             }
         }
         // Release the wake lock provided by the WakefulBroadcastReceiver.
@@ -93,7 +87,7 @@ public class GcmIntentService extends IntentService {
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, StartActivity.class), 0);
+                new Intent(this, SplashActivity.class), 0);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)

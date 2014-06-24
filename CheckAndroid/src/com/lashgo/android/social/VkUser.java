@@ -14,17 +14,21 @@ import java.io.Serializable;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class VkUser implements Serializable {
-    public VkUser() {
-    }
-
     @JsonProperty("uid")
     private String uid;
-
     @JsonProperty("first_name")
     private String firstName;
-
     @JsonProperty("last_name")
     private String lastName;
+    @JsonProperty("sex")
+    private int sex;
+    @JsonProperty("bdate")
+    private String birthDate;
+    @JsonProperty("photo_100")
+    private String avatarUrl;
+
+    public VkUser() {
+    }
 
     public String getUid() {
         return uid;
@@ -73,13 +77,4 @@ public class VkUser implements Serializable {
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
     }
-
-    @JsonProperty("sex")
-    private int sex;
-
-    @JsonProperty("bdate")
-    private String birthDate;
-
-    @JsonProperty("photo_100")
-    private String avatarUrl;
 }
