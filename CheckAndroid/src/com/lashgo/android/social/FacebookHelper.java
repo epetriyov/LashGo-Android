@@ -1,10 +1,8 @@
 package com.lashgo.android.social;
 
-import com.lashgo.android.ForActivity;
-import com.lashgo.android.ui.BaseActivity;
-import com.lashgo.android.ui.auth.LoginActivity;
 import com.facebook.Session;
 import com.facebook.SessionState;
+import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.model.dto.SocialInfo;
 import com.lashgo.model.dto.SocialNames;
 
@@ -20,11 +18,11 @@ import java.util.Arrays;
  */
 public class FacebookHelper {
 
-    @Inject
-    @ForActivity
     private BaseActivity loginActivity;
 
+    @Inject
     public FacebookHelper(BaseActivity baseActivity) {
+        this.loginActivity = baseActivity;
         baseActivity.inject(this);
     }
 
@@ -35,7 +33,7 @@ public class FacebookHelper {
                 /**
                  * successful login into facebook
                  */
-                loginActivity.onSocialLogin(new SocialInfo(session.getAccessToken(),null,SocialNames.FACEBOOK));
+                loginActivity.onSocialLogin(new SocialInfo(session.getAccessToken(), null, SocialNames.FACEBOOK));
             }
         }
     };

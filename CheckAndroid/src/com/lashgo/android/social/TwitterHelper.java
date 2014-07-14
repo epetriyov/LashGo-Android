@@ -4,10 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import com.lashgo.android.ForActivity;
 import com.lashgo.android.R;
 import com.lashgo.android.ui.BaseActivity;
-import com.lashgo.android.ui.auth.LoginActivity;
 import com.lashgo.model.dto.SocialInfo;
 import com.lashgo.model.dto.SocialNames;
 import twitter4j.Twitter;
@@ -31,11 +29,11 @@ public class TwitterHelper {
 
     private RequestToken requestToken;
 
-    @Inject
-    @ForActivity
-    private LoginActivity loginActivity;
+    private BaseActivity loginActivity;
 
+    @Inject
     public TwitterHelper(BaseActivity baseActivity) {
+        this.loginActivity = baseActivity;
         baseActivity.inject(this);
     }
 

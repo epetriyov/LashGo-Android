@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.Styled" parent="@style/Holo.Theme.Light">
-        <!-- Setting values in the default namespace affects API levels 7-13 -->
-        <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
+    <style name="Theme.Styled" parent="@android:style/Theme.Holo.Light">
+        <!-- Setting values in the android namespace affects API levels 14+ -->
+        <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
     </style>
 
-    <style name="Widget.Styled.ActionBar" parent="@style/Widget.AppCompat.Light.ActionBar">
-        <!-- Setting values in the default namespace affects API levels 7-13 -->
+    <style name="Widget.Styled.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <!-- Setting values in the android namespace affects API levels 14+ -->
+    </style>
+
+    <style name="EditText.Styled" parent="@android:style/Widget.EditText">
+        <item name="android:inputType">textFilter|textNoSuggestions|textVisiblePassword</item>
     </style>
 </resources>

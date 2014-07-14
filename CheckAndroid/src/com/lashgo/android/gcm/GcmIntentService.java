@@ -16,6 +16,7 @@
 
 package com.lashgo.android.gcm;
 
+import android.app.Notification;
 import com.lashgo.android.ui.start.SplashActivity;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
@@ -25,7 +26,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 
 /**
  * This {@code IntentService} does the actual handling of the GCM message.
@@ -37,7 +37,6 @@ import android.support.v4.app.NotificationCompat;
 public class GcmIntentService extends IntentService {
     public static final int NOTIFICATION_ID = 1;
     private NotificationManager mNotificationManager;
-    NotificationCompat.Builder builder;
 
     public GcmIntentService() {
         super("GcmIntentService");
@@ -75,8 +74,6 @@ public class GcmIntentService extends IntentService {
                 sendNotification("Received: " + extras.toString());
             }
         }
-        // Release the wake lock provided by the WakefulBroadcastReceiver.
-        GcmBroadcastReceiver.completeWakefulIntent(intent);
     }
 
     // Put the message into a notification and post it.
@@ -89,10 +86,10 @@ public class GcmIntentService extends IntentService {
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 new Intent(this, SplashActivity.class), 0);
 
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
+        Notification.Builder mBuilder =
+                new Notification.Builder(this)
         .setContentTitle("GCM Notification")
-        .setStyle(new NotificationCompat.BigTextStyle()
+        .setStyle(new Notification.BigTextStyle()
         .bigText(msg))
         .setContentText(msg);
 

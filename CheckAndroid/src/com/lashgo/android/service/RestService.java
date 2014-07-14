@@ -5,8 +5,9 @@ import com.lashgo.model.dto.*;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.Query;
 
-import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -31,6 +32,6 @@ public interface RestService {
     @POST(Path.Gcm.REGISTER)
     ResponseObject registerDevice(@Body GcmRegistrationDto gcmRegistrationDto);
 
-    @GET(Path.Checks.CURRENT)
-    CheckDto getLastCheck();
+    @GET(Path.Users.MAIN_SCREEN_INFO)
+    ResponseObject<MainScreenInfoDto> getUserMainScreenInfo(@Query("news_last_view") String newsLastView, @Query("subscriptions_last_view") String subscriptionsLastView);
 }

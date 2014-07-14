@@ -16,8 +16,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="facebook" />
-    <orderEntry type="module" module-name="HoloEverywhere" />
-    <orderEntry type="module" module-name="preferences" />
     <orderEntry type="module" module-name="vksdk" />
     <orderEntry type="library" name="libs" level="project" />
   </component>

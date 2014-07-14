@@ -1,10 +1,10 @@
 package com.lashgo.android;
 
 
+import android.app.Application;
 import android.os.Build;
 import android.os.StrictMode;
 import dagger.ObjectGraph;
-import org.holoeverywhere.app.Application;
 
 import java.util.Arrays;
 import java.util.List;

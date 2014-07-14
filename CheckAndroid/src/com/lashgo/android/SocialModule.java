@@ -5,6 +5,9 @@ import com.lashgo.android.social.FacebookHelper;
 import com.lashgo.android.social.TwitterHelper;
 import com.lashgo.android.social.VkontakteListener;
 import com.lashgo.android.ui.BaseActivity;
+import com.lashgo.android.ui.auth.LoginActivity;
+import com.lashgo.android.ui.main.MainActivity;
+import com.lashgo.android.ui.start.StartActivity;
 import dagger.Module;
 import dagger.Provides;
 
@@ -17,7 +20,9 @@ import dagger.Provides;
  */
 @Module(
         injects = {
-                BaseActivity.class,
+                StartActivity.class,
+                MainActivity.class,
+                LoginActivity.class,
                 FacebookHelper.class,
                 TwitterHelper.class,
                 VkontakteListener.class
@@ -33,14 +38,13 @@ public class SocialModule {
     }
 
     @Provides
-    UiLifecycleHelper provideUiLifecycleHelper(FacebookHelper facebookHelper) {
-        return new UiLifecycleHelper(baseActivity, facebookHelper.getFacebookCallback());
+    BaseActivity provideBaseActivity() {
+        return baseActivity;
     }
 
     @Provides
-    @ForActivity
-    BaseActivity provideContext() {
-        return baseActivity;
+    UiLifecycleHelper provideUiLifecycleHelper(FacebookHelper facebookHelper) {
+        return new UiLifecycleHelper(baseActivity, facebookHelper.getFacebookCallback());
     }
 
     @Provides

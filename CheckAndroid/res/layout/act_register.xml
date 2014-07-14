@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<org.holoeverywhere.widget.FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                        android:layout_width="match_parent"
                                        android:layout_height="match_parent">
 
-    <org.holoeverywhere.widget.LinearLayout
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -12,7 +12,7 @@
             android:paddingRight="@dimen/horizontal_padding"
             android:gravity="center_vertical">
 
-        <org.holoeverywhere.widget.EditText
+        <EditText
                 android:id="@+id/edit_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
                 android:singleLine="true"
                 android:imeOptions="actionNext"/>
 
-        <org.holoeverywhere.widget.EditText
+        <EditText
                 android:id="@+id/edit_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
                 android:singleLine="true"
                 android:inputType="textPassword"/>
 
-        <org.holoeverywhere.widget.EditText
+        <EditText
                 android:id="@+id/edit_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -40,13 +40,13 @@
                 android:singleLine="true"
                 android:inputType="textEmailAddress"/>
 
-        <org.holoeverywhere.widget.Button
+        <Button
                 android:id="@+id/btn_register"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/register"
                 android:layout_marginTop="@dimen/vertical_margin"/>
-    </org.holoeverywhere.widget.LinearLayout>
+    </LinearLayout>
 
     <include layout="@layout/view_progress_overlay"/>
-</org.holoeverywhere.widget.FrameLayout>
+</FrameLayout>

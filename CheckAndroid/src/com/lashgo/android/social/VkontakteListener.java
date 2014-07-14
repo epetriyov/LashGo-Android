@@ -1,8 +1,6 @@
 package com.lashgo.android.social;
 
-import com.lashgo.android.ForActivity;
 import com.lashgo.android.ui.BaseActivity;
-import com.lashgo.android.ui.auth.LoginActivity;
 import com.lashgo.model.dto.SocialInfo;
 import com.lashgo.model.dto.SocialNames;
 import com.vk.sdk.VKAccessToken;
@@ -22,11 +20,11 @@ import javax.inject.Inject;
  */
 public class VkontakteListener extends VKSdkListener {
 
-    @Inject
-    @ForActivity
     private BaseActivity loginActivity;
 
+    @Inject
     public VkontakteListener(BaseActivity baseActivity) {
+        this.loginActivity = baseActivity;
         baseActivity.inject(this);
     }
 

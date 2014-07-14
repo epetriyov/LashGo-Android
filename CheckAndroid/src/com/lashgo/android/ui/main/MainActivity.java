@@ -1,21 +1,19 @@
 package com.lashgo.android.ui.main;
 
-import android.content.Context;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.view.ViewStub;
+import android.widget.*;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -23,8 +21,10 @@ import com.lashgo.android.LashgoApplication;
 import com.lashgo.android.LashgoConfig;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
+import com.lashgo.android.service.handlers.GetMainScreenHandler;
 import com.lashgo.android.service.handlers.RestHandlerFactory;
 import com.lashgo.android.ui.BaseActivity;
+import com.lashgo.android.ui.auth.AuthController;
 import com.lashgo.android.ui.check.CheckFragment;
 import com.lashgo.android.ui.check.CheckListFragment;
 import com.lashgo.android.ui.news.NewsFragment;
@@ -32,6 +32,8 @@ import com.lashgo.android.ui.subscribes.SubscribesFragment;
 import com.lashgo.android.utils.ContextUtils;
 import com.lashgo.model.dto.CheckDto;
 import com.lashgo.model.dto.GcmRegistrationDto;
+import com.lashgo.model.dto.MainScreenInfoDto;
+import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -39,36 +41,75 @@ import java.io.IOException;
 /**
  * Created by Eugene on 17.06.2014.
  */
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
     public static final String KEY_CHECK_DTO = "check_dto";
     private String[] menuItems;
     private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    private CheckDto checkDto;
+    @Inject
+    AuthController authController;
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     private GoogleCloudMessaging gcm;
-
-    @Inject
-    protected Handler handler;
+    private ImageView userAvatar;
+    private TextView userName;
+    private View itemTasks;
+    private TextView tasksCount;
+    private TextView newsCount;
+    private TextView subscribesCount;
+    private View drawerMenu;
 
     @Override
     protected void registerActionsListener() {
+        serviceHelper.addActionListener(RestHandlerFactory.ACTION_LOGIN, this);
+        serviceHelper.addActionListener(RestHandlerFactory.ACTION_REGISTER, this);
+        serviceHelper.addActionListener(RestHandlerFactory.ACTION_PASSWORD_RECOVER, this);
+        serviceHelper.addActionListener(RestHandlerFactory.ACTION_SOCIAL_SIGN_IN, this);
+        serviceHelper.addActionListener(RestHandlerFactory.ACTION_CONFIRM_SOCIAL_SIGN_UP, this);
         serviceHelper.addActionListener(RestHandlerFactory.ACTION_GCM_REGISTER_ID, this);
+        serviceHelper.addActionListener(RestHandlerFactory.ACTION_GET_MAIN_SCREEN_INFO, this);
     }
 
+
     @Override
-    protected void unregisterActionsListener() {
-        serviceHelper.removeActionListener(RestHandlerFactory.ACTION_GCM_REGISTER_ID);
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent != null && intent.getData() != null) {
+            twitterHelper.handleCallbackUrl(intent.getData());
+        }
     }
 
     @Override
     protected void processServerResult(String action, int resultCode, Bundle data) {
-        super.processServerResult(action, resultCode, data);
+        authController.handleServerResponse(action, resultCode, data);
+        if (RestHandlerFactory.ACTION_GET_MAIN_SCREEN_INFO.equals(action)) {
+            if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
+                MainScreenInfoDto mainScreenInfoDto = (MainScreenInfoDto) data.getSerializable(GetMainScreenHandler.MAIN_SCREEN_INFO);
+                updateMainScreenInfo(mainScreenInfoDto);
+            }
+        }
+    }
+
+    private void updateMainScreenInfo(MainScreenInfoDto mainScreenInfoDto) {
+        userName.setText(mainScreenInfoDto.getUserName());
+        Picasso.with(this).load(mainScreenInfoDto.getUserAvatar()).into(userAvatar);
+        tasksCount.setText(mainScreenInfoDto.getTasksCount());
+        newsCount.setText(mainScreenInfoDto.getNewsCount());
+        subscribesCount.setText(mainScreenInfoDto.getSubscribesCount());
+    }
+
+    @Override
+    protected void unregisterActionsListener() {
+        serviceHelper.removeActionListener(RestHandlerFactory.ACTION_LOGIN);
+        serviceHelper.removeActionListener(RestHandlerFactory.ACTION_REGISTER);
+        serviceHelper.removeActionListener(RestHandlerFactory.ACTION_PASSWORD_RECOVER);
+        serviceHelper.removeActionListener(RestHandlerFactory.ACTION_SOCIAL_SIGN_IN);
+        serviceHelper.removeActionListener(RestHandlerFactory.ACTION_CONFIRM_SOCIAL_SIGN_UP);
+        serviceHelper.removeActionListener(RestHandlerFactory.ACTION_GCM_REGISTER_ID);
+        serviceHelper.removeActionListener(RestHandlerFactory.ACTION_GET_MAIN_SCREEN_INFO);
     }
 
     @Override
@@ -81,51 +122,42 @@ public class MainActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_main);
-        LashgoApplication.getInstance().getApplicationGraph().inject(this);
         if (!settingsHelper.isFirstLaunch()) {
             settingsHelper.setFirstLaunch();
         }
         mTitle = mDrawerTitle = getTitle();
         menuItems = getResources().getStringArray(R.array.menus_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        if (settingsHelper.isLoggedIn()) {
+            initAuthDrawerMenu();
+        } else {
+            initNotAuthDrawerMenu();
+        }
 
         // Set the adapter for the list view
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, menuItems));
-        // Set the list's click listener
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
 
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                getSupportActionBar().setTitle(mTitle);
+                getActionBar().setTitle(mTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle(mDrawerTitle);
+                getActionBar().setTitle(mDrawerTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
 
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_CHECK_DTO)) {
-            checkDto = (CheckDto) savedInstanceState.getSerializable(KEY_CHECK_DTO);
-        } else {
-            Intent intent = getIntent();
-            checkDto = (CheckDto) intent.getSerializableExtra(KEY_CHECK_DTO);
-        }
-        if (checkDto != null) {
-            addCheckFragment();
-        }
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
         if (checkPlayServices()) {
             gcm = GoogleCloudMessaging.getInstance(this);
             String regid = settingsHelper.getRegistrationId();
@@ -137,6 +169,30 @@ public class MainActivity extends BaseActivity {
         } else {
             ContextUtils.showToast(this, "No valid Google Play Services APK found.");
         }
+    }
+
+    private void initNotAuthDrawerMenu() {
+        ViewStub drawerMenuStub = (ViewStub) findViewById(R.id.not_auth_drawer_menu);
+        drawerMenu = drawerMenuStub.inflate();
+        authController.initViews(drawerMenu);
+        showFragment(CheckListFragment.newInstance());
+    }
+
+    private void initAuthDrawerMenu() {
+        ViewStub drawerMenuStub = (ViewStub) findViewById(R.id.auth_drawer_menu);
+        drawerMenu = drawerMenuStub.inflate();
+        userAvatar = (ImageView) drawerMenu.findViewById(R.id.img_user_avatar);
+        userName = (TextView) drawerMenu.findViewById(R.id.text_user_name);
+        itemTasks = drawerMenu.findViewById(R.id.item_tasks);
+        itemTasks.setOnClickListener(this);
+        tasksCount = (TextView) drawerMenu.findViewById(R.id.tasks_count);
+        drawerMenu.findViewById(R.id.item_news).setOnClickListener(this);
+        newsCount = (TextView) drawerMenu.findViewById(R.id.news_count);
+        drawerMenu.findViewById(R.id.item_subscribes).setOnClickListener(this);
+        subscribesCount = (TextView) drawerMenu.findViewById(R.id.subscribes_count);
+        serviceHelper.getMainScreenInfo(settingsHelper.getLastNewsView(), settingsHelper.getLastSubscriptionsView());
+        selectItem(itemTasks);
+
     }
 
     /**
@@ -202,63 +258,48 @@ public class MainActivity extends BaseActivity {
         serviceHelper.gcmRegisterId(new GcmRegistrationDto(registrationId));
     }
 
-
-    private void addCheckFragment() {
-        Fragment fragment = CheckFragment.newInstance(checkDto);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.content_frame, fragment)
-                .commit();
-    }
-
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView parent, View view, int position, long id) {
-            selectItem(position);
-        }
-    }
-
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(KEY_CHECK_DTO, checkDto);
-        super.onSaveInstanceState(outState);
+    public void onClick(View v) {
+        selectItem(v);
     }
 
     /**
      * Swaps fragments in the main content view
      */
-    private void selectItem(int position) {
+    private void selectItem(View view) {
         // Create a new fragment and specify the planet to show based on position
         Fragment fragment = null;
-        switch (position) {
-            case 0:
-                fragment = CheckListFragment.newInstance();
-                break;
-            case 1:
-                fragment = SubscribesFragment.newInstance();
-                break;
-            case 2:
-                fragment = NewsFragment.newInstance();
-                break;
-            default:
-                break;
+        int position = 0;
+        if (view.getId() == R.id.item_tasks) {
+            fragment = CheckListFragment.newInstance();
+            position = 0;
+        } else if (view.getId() == R.id.item_news) {
+            fragment = NewsFragment.newInstance();
+            position = 1;
+        } else if (view.getId() == R.id.item_subscribes) {
+            fragment = SubscribesFragment.newInstance();
+            position = 2;
         }
+        showFragment(fragment);
+
+        // Highlight the selected item, update the title, and close the drawer
+        view.setBackgroundColor(getResources().getColor(R.color.selected_item_color));
+        setTitle(menuItems[position]);
+        mDrawerLayout.closeDrawer(drawerMenu);
+    }
+
+    private void showFragment(Fragment fragment) {
         // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.content_frame, fragment)
                 .commit();
-
-        // Highlight the selected item, update the title, and close the drawer
-        mDrawerList.setItemChecked(position, true);
-        setTitle(menuItems[position]);
-        mDrawerLayout.closeDrawer(mDrawerList);
     }
 
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
-        getSupportActionBar().setTitle(mTitle);
+        getActionBar().setTitle(mTitle);
     }
 
     @Override

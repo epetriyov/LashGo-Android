@@ -15,10 +15,9 @@ public class RestHandlerFactory {
     public static final String ACTION_SOCIAL_SIGN_IN = "sign_in_social";
 
     public static final String ACTION_GCM_REGISTER_ID = "gcm_register_id";
-
-    public static final String ACTION_GET_LAST_CHECK = "get_last_check";
     public static final String ACTION_PASSWORD_RECOVER = "recover_password";
     public static final String ACTION_CONFIRM_SOCIAL_SIGN_UP = "confirm_social_sign_up";
+    public static final String ACTION_GET_MAIN_SCREEN_INFO = "get_main_screen_info";
 
     public static BaseIntentHandler getIntentHandler(String action) {
         if (action.equals(ACTION_LOGIN)) {
@@ -29,10 +28,10 @@ public class RestHandlerFactory {
             return new SocialSignInHandler();
         } else if (action.equals(ACTION_GCM_REGISTER_ID)) {
             return new GcmRegisterHandler();
-        } else if (action.equals(ACTION_GET_LAST_CHECK)) {
-            return new GetLastCheckHandler();
         } else if (action.equals(ACTION_CONFIRM_SOCIAL_SIGN_UP)) {
             return new SocialSignUpHandler();
+        } else if (action.equals(ACTION_GET_MAIN_SCREEN_INFO)) {
+            return new GetMainScreenHandler();
         } else {
             throw new IllegalArgumentException("illegal action - " + action);
         }

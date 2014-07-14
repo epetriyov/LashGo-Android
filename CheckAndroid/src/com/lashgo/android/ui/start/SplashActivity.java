@@ -1,17 +1,19 @@
 package com.lashgo.android.ui.start;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import com.lashgo.android.R;
 import com.lashgo.android.ui.auth.LoginActivity;
 import com.lashgo.android.ui.main.MainActivity;
-import org.holoeverywhere.app.Activity;
 
 /**
  * Created by Eugene on 02.03.14.
  */
 public class SplashActivity extends Activity implements View.OnClickListener {
+
+    public static final int SPASH_REQUEST_CODE = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,8 +27,17 @@ public class SplashActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         if (v.getId() == R.id.btn_start) {
             startActivity(new Intent(this, MainActivity.class));
+            finish();
         } else if (v.getId() == R.id.btn_enter) {
-            startActivity(new Intent(this, LoginActivity.class));
+            startActivityForResult(new Intent(this, LoginActivity.class), SPASH_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SPASH_REQUEST_CODE && resultCode == RESULT_OK) {
+            finish();
         }
     }
 }

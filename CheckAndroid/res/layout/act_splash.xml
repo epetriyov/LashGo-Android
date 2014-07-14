@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<org.holoeverywhere.widget.LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:orientation="horizontal"
                                         android:gravity="bottom"
                                         android:padding="@dimen/horizontal_padding"
         >
-    <org.holoeverywhere.widget.Button
+    <Button
             android:id="@+id/btn_start"
             android:layout_weight="1"
             android:layout_height="48dp"
-            android:layout_width="0"
+            android:layout_width="0dp"
             android:text="@string/start"
             />
-    <org.holoeverywhere.widget.View android:layout_width="25dp" android:layout_height="1dp"/>
-    <org.holoeverywhere.widget.Button
+    <View android:layout_width="25dp" android:layout_height="1dp"/>
+    <Button
             android:id="@+id/btn_enter"
             android:layout_weight="1"
             android:layout_height="48dp"
-            android:layout_width="0"
+            android:layout_width="0dp"
             android:text="@string/enter"
             />
-</org.holoeverywhere.widget.LinearLayout>
+</LinearLayout>

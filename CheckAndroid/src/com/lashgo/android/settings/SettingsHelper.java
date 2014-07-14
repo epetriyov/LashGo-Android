@@ -6,12 +6,15 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lashgo.android.LashgoConfig;
 import com.lashgo.model.dto.LoginInfo;
 import com.lashgo.model.dto.SessionInfo;
 import com.lashgo.model.dto.SocialInfo;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * User: eugene.petriyov
@@ -21,11 +24,12 @@ import java.io.Serializable;
 public class SettingsHelper {
 
     private static final String KEY_SESSION = "session_id";
-    private static final String KEY_LOGIN = "login";
-    private static final String KEY_PASSWORD = "password";
+    private static final String KEY_LOGIN_INFO = "login_info";
     private static final String GCM_REGISTRATION_ID = "gcm_registration_id";
     private static final String KEY_IS_FIRST_LAUNCH = "is_first_launch";
     private static final String KEY_SOCIAL_INFO = "social_info";
+    private static final String KEY_LAST_SUBSCRIPTIONS_VIEW = "last_subscription_date";
+    private static final String KEY_LAST_NEWS_VIEW = "last_news_view";
     private SharedPreferences preferences;
 
     public SettingsHelper(Context context) {
@@ -94,14 +98,13 @@ public class SettingsHelper {
 
     public void login(SessionInfo sessionInfo, LoginInfo loginInfo) {
         setString(KEY_SESSION, sessionInfo.getSessionId());
-        setString(KEY_LOGIN, loginInfo.getLogin());
-        setString(KEY_PASSWORD, loginInfo.getPasswordHash());
+        saveSerializable(KEY_LOGIN_INFO, loginInfo);
     }
 
     public void logout() {
         remove(KEY_SESSION);
-        remove(KEY_LOGIN);
-        remove(KEY_PASSWORD);
+        remove(KEY_LOGIN_INFO);
+        remove(KEY_SOCIAL_INFO);
     }
 
     private void remove(String key) {
@@ -134,11 +137,19 @@ public class SettingsHelper {
     }
 
     public SocialInfo getSocialInfo() {
-        String socialInfoString = getString(KEY_SOCIAL_INFO, null);
-        if (!TextUtils.isEmpty(socialInfoString)) {
+        return (SocialInfo) getSerializable(KEY_SOCIAL_INFO, SocialInfo.class);
+    }
+
+    public LoginInfo getLoginInfo() {
+        return (LoginInfo) getSerializable(KEY_LOGIN_INFO, LoginInfo.class);
+    }
+
+    private Serializable getSerializable(String key, Class<? extends Serializable> clazz) {
+        String infoString = getString(key, null);
+        if (!TextUtils.isEmpty(infoString)) {
             ObjectMapper objectMapper = new ObjectMapper();
             try {
-                return objectMapper.readValue(socialInfoString, SocialInfo.class);
+                return objectMapper.readValue(infoString, clazz);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -146,15 +157,31 @@ public class SettingsHelper {
         return null;
     }
 
-    public void saveSocialInfo(SocialInfo socialInfo) {
+    private void saveSerializable(String key, Serializable info) {
         ObjectMapper objectMapper = new ObjectMapper();
-        String socialInfoString = null;
+        String infoString = null;
         try {
-            socialInfoString = objectMapper.writeValueAsString(socialInfo);
+            infoString = objectMapper.writeValueAsString(info);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        setString(KEY_SOCIAL_INFO, socialInfoString);
+        setString(key, infoString);
     }
 
+    public void socialLogin(SessionInfo sessionInfo, SocialInfo socialInfo) {
+        setString(KEY_SESSION, sessionInfo.getSessionId());
+        saveSerializable(KEY_SOCIAL_INFO, socialInfo);
+    }
+
+    public String getSessionId() {
+        return getString(KEY_SESSION, null);
+    }
+
+    public String getLastNewsView() {
+        return getString(KEY_LAST_NEWS_VIEW, null);
+    }
+
+    public String getLastSubscriptionsView() {
+        return getString(KEY_LAST_SUBSCRIPTIONS_VIEW, null);
+    }
 }

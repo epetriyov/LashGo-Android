@@ -6,21 +6,17 @@ import android.os.Looper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lashgo.android.service.*;
-import com.lashgo.android.service.handlers.GcmRegisterHandler;
-import com.lashgo.android.service.handlers.LoginHandler;
-import com.lashgo.android.service.handlers.RegisterHandler;
-import com.lashgo.android.service.handlers.SocialSignInHandler;
+import com.lashgo.android.service.handlers.*;
 import com.lashgo.android.settings.SettingsHelper;
 import com.lashgo.android.ui.auth.LoginActivity;
 import com.lashgo.android.ui.main.MainActivity;
-import com.lashgo.android.ui.start.SplashActivity;
 import com.lashgo.android.ui.start.StartActivity;
 import dagger.Module;
 import dagger.Provides;
 import retrofit.RestAdapter;
-import retrofit.client.ApacheClient;
 
 import javax.inject.Singleton;
+import java.text.SimpleDateFormat;
 
 /**
  * Created with IntelliJ IDEA.
@@ -31,13 +27,13 @@ import javax.inject.Singleton;
  */
 @Module(
         injects = {
-                StartActivity.class,
-                MainActivity.class,
-                LoginActivity.class,
                 LoginHandler.class,
                 RegisterHandler.class,
                 GcmRegisterHandler.class,
-                SocialSignInHandler.class
+                SocialSignInHandler.class,
+                SocialSignUpHandler.class,
+                ServiceHelper.class,
+                CheckInterceptor.class
         },
         library = true
 )
@@ -51,8 +47,7 @@ public class LashgoModule {
 
     @Provides
     @Singleton
-    @ForApplication
-    Context provideApplicationContext() {
+    Context provideContext() {
         return application;
     }
 
@@ -64,22 +59,22 @@ public class LashgoModule {
 
     @Provides
     @Singleton
-    ServiceHelper provideServiceHelper() {
-        return new ServiceHelper(application);
+    ServiceHelper provideServiceHelper(SettingsHelper settingsHelper) {
+        return new ServiceHelper(application, settingsHelper);
     }
 
     @Provides
     @Singleton
-    RestService provideRestService() {
+    RestService provideRestService(SettingsHelper settingsHelper) {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        objectMapper.setDateFormat(new SimpleDateFormat(LashgoConfig.DATE_FORMAT));
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(LashgoConfig.BASE_URL)
                 .setConverter(new JacksonConverter(objectMapper))
                 .setErrorHandler(new CheckErrorHandler())
                 .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setClient(new ApacheClient())
-                .setRequestInterceptor(new CheckInterceptor())
+                .setRequestInterceptor(new CheckInterceptor(settingsHelper))
                 .build();
         return restAdapter.create(RestService.class);
     }

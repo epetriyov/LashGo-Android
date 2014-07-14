@@ -1,8 +1,10 @@
 package com.lashgo.android.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.Window;
 import com.facebook.UiLifecycleHelper;
 import com.lashgo.android.LashgoApplication;
@@ -10,16 +12,17 @@ import com.lashgo.android.SocialModule;
 import com.lashgo.android.R;
 import com.lashgo.android.service.ServiceCallbackListener;
 import com.lashgo.android.service.ServiceHelper;
+import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.settings.SettingsHelper;
 import com.lashgo.android.social.FacebookHelper;
 import com.lashgo.android.social.TwitterHelper;
 import com.lashgo.android.social.VkontakteListener;
 import com.lashgo.android.utils.ContextUtils;
+import com.lashgo.model.dto.ErrorDto;
 import com.lashgo.model.dto.SocialInfo;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.VKUIHelper;
 import dagger.ObjectGraph;
-import org.holoeverywhere.app.Activity;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -52,7 +55,7 @@ public abstract class BaseActivity extends Activity implements ServiceCallbackLi
     protected FacebookHelper facebookHelper;
 
     @Inject
-    private Handler handler;
+    protected Handler handler;
 
     private boolean isActivityOnForeground;
 
@@ -114,7 +117,7 @@ public abstract class BaseActivity extends Activity implements ServiceCallbackLi
 
     @Override
     public void onCommandStarted() {
-        setSupportProgressBarIndeterminateVisibility(true);
+        setProgressBarIndeterminate(true);
     }
 
     private void onCommandFinished(ServiceResult serviceResult) {
@@ -128,7 +131,7 @@ public abstract class BaseActivity extends Activity implements ServiceCallbackLi
 
     @Override
     public void onCommandFinished(String action, int resultCode, Bundle data) {
-        setSupportProgressBarIndeterminateVisibility(false);
+        setProgressBarIndeterminateVisibility(false);
         if (!isActivityOnForeground) {
             saveServiceResult(action, resultCode, data);
         } else {
@@ -157,7 +160,6 @@ public abstract class BaseActivity extends Activity implements ServiceCallbackLi
     }
 
     public void onSocialLogin(SocialInfo socialInfo) {
-        settingsHelper.saveSocialInfo(socialInfo);
         serviceHelper.socialSignIn(socialInfo);
     }
 
@@ -170,5 +172,23 @@ public abstract class BaseActivity extends Activity implements ServiceCallbackLi
 
     private List<Object> getModules() {
         return Arrays.<Object>asList(new SocialModule(this));
+    }
+
+    public void showErrorToast(Bundle data) {
+        if (data != null) {
+            ErrorDto errorDto = (ErrorDto) data.getSerializable(BaseIntentHandler.ERROR_EXTRA);
+            if (errorDto != null && !TextUtils.isEmpty(errorDto.getErrorMessage())) {
+                ContextUtils.showToast(this, errorDto.getErrorMessage());
+            }
+        }
+    }
+
+
+    public void showProgress() {
+        setProgressBarIndeterminateVisibility(true);
+    }
+
+    public void hideProgress() {
+        setProgressBarIndeterminateVisibility(false);
     }
 }
