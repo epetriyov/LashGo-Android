@@ -34,4 +34,7 @@ public interface RestService {
 
     @GET(Path.Users.MAIN_SCREEN_INFO)
     ResponseObject<MainScreenInfoDto> getUserMainScreenInfo(@Query("news_last_view") String newsLastView, @Query("subscriptions_last_view") String subscriptionsLastView);
+
+    @GET(Path.Checks.GET)
+    ResponseList<CheckDto> getChecks();
 }

@@ -1,6 +1,8 @@
 package com.lashgo.android;
 
 import com.facebook.UiLifecycleHelper;
+import com.lashgo.android.service.ServiceBinder;
+import com.lashgo.android.service.ServiceReceiver;
 import com.lashgo.android.social.FacebookHelper;
 import com.lashgo.android.social.TwitterHelper;
 import com.lashgo.android.social.VkontakteListener;
@@ -25,16 +27,22 @@ import dagger.Provides;
                 LoginActivity.class,
                 FacebookHelper.class,
                 TwitterHelper.class,
-                VkontakteListener.class
+                VkontakteListener.class,
+                ServiceBinder.class
         },
         complete = false
 )
-public class SocialModule {
+public class ActivityModule {
 
     private final BaseActivity baseActivity;
 
-    public SocialModule(BaseActivity baseActivity) {
+    public ActivityModule(BaseActivity baseActivity) {
         this.baseActivity = baseActivity;
+    }
+
+    @Provides
+    ServiceBinder provideServiceBinder() {
+        return new ServiceBinder(baseActivity);
     }
 
     @Provides

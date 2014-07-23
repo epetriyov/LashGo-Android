@@ -7,11 +7,12 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.view.Window;
 import com.facebook.UiLifecycleHelper;
+import com.lashgo.android.ActivityModule;
 import com.lashgo.android.LashgoApplication;
-import com.lashgo.android.SocialModule;
 import com.lashgo.android.R;
-import com.lashgo.android.service.ServiceCallbackListener;
+import com.lashgo.android.service.ServiceBinder;
 import com.lashgo.android.service.ServiceHelper;
+import com.lashgo.android.service.ServiceReceiver;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.settings.SettingsHelper;
 import com.lashgo.android.social.FacebookHelper;
@@ -25,14 +26,13 @@ import com.vk.sdk.VKUIHelper;
 import dagger.ObjectGraph;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * Created by Eugene on 18.02.14.
  */
-public abstract class BaseActivity extends Activity implements ServiceCallbackListener {
+public abstract class BaseActivity extends Activity implements ServiceReceiver {
 
     private ObjectGraph loginGraph;
 
@@ -57,9 +57,8 @@ public abstract class BaseActivity extends Activity implements ServiceCallbackLi
     @Inject
     protected Handler handler;
 
-    private boolean isActivityOnForeground;
-
-    private List<ServiceResult> serviceResultList = new ArrayList<>();
+    @Inject
+    ServiceBinder serviceBinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +72,17 @@ public abstract class BaseActivity extends Activity implements ServiceCallbackLi
         twitterHelper.onCreate(savedInstanceState);
     }
 
-    protected abstract void registerActionsListener();
+    protected void registerActionsListener() {
+
+    }
+
+    protected void addActionListener(String actionName) {
+        serviceHelper.addActionListener(actionName, serviceBinder);
+    }
+
+    protected void removeActionListener(String actionName) {
+        serviceHelper.removeActionListener(actionName);
+    }
 
     @Override
     protected void onDestroy() {
@@ -91,13 +100,15 @@ public abstract class BaseActivity extends Activity implements ServiceCallbackLi
         super.onSaveInstanceState(outState);
     }
 
-    protected abstract void unregisterActionsListener();
+    protected void unregisterActionsListener() {
+
+    }
+
 
     @Override
     protected void onResume() {
         super.onResume();
-        isActivityOnForeground = true;
-        deliverServiceResults();
+        serviceBinder.onResume();
         facebookUiHelper.onResume();
         VKUIHelper.onResume(this);
     }
@@ -105,42 +116,8 @@ public abstract class BaseActivity extends Activity implements ServiceCallbackLi
     @Override
     protected void onPause() {
         super.onPause();
-        isActivityOnForeground = false;
+        serviceBinder.onPause();
         facebookUiHelper.onPause();
-    }
-
-    private void deliverServiceResults() {
-        for (ServiceResult serviceResult : serviceResultList) {
-            onCommandFinished(serviceResult);
-        }
-    }
-
-    @Override
-    public void onCommandStarted() {
-        setProgressBarIndeterminate(true);
-    }
-
-    private void onCommandFinished(ServiceResult serviceResult) {
-        processServerResult(serviceResult.getAction(), serviceResult.getResultCode(), serviceResult.getData());
-        serviceResultList.remove(serviceResult);
-    }
-
-    protected void processServerResult(String action, int resultCode, Bundle data) {
-
-    }
-
-    @Override
-    public void onCommandFinished(String action, int resultCode, Bundle data) {
-        setProgressBarIndeterminateVisibility(false);
-        if (!isActivityOnForeground) {
-            saveServiceResult(action, resultCode, data);
-        } else {
-            processServerResult(action, resultCode, data);
-        }
-    }
-
-    private void saveServiceResult(String action, int resultCode, Bundle data) {
-        serviceResultList.add(new ServiceResult(action, resultCode, data));
     }
 
     @Override
@@ -171,7 +148,7 @@ public abstract class BaseActivity extends Activity implements ServiceCallbackLi
     }
 
     private List<Object> getModules() {
-        return Arrays.<Object>asList(new SocialModule(this));
+        return Arrays.<Object>asList(new ActivityModule(this));
     }
 
     public void showErrorToast(Bundle data) {
@@ -183,12 +160,15 @@ public abstract class BaseActivity extends Activity implements ServiceCallbackLi
         }
     }
 
-
-    public void showProgress() {
+    public void startProgress() {
         setProgressBarIndeterminateVisibility(true);
     }
 
-    public void hideProgress() {
+    public void stopProgress() {
         setProgressBarIndeterminateVisibility(false);
+    }
+
+    public void processServerResult(String action, int resultCode, Bundle data) {
+
     }
 }

@@ -25,11 +25,11 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void registerActionsListener() {
-        serviceHelper.addActionListener(RestHandlerFactory.ACTION_LOGIN, this);
-        serviceHelper.addActionListener(RestHandlerFactory.ACTION_REGISTER, this);
-        serviceHelper.addActionListener(RestHandlerFactory.ACTION_PASSWORD_RECOVER, this);
-        serviceHelper.addActionListener(RestHandlerFactory.ACTION_SOCIAL_SIGN_IN, this);
-        serviceHelper.addActionListener(RestHandlerFactory.ACTION_CONFIRM_SOCIAL_SIGN_UP, this);
+        addActionListener(RestHandlerFactory.ACTION_LOGIN);
+        addActionListener(RestHandlerFactory.ACTION_REGISTER);
+        addActionListener(RestHandlerFactory.ACTION_PASSWORD_RECOVER);
+        addActionListener(RestHandlerFactory.ACTION_SOCIAL_SIGN_IN);
+        addActionListener(RestHandlerFactory.ACTION_CONFIRM_SOCIAL_SIGN_UP);
     }
 
 
@@ -42,16 +42,16 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Override
-    protected void processServerResult(String action, int resultCode, Bundle data) {
+    public void processServerResult(String action, int resultCode, Bundle data) {
         authController.handleServerResponse(action, resultCode, data);
     }
 
     @Override
     protected void unregisterActionsListener() {
-        serviceHelper.removeActionListener(RestHandlerFactory.ACTION_LOGIN);
-        serviceHelper.removeActionListener(RestHandlerFactory.ACTION_REGISTER);
-        serviceHelper.removeActionListener(RestHandlerFactory.ACTION_PASSWORD_RECOVER);
-        serviceHelper.removeActionListener(RestHandlerFactory.ACTION_SOCIAL_SIGN_IN);
-        serviceHelper.removeActionListener(RestHandlerFactory.ACTION_CONFIRM_SOCIAL_SIGN_UP);
+        removeActionListener(RestHandlerFactory.ACTION_LOGIN);
+        removeActionListener(RestHandlerFactory.ACTION_REGISTER);
+        removeActionListener(RestHandlerFactory.ACTION_PASSWORD_RECOVER);
+        removeActionListener(RestHandlerFactory.ACTION_SOCIAL_SIGN_IN);
+        removeActionListener(RestHandlerFactory.ACTION_CONFIRM_SOCIAL_SIGN_UP);
     }
 }

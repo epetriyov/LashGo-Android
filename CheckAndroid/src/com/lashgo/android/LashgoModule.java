@@ -32,6 +32,8 @@ import java.text.SimpleDateFormat;
                 GcmRegisterHandler.class,
                 SocialSignInHandler.class,
                 SocialSignUpHandler.class,
+                GetMainScreenHandler.class,
+                GetCheckListHandler.class,
                 ServiceHelper.class,
                 CheckInterceptor.class
         },

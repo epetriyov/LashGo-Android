@@ -147,4 +147,8 @@ public class ServiceHelper {
         extras.putString(GetMainScreenHandler.LAST_SUBSCRIPTIONS_VIEW_DATE, lastSubscribtionsViewDate);
         runRequest(RestHandlerFactory.ACTION_GET_MAIN_SCREEN_INFO, extras);
     }
+
+    public void getChecks() {
+        runRequest(RestHandlerFactory.ACTION_GET_CHECK_LIST, null);
+    }
 }

@@ -9,6 +9,7 @@ public final class LashgoConfig {
     public static final String DATE_FORMAT = "dd.MM.yyyy HH:mm:ss z";
     public static final String GCM_API_KEY = "701321427381";
     public static final String CLIENT_TYPE = "ANDROID";
+    public static final String PHOTO_BASE_URI = "/photos/";
 
     private LashgoConfig() {
 

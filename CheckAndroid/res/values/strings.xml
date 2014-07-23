@@ -45,4 +45,6 @@
     <string name="password_was_reset">Новый пароль отправлен вам на email</string>
     <string name="email_for_recovery">Адрес для восстановления</string>
     <string name="ready">Готово</string>
+    <string name="active_checks">Активные</string>
+    <string name="finished_checks">Завершенные</string>
 </resources>

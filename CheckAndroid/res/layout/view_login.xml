@@ -1,75 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        >
+    <ImageView android:layout_width="48dp" android:layout_height="48dp"
+               android:layout_alignParentLeft="true"
+               android:layout_alignParentTop="true"
+               android:id="@+id/icon_email"
+            />
+    <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:id="@+id/edit_email"
+              android:layout_alignParentTop="true"
+              android:layout_toRightOf="@id/icon_email"
+            />
+    <ImageView android:layout_width="48dp" android:layout_height="48dp"
+               android:layout_alignParentLeft="true"
+               android:layout_below="@id/icon_email"
+               android:id="@+id/icon_password"
+            />
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
-        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                   android:layout_alignParentLeft="true"
-                   android:layout_alignParentTop="true"
-                   android:id="@+id/icon_email"
-                />
-        <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:id="@+id/edit_email"
-                  android:layout_alignParentTop="true"
-                  android:layout_toLeftOf="@id/icon_email"
-                />
-        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                   android:layout_alignParentLeft="true"
-                   android:layout_above="@id/icon_email"
-                   android:id="@+id/icon_password"
-                />
-        <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/edit_email"
-                android:layout_toLeftOf="@id/icon_password"
-                android:id="@+id/layout_edit_password"
-                >
-
-            <EditText
-                    android:id="@+id/edit_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true">
-            </EditText>
-            <TextView
-                    android:id="@+id/btn_recover_password"
-                    android:padding="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/edit_password"
-                    android:layout_alignBottom="@+id/edit_password"
-                    android:layout_alignRight="@+id/edit_password"
-                    />
-
-        </RelativeLayout>
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:id="@+id/btn_login"
-                  android:layout_above="@id/layout_edit_password"
-                />
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:id="@+id/btn_register"
-                  android:layout_above="@id/layout_edit_password"
-                  android:layout_toLeftOf="@id/btn_login"
-                />
-        <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
-                     android:id="@+id/btn_facebook"
-                     android:layout_alignParentBottom="true"
-                />
-        <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
-                     android:id="@+id/btn_twitter"
-                     android:layout_alignParentBottom="true"
-                     android:layout_toLeftOf="@+id/btn_facebook"
-                />
-        <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
-                     android:id="@+id/btn_vk"
-                     android:layout_alignParentBottom="true"
-                     android:layout_toLeftOf="@+id/btn_twitter"
-                />
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:layout_below="@id/btn_facebook"
-                />
-    </RelativeLayout>
-</LinearLayout>
+    <EditText
+            android:layout_below="@id/edit_email"
+            android:layout_toRightOf="@id/icon_password"
+            android:id="@+id/edit_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true">
+    </EditText>
+    <TextView
+            android:id="@+id/btn_recover_password"
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/edit_password"
+            android:layout_alignBottom="@+id/edit_password"
+            android:layout_alignRight="@+id/edit_password"
+            />
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:id="@+id/btn_login"
+              android:layout_below="@id/edit_password"
+              android:text="@string/login"
+            />
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:id="@+id/btn_register"
+              android:layout_below="@id/edit_password"
+              android:layout_toRightOf="@id/btn_login"
+              android:text="@string/register"
+            />
+    <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                 android:id="@+id/btn_facebook"
+                 android:layout_alignParentBottom="true"
+            />
+    <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                 android:id="@+id/btn_twitter"
+                 android:layout_alignParentBottom="true"
+                 android:layout_toLeftOf="@+id/btn_facebook"
+            />
+    <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                 android:id="@+id/btn_vk"
+                 android:layout_alignParentBottom="true"
+                 android:layout_toLeftOf="@+id/btn_twitter"
+            />
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:layout_below="@id/btn_facebook"
+            />
+</RelativeLayout>

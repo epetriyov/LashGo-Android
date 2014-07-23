@@ -21,14 +21,4 @@ public class StartActivity extends BaseActivity {
         }
         finish();
     }
-
-    @Override
-    protected void registerActionsListener() {
-
-    }
-
-    @Override
-    protected void unregisterActionsListener() {
-
-    }
 }

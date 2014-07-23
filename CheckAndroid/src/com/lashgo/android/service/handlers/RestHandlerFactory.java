@@ -18,6 +18,7 @@ public class RestHandlerFactory {
     public static final String ACTION_PASSWORD_RECOVER = "recover_password";
     public static final String ACTION_CONFIRM_SOCIAL_SIGN_UP = "confirm_social_sign_up";
     public static final String ACTION_GET_MAIN_SCREEN_INFO = "get_main_screen_info";
+    public static final String ACTION_GET_CHECK_LIST = "get_check_list";
 
     public static BaseIntentHandler getIntentHandler(String action) {
         if (action.equals(ACTION_LOGIN)) {
@@ -32,6 +33,8 @@ public class RestHandlerFactory {
             return new SocialSignUpHandler();
         } else if (action.equals(ACTION_GET_MAIN_SCREEN_INFO)) {
             return new GetMainScreenHandler();
+        } else if (action.equals(ACTION_GET_CHECK_LIST)) {
+            return new GetCheckListHandler();
         } else {
             throw new IllegalArgumentException("illegal action - " + action);
         }

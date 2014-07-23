@@ -6,18 +6,17 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
-import android.widget.*;
+import android.widget.ImageView;
+import android.widget.TextView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.lashgo.android.LashgoApplication;
 import com.lashgo.android.LashgoConfig;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
@@ -25,12 +24,11 @@ import com.lashgo.android.service.handlers.GetMainScreenHandler;
 import com.lashgo.android.service.handlers.RestHandlerFactory;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.auth.AuthController;
-import com.lashgo.android.ui.check.CheckFragment;
 import com.lashgo.android.ui.check.CheckListFragment;
 import com.lashgo.android.ui.news.NewsFragment;
 import com.lashgo.android.ui.subscribes.SubscribesFragment;
 import com.lashgo.android.utils.ContextUtils;
-import com.lashgo.model.dto.CheckDto;
+import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.model.dto.GcmRegistrationDto;
 import com.lashgo.model.dto.MainScreenInfoDto;
 import com.squareup.picasso.Picasso;
@@ -64,13 +62,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void registerActionsListener() {
-        serviceHelper.addActionListener(RestHandlerFactory.ACTION_LOGIN, this);
-        serviceHelper.addActionListener(RestHandlerFactory.ACTION_REGISTER, this);
-        serviceHelper.addActionListener(RestHandlerFactory.ACTION_PASSWORD_RECOVER, this);
-        serviceHelper.addActionListener(RestHandlerFactory.ACTION_SOCIAL_SIGN_IN, this);
-        serviceHelper.addActionListener(RestHandlerFactory.ACTION_CONFIRM_SOCIAL_SIGN_UP, this);
-        serviceHelper.addActionListener(RestHandlerFactory.ACTION_GCM_REGISTER_ID, this);
-        serviceHelper.addActionListener(RestHandlerFactory.ACTION_GET_MAIN_SCREEN_INFO, this);
+        addActionListener(RestHandlerFactory.ACTION_LOGIN);
+        addActionListener(RestHandlerFactory.ACTION_REGISTER);
+        addActionListener(RestHandlerFactory.ACTION_PASSWORD_RECOVER);
+        addActionListener(RestHandlerFactory.ACTION_SOCIAL_SIGN_IN);
+        addActionListener(RestHandlerFactory.ACTION_CONFIRM_SOCIAL_SIGN_UP);
+        addActionListener(RestHandlerFactory.ACTION_GCM_REGISTER_ID);
+        addActionListener(RestHandlerFactory.ACTION_GET_MAIN_SCREEN_INFO);
     }
 
 
@@ -83,7 +81,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     @Override
-    protected void processServerResult(String action, int resultCode, Bundle data) {
+    public void processServerResult(String action, int resultCode, Bundle data) {
         authController.handleServerResponse(action, resultCode, data);
         if (RestHandlerFactory.ACTION_GET_MAIN_SCREEN_INFO.equals(action)) {
             if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
@@ -95,7 +93,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private void updateMainScreenInfo(MainScreenInfoDto mainScreenInfoDto) {
         userName.setText(mainScreenInfoDto.getUserName());
-        Picasso.with(this).load(mainScreenInfoDto.getUserAvatar()).into(userAvatar);
+        Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(mainScreenInfoDto.getUserAvatar())).into(userAvatar);
         tasksCount.setText(mainScreenInfoDto.getTasksCount());
         newsCount.setText(mainScreenInfoDto.getNewsCount());
         subscribesCount.setText(mainScreenInfoDto.getSubscribesCount());
@@ -103,13 +101,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void unregisterActionsListener() {
-        serviceHelper.removeActionListener(RestHandlerFactory.ACTION_LOGIN);
-        serviceHelper.removeActionListener(RestHandlerFactory.ACTION_REGISTER);
-        serviceHelper.removeActionListener(RestHandlerFactory.ACTION_PASSWORD_RECOVER);
-        serviceHelper.removeActionListener(RestHandlerFactory.ACTION_SOCIAL_SIGN_IN);
-        serviceHelper.removeActionListener(RestHandlerFactory.ACTION_CONFIRM_SOCIAL_SIGN_UP);
-        serviceHelper.removeActionListener(RestHandlerFactory.ACTION_GCM_REGISTER_ID);
-        serviceHelper.removeActionListener(RestHandlerFactory.ACTION_GET_MAIN_SCREEN_INFO);
+        removeActionListener(RestHandlerFactory.ACTION_LOGIN);
+        removeActionListener(RestHandlerFactory.ACTION_REGISTER);
+        removeActionListener(RestHandlerFactory.ACTION_PASSWORD_RECOVER);
+        removeActionListener(RestHandlerFactory.ACTION_SOCIAL_SIGN_IN);
+        removeActionListener(RestHandlerFactory.ACTION_CONFIRM_SOCIAL_SIGN_UP);
+        removeActionListener(RestHandlerFactory.ACTION_GCM_REGISTER_ID);
+        removeActionListener(RestHandlerFactory.ACTION_GET_MAIN_SCREEN_INFO);
     }
 
     @Override
@@ -130,7 +128,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         if (settingsHelper.isLoggedIn()) {
-            initAuthDrawerMenu();
+//            initAuthDrawerMenu();
         } else {
             initNotAuthDrawerMenu();
         }
@@ -178,22 +176,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         showFragment(CheckListFragment.newInstance());
     }
 
-    private void initAuthDrawerMenu() {
-        ViewStub drawerMenuStub = (ViewStub) findViewById(R.id.auth_drawer_menu);
-        drawerMenu = drawerMenuStub.inflate();
-        userAvatar = (ImageView) drawerMenu.findViewById(R.id.img_user_avatar);
-        userName = (TextView) drawerMenu.findViewById(R.id.text_user_name);
-        itemTasks = drawerMenu.findViewById(R.id.item_tasks);
-        itemTasks.setOnClickListener(this);
-        tasksCount = (TextView) drawerMenu.findViewById(R.id.tasks_count);
-        drawerMenu.findViewById(R.id.item_news).setOnClickListener(this);
-        newsCount = (TextView) drawerMenu.findViewById(R.id.news_count);
-        drawerMenu.findViewById(R.id.item_subscribes).setOnClickListener(this);
-        subscribesCount = (TextView) drawerMenu.findViewById(R.id.subscribes_count);
-        serviceHelper.getMainScreenInfo(settingsHelper.getLastNewsView(), settingsHelper.getLastSubscriptionsView());
-        selectItem(itemTasks);
-
-    }
+//    private void initAuthDrawerMenu() {
+//        ViewStub drawerMenuStub = (ViewStub) findViewById(R.id.auth_drawer_menu);
+//        drawerMenu = drawerMenuStub.inflate();
+//        userAvatar = (ImageView) drawerMenu.findViewById(R.id.img_user_avatar);
+//        userName = (TextView) drawerMenu.findViewById(R.id.text_user_name);
+//        itemTasks = drawerMenu.findViewById(R.id.item_tasks);
+//        itemTasks.setOnClickListener(this);
+//        tasksCount = (TextView) drawerMenu.findViewById(R.id.tasks_count);
+//        drawerMenu.findViewById(R.id.item_news).setOnClickListener(this);
+//        newsCount = (TextView) drawerMenu.findViewById(R.id.news_count);
+//        drawerMenu.findViewById(R.id.item_subscribes).setOnClickListener(this);
+//        subscribesCount = (TextView) drawerMenu.findViewById(R.id.subscribes_count);
+//        serviceHelper.getMainScreenInfo(settingsHelper.getLastNewsView(), settingsHelper.getLastSubscriptionsView());
+//        selectItem(itemTasks);
+//
+//    }
 
     /**
      * Check the device to make sure it has the Google Play Services APK. If

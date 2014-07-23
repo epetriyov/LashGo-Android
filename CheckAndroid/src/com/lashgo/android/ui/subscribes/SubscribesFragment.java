@@ -26,8 +26,7 @@ public class SubscribesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_planet, container, false);
-        ((ImageView) rootView.findViewById(R.id.image)).setImageResource(R.drawable.saturn);
+        View rootView = inflater.inflate(R.layout.frag_check_list, container, false);
         getActivity().setTitle(R.string.subscribes_list);
         return rootView;
     }

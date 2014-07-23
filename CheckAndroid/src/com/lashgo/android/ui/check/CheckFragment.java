@@ -1,17 +1,17 @@
 package com.lashgo.android.ui.check;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.lashgo.android.ui.BaseFragment;
 import com.lashgo.android.ui.main.MainActivity;
 import com.lashgo.model.dto.CheckDto;
 
 /**
  * Created by Eugene on 16.06.2014.
  */
-public class CheckFragment extends Fragment {
+public class CheckFragment extends BaseFragment {
 
     public static CheckFragment newInstance(CheckDto checkDto) {
         CheckFragment checkFragment = new CheckFragment();

@@ -54,7 +54,7 @@ public class AuthController implements View.OnClickListener, EnterEmailDialog.Em
     TwitterHelper twitterHelper;
 
     public void initViews(View rootView) {
-        login = (EditText) rootView.findViewById(R.id.edit_login);
+        login = (EditText) rootView.findViewById(R.id.edit_email);
         password = (EditText) rootView.findViewById(R.id.edit_password);
         rootView.findViewById(R.id.btn_login).setOnClickListener(this);
         rootView.findViewById(R.id.btn_register).setOnClickListener(this);
@@ -77,13 +77,13 @@ public class AuthController implements View.OnClickListener, EnterEmailDialog.Em
         } else if (view.getId() == R.id.btn_password_recover) {
             LoginInfo loginInfo = buildLoginInfo();
             if (loginInfo != null) {
-                baseActivity.showProgress();
+                baseActivity.startProgress();
                 serviceHelper.login(loginInfo);
             }
         } else if (view.getId() == R.id.btn_register) {
             LoginInfo loginInfo = buildLoginInfo();
             if (loginInfo != null) {
-                baseActivity.showProgress();
+                baseActivity.startProgress();
                 serviceHelper.register(loginInfo);
             }
         }
@@ -103,7 +103,7 @@ public class AuthController implements View.OnClickListener, EnterEmailDialog.Em
     }
 
     public void handleServerResponse(String action, int resultCode, Bundle data) {
-        baseActivity.hideProgress();
+        baseActivity.stopProgress();
         switch (action) {
             case RestHandlerFactory.ACTION_LOGIN:
                 if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
@@ -114,7 +114,7 @@ public class AuthController implements View.OnClickListener, EnterEmailDialog.Em
                 break;
             case RestHandlerFactory.ACTION_REGISTER:
                 if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
-                    baseActivity.showProgress();
+                    baseActivity.startProgress();
                     serviceHelper.login((LoginInfo) data.getSerializable(RegisterHandler.REGISTER_DTO));
                 } else {
                     baseActivity.showErrorToast(data);
@@ -161,7 +161,7 @@ public class AuthController implements View.OnClickListener, EnterEmailDialog.Em
 
     @Override
     public void sendSocialEmail(String email) {
-        baseActivity.showProgress();
+        baseActivity.startProgress();
         serviceHelper.socialSignUp(new ExtendedSocialInfo(socialInfo, email));
     }
 }
