@@ -80,9 +80,9 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
                 calendar.add(Calendar.HOUR, checkDto.getDuration());
                 if (isFirstIteration || (isLastActive && (calendar.getTimeInMillis() > System.currentTimeMillis()))) {
                     if ((calendar.getTimeInMillis() > System.currentTimeMillis())) {
-                        checkStatus = getString(R.string.finished_checks);
-                    } else {
                         checkStatus = getString(R.string.active_checks);
+                    } else {
+                        checkStatus = getString(R.string.finished_checks);
                     }
                     multyTypeAdapter.addItem(checkStatus, R.layout.adt_check_state, false);
                 }

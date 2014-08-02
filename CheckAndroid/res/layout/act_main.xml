@@ -11,20 +11,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     <!-- The navigation drawer -->
-    <!--
-    <ViewStub
-            android:id="@+id/auth_drawer_menu"
-            android:layout_width="240dp"
+    <include
+            android:layout_width="304dp"
             android:layout_height="match_parent"
-            android:layout="@layout/view_auth_drawer"
             android:layout_gravity="start"
-            />
-            -->
-    <ViewStub
-            android:id="@+id/not_auth_drawer_menu"
-            android:layout_width="240dp"
-            android:layout_height="match_parent"
-            android:layout="@layout/view_login_drawer"
-            android:layout_gravity="start"
+            android:layout="@layout/view_drawer"
             />
 </android.support.v4.widget.DrawerLayout>

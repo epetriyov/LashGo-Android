@@ -11,19 +11,19 @@
 
 
     <!-- login screen strings -->
-    <string name="login">Вход</string>
-    <string name="register">Регистрация</string>
+    <string name="login">ВХОД</string>
+    <string name="register">РЕГИСТРАЦИЯ</string>
     <string name="auth_vk">VK</string>
     <string name="auth_facebook">F</string>
     <string name="auth_twitter">T</string>
     <string name="hint_login">Email</string>
     <string name="hint_password">Пароль</string>
     <string name="error_no_internet">Нет интернет соединения</string>
-    <string name="hint_email">email</string>
+    <string name="hint_email">Email</string>
     <string name="error_empty_field">Поле не может быть пустым</string>
     <string name="server_is_unavailable">Сервер недоступен</string>
     <string name="auth_success">Пользователь авторизован</string>
-    <string name="password_recover">Восстановить пароль</string>
+    <string name="password_recover">ВСПОМНИТЬ</string>
     <string name="remember_password">напомнить пароль</string>
     <string name="wrong_response">Неверный ответ</string>
 
@@ -41,10 +41,16 @@
     <string name="subscribes_list">Подписки</string>
     <string name="start">Начать</string>
     <string name="enter">Войти</string>
-    <string name="social_login">войти через соцсети</string>
+    <string name="social_login">Войти через соцсети</string>
     <string name="password_was_reset">Новый пароль отправлен вам на email</string>
     <string name="email_for_recovery">Адрес для восстановления</string>
     <string name="ready">Готово</string>
     <string name="active_checks">Активные</string>
     <string name="finished_checks">Завершенные</string>
+    <string name="regular">Roboto-Regular</string>
+    <string name="medium">Roboto-Medium</string>
+    <string name="login_or_register">Войдите или зарегистрируйтесь</string>
+    <string name="tasks">Задания</string>
+    <string name="news">Новости</string>
+    <string name="subscribes">Подписки</string>
 </resources>

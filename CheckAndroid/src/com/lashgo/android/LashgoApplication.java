@@ -2,7 +2,6 @@ package com.lashgo.android;
 
 
 import android.app.Application;
-import android.os.Build;
 import android.os.StrictMode;
 import dagger.ObjectGraph;
 
@@ -35,7 +34,7 @@ public class LashgoApplication extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
-        if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= 9) {
+        if (BuildConfig.DEBUG) {
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites().detectNetwork()   // or .detectAll() for all detectable problems
                     .penaltyLog().build());
             StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects().penaltyLog().penaltyDeath().build());

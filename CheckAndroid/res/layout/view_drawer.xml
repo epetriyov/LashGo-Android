@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res/com.lashgo.android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/white"
+        >
+    <FrameLayout
+            android:id="@+id/drawer_top_view"
+            android:layout_width="match_parent" android:layout_height="171dp"
+            android:background="@color/splash_top_color"
+            >
+        <ImageView
+                android:id="@+id/drawer_ava"
+                android:layout_width="64dp" android:layout_height="64dp"
+                android:layout_gravity="top|left"
+                android:paddingTop="16dp"
+                android:paddingLeft="16dp"
+                android:src="@drawable/ava"
+                />
+        <com.lashgo.android.ui.views.RobotoTextView
+                android:id="@+id/drawer_text"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_gravity="bottom|left"
+                android:paddingBottom="16dp"
+                android:paddingLeft="16dp"
+                android:textSize="16sp"
+                android:textColor="@color/login_drawer_text_color"
+                app:fontName="@string/regular"
+                />
+        <View
+                android:id="@+id/drawer_gradient"
+                android:layout_height="84dp" android:layout_width="match_parent"
+                android:layout_gravity="bottom"
+                android:background="@drawable/gradient_bottom"
+                />
+    </FrameLayout>
+    <ViewStub
+            android:id="@+id/view_login_stub"
+            android:layout_width="match_parent" android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout="@layout/view_login"
+            />
+    <ViewStub
+            android:id="@+id/view_auth_stub"
+            android:layout_width="match_parent" android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout="@layout/view_auth_drawer"
+            />
+</LinearLayout>

@@ -73,13 +73,12 @@ public class AuthController implements View.OnClickListener, EnterEmailDialog.Em
         } else if (view.getId() == R.id.btn_twitter) {
             twitterHelper.loginWithTwitter();
         } else if (view.getId() == R.id.btn_login) {
-
-        } else if (view.getId() == R.id.btn_password_recover) {
             LoginInfo loginInfo = buildLoginInfo();
             if (loginInfo != null) {
                 baseActivity.startProgress();
                 serviceHelper.login(loginInfo);
             }
+        } else if (view.getId() == R.id.btn_password_recover) {
         } else if (view.getId() == R.id.btn_register) {
             LoginInfo loginInfo = buildLoginInfo();
             if (loginInfo != null) {

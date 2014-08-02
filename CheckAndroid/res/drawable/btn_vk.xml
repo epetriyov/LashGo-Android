@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/btn_vk_normal"
+          android:state_focused="false" android:state_pressed="false"
+            />
+    <item android:drawable="@drawable/btn_vk_focosed"
+          android:state_focused="true"
+          android:state_pressed="false"
+            />
+    <item android:drawable="@drawable/btn_vk_pressed"
+          android:state_pressed="true"
+            />
+</selector>

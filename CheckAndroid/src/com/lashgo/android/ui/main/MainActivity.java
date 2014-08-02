@@ -42,23 +42,31 @@ import java.io.IOException;
 public class MainActivity extends BaseActivity implements View.OnClickListener {
     public static final String KEY_CHECK_DTO = "check_dto";
     private String[] menuItems;
-    private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
-    private CharSequence mDrawerTitle;
-    private CharSequence mTitle;
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle drawerToggle;
+    private CharSequence drawerTitle;
+    private CharSequence title;
     @Inject
     AuthController authController;
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     private GoogleCloudMessaging gcm;
-    private ImageView userAvatar;
+    private ImageView userAvatarView;
     private TextView userName;
     private View itemTasks;
-    private TextView tasksCount;
-    private TextView newsCount;
-    private TextView subscribesCount;
+    private TextView tasksCountView;
+    private TextView newsCountView;
+    private TextView subscribesCountView;
     private View drawerMenu;
+    private ImageView taskCountBg;
+    private ImageView newsCountBg;
+    private ImageView subscribesCountBg;
+    private View tasksCountRoot;
+    private View newsCountRoot;
+    private View subscribesCountRoot;
+    private View drawerTopView;
+    private View drawerTopGradient;
 
     @Override
     protected void registerActionsListener() {
@@ -92,11 +100,42 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void updateMainScreenInfo(MainScreenInfoDto mainScreenInfoDto) {
-        userName.setText(mainScreenInfoDto.getUserName());
-        Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(mainScreenInfoDto.getUserAvatar())).into(userAvatar);
-        tasksCount.setText(mainScreenInfoDto.getTasksCount());
-        newsCount.setText(mainScreenInfoDto.getNewsCount());
-        subscribesCount.setText(mainScreenInfoDto.getSubscribesCount());
+        if (mainScreenInfoDto != null) {
+            userName.setText(mainScreenInfoDto.getUserName());
+            String userAvatar = mainScreenInfoDto.getUserAvatar();
+            if (!TextUtils.isEmpty(userAvatar)) {
+                Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(userAvatar)).error(R.drawable.ava).into(userAvatarView);
+            }
+            int tasksCount = mainScreenInfoDto.getTasksCount();
+            tasksCountView.setText(String.valueOf(tasksCount));
+            if (tasksCount > 9) {
+                taskCountBg.setImageResource(R.drawable.ic_notification_small);
+            } else if (tasksCount > 0 && tasksCount <= 9) {
+                taskCountBg.setImageResource(R.drawable.ic_notification_big);
+            } else {
+                tasksCountRoot.setVisibility(View.GONE);
+            }
+
+            int newsCount = mainScreenInfoDto.getNewsCount();
+            newsCountView.setText(String.valueOf(newsCount));
+            if (newsCount > 9) {
+                newsCountBg.setImageResource(R.drawable.ic_notification_small);
+            } else if (newsCount > 0 && newsCount <= 9) {
+                newsCountBg.setImageResource(R.drawable.ic_notification_big);
+            } else {
+                newsCountRoot.setVisibility(View.GONE);
+            }
+
+            int subscribesCount = mainScreenInfoDto.getSubscribesCount();
+            subscribesCountView.setText(String.valueOf(subscribesCount));
+            if (subscribesCount > 9) {
+                subscribesCountBg.setImageResource(R.drawable.ic_notification_small);
+            } else if (subscribesCount > 0 && subscribesCount <= 9) {
+                subscribesCountBg.setImageResource(R.drawable.ic_notification_big);
+            } else {
+                subscribesCountRoot.setVisibility(View.GONE);
+            }
+        }
     }
 
     @Override
@@ -123,37 +162,40 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if (!settingsHelper.isFirstLaunch()) {
             settingsHelper.setFirstLaunch();
         }
-        mTitle = mDrawerTitle = getTitle();
+        title = drawerTitle = getTitle();
         menuItems = getResources().getStringArray(R.array.menus_array);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerTopView = findViewById(R.id.drawer_top_view);
+        drawerTopGradient = findViewById(R.id.drawer_gradient);
+        userAvatarView = (ImageView) findViewById(R.id.drawer_ava);
+        userName = (TextView) findViewById(R.id.drawer_text);
         if (settingsHelper.isLoggedIn()) {
-//            initAuthDrawerMenu();
+            initAuthDrawerMenu();
         } else {
             initNotAuthDrawerMenu();
         }
 
         // Set the adapter for the list view
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
                 R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
 
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                getActionBar().setTitle(mTitle);
+                getActionBar().setTitle(title);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getActionBar().setTitle(mDrawerTitle);
+                getActionBar().setTitle(drawerTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
 
         // Set the drawer toggle as the DrawerListener
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        drawerLayout.setDrawerListener(drawerToggle);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
         if (checkPlayServices()) {
@@ -170,28 +212,34 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void initNotAuthDrawerMenu() {
-        ViewStub drawerMenuStub = (ViewStub) findViewById(R.id.not_auth_drawer_menu);
+        userName.setText(R.string.login_or_register);
+        drawerTopGradient.setVisibility(View.GONE);
+        ViewStub drawerMenuStub = (ViewStub) findViewById(R.id.view_login_stub);
         drawerMenu = drawerMenuStub.inflate();
         authController.initViews(drawerMenu);
         showFragment(CheckListFragment.newInstance());
     }
 
-//    private void initAuthDrawerMenu() {
-//        ViewStub drawerMenuStub = (ViewStub) findViewById(R.id.auth_drawer_menu);
-//        drawerMenu = drawerMenuStub.inflate();
-//        userAvatar = (ImageView) drawerMenu.findViewById(R.id.img_user_avatar);
-//        userName = (TextView) drawerMenu.findViewById(R.id.text_user_name);
-//        itemTasks = drawerMenu.findViewById(R.id.item_tasks);
-//        itemTasks.setOnClickListener(this);
-//        tasksCount = (TextView) drawerMenu.findViewById(R.id.tasks_count);
-//        drawerMenu.findViewById(R.id.item_news).setOnClickListener(this);
-//        newsCount = (TextView) drawerMenu.findViewById(R.id.news_count);
-//        drawerMenu.findViewById(R.id.item_subscribes).setOnClickListener(this);
-//        subscribesCount = (TextView) drawerMenu.findViewById(R.id.subscribes_count);
-//        serviceHelper.getMainScreenInfo(settingsHelper.getLastNewsView(), settingsHelper.getLastSubscriptionsView());
-//        selectItem(itemTasks);
-//
-//    }
+    private void initAuthDrawerMenu() {
+        ViewStub drawerMenuStub = (ViewStub) findViewById(R.id.view_auth_stub);
+        drawerMenu = drawerMenuStub.inflate();
+        itemTasks = drawerMenu.findViewById(R.id.item_tasks);
+        itemTasks.setOnClickListener(this);
+        taskCountBg = (ImageView) drawerMenu.findViewById(R.id.tasks_count_bg);
+        tasksCountRoot = drawerMenu.findViewById(R.id.tasks_count);
+        tasksCountView = (TextView) drawerMenu.findViewById(R.id.tasks_count_value);
+        drawerMenu.findViewById(R.id.item_news).setOnClickListener(this);
+        newsCountRoot = drawerMenu.findViewById(R.id.news_count);
+        newsCountView = (TextView) drawerMenu.findViewById(R.id.news_count_value);
+        newsCountBg = (ImageView) drawerMenu.findViewById(R.id.news_count_bg);
+        drawerMenu.findViewById(R.id.item_subscribes).setOnClickListener(this);
+        subscribesCountRoot = drawerMenu.findViewById(R.id.subscribes_count);
+        subscribesCountBg = (ImageView) drawerMenu.findViewById(R.id.subscribes_count_bg);
+        subscribesCountView = (TextView) drawerMenu.findViewById(R.id.subscribes_count_value);
+        serviceHelper.getMainScreenInfo(settingsHelper.getLastNewsView(), settingsHelper.getLastSubscriptionsView());
+        selectItem(itemTasks);
+
+    }
 
     /**
      * Check the device to make sure it has the Google Play Services APK. If
@@ -281,9 +329,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         showFragment(fragment);
 
         // Highlight the selected item, update the title, and close the drawer
-        view.setBackgroundColor(getResources().getColor(R.color.selected_item_color));
+        view.setBackgroundColor(getResources().getColor(R.color.white));
         setTitle(menuItems[position]);
-        mDrawerLayout.closeDrawer(drawerMenu);
+        drawerLayout.closeDrawer(drawerMenu);
     }
 
     private void showFragment(Fragment fragment) {
@@ -296,28 +344,28 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void setTitle(CharSequence title) {
-        mTitle = title;
-        getActionBar().setTitle(mTitle);
+        this.title = title;
+        getActionBar().setTitle(this.title);
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
+        drawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Pass the event to ActionBarDrawerToggle, if it returns
         // true, then it has handled the app icon touch event
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
+        if (drawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
         // Handle your other action bar items...
