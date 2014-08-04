@@ -1,4 +1,4 @@
-package com.lashgo.android.service;
+package com.lashgo.android.service.transport;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;

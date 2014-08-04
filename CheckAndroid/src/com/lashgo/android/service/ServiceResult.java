@@ -1,4 +1,4 @@
-package com.lashgo.android.ui;
+package com.lashgo.android.service;
 
 import android.os.Bundle;
 

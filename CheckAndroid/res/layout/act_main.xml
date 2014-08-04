@@ -12,9 +12,10 @@
             android:layout_height="match_parent"/>
     <!-- The navigation drawer -->
     <include
+            android:id = "@+id/drawer_menu"
             android:layout_width="304dp"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:layout="@layout/view_drawer"
+            layout="@layout/view_drawer"
             />
 </android.support.v4.widget.DrawerLayout>

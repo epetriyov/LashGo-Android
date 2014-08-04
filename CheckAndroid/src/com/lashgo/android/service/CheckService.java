@@ -4,7 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.os.ResultReceiver;
 import android.text.TextUtils;
-import com.lashgo.android.service.handlers.RestHandlerFactory;
+import com.lashgo.android.service.handlers.BaseIntentHandler;
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,7 +35,7 @@ public class CheckService extends IntentService {
         String action = intent.getAction();
         if (!TextUtils.isEmpty(action)) {
             final ResultReceiver receiver = intent.getParcelableExtra(EXTRA_STATUS_RECEIVER);
-            RestHandlerFactory.getIntentHandler(action).execute(intent, receiver);
+            BaseIntentHandler.getIntentHandler(action).execute(intent, receiver);
         }
     }
 }

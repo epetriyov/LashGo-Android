@@ -14,9 +14,9 @@ public final class NetworkUtils {
 
     }
 
-    public static boolean isNetAvailable(Context con) {
+    public static boolean isNetAvailable(Context context) {
         try {
-            ConnectivityManager connectivityManager = (ConnectivityManager) con.getSystemService(Context.CONNECTIVITY_SERVICE);
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo wifiInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
             NetworkInfo mobileInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
             if (wifiInfo.isConnected() || mobileInfo.isConnected()) {

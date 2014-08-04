@@ -10,9 +10,6 @@ import android.widget.EditText;
 import com.lashgo.android.R;
 import com.lashgo.android.service.ServiceHelper;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
-import com.lashgo.android.service.handlers.RegisterHandler;
-import com.lashgo.android.service.handlers.RestHandlerFactory;
-import com.lashgo.android.service.handlers.SocialSignInHandler;
 import com.lashgo.android.social.FacebookHelper;
 import com.lashgo.android.social.TwitterHelper;
 import com.lashgo.android.ui.BaseActivity;
@@ -32,8 +29,6 @@ import javax.inject.Inject;
  * Created by Eugene on 09.07.2014.
  */
 public class AuthController implements View.OnClickListener, EnterEmailDialog.EmailEnterListener {
-
-    private final String DIALOG_TAG = "EnterEmailDialog";
 
     private SocialInfo socialInfo;
 
@@ -102,53 +97,44 @@ public class AuthController implements View.OnClickListener, EnterEmailDialog.Em
     }
 
     public void handleServerResponse(String action, int resultCode, Bundle data) {
-        baseActivity.stopProgress();
-        switch (action) {
-            case RestHandlerFactory.ACTION_LOGIN:
-                if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
-                    onLoginSuccessFull();
+        if (BaseIntentHandler.ServiceActionNames.ACTION_LOGIN.name().equals(action)) {
+            if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
+                onLoginSuccessFull();
+            } else {
+                baseActivity.showErrorToast(data);
+            }
+        } else if (BaseIntentHandler.ServiceActionNames.ACTION_REGISTER.name().equals(action)) {
+            if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
+                baseActivity.startProgress();
+                serviceHelper.login((LoginInfo) data.getSerializable(BaseIntentHandler.ServiceExtraNames.REGISTER_DTO.name()));
+            } else {
+                baseActivity.showErrorToast(data);
+            }
+        } else if (BaseIntentHandler.ServiceActionNames.ACTION_PASSWORD_RECOVER.name().equals(action)) {
+            if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
+                ContextUtils.showToast(baseActivity, R.string.password_was_reset);
+            } else {
+                baseActivity.showErrorToast(data);
+            }
+        } else if (BaseIntentHandler.ServiceActionNames.ACTION_SOCIAL_SIGN_IN.name().equals(action)) {
+            if (resultCode == BaseIntentHandler.FAILURE_RESPONSE) {
+                ErrorDto errorDto = (ErrorDto) data.getSerializable(BaseIntentHandler.ERROR_EXTRA);
+                if (errorDto != null && ErrorCodes.EMAIL_NEEDED.equals(errorDto.getErrorCode())) {
+                    socialInfo = (SocialInfo) data.getSerializable(BaseIntentHandler.ServiceExtraNames.SOCIAL_DTO.name());
+                    DialogFragment dialogFragment = EnterEmailDialog.newInstance(this);
+                    dialogFragment.show(baseActivity.getFragmentManager(), EnterEmailDialog.DIALOG_TAG);
                 } else {
                     baseActivity.showErrorToast(data);
                 }
-                break;
-            case RestHandlerFactory.ACTION_REGISTER:
-                if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
-                    baseActivity.startProgress();
-                    serviceHelper.login((LoginInfo) data.getSerializable(RegisterHandler.REGISTER_DTO));
-                } else {
-                    baseActivity.showErrorToast(data);
-                }
-                break;
-            case RestHandlerFactory.ACTION_PASSWORD_RECOVER:
-                if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
-                    ContextUtils.showToast(baseActivity, R.string.password_was_reset);
-                } else {
-                    baseActivity.showErrorToast(data);
-                }
-                break;
-            case RestHandlerFactory.ACTION_SOCIAL_SIGN_IN:
-                if (resultCode == BaseIntentHandler.FAILURE_RESPONSE) {
-                    ErrorDto errorDto = (ErrorDto) data.getSerializable(BaseIntentHandler.ERROR_EXTRA);
-                    if (errorDto != null && ErrorCodes.EMAIL_NEEDED.equals(errorDto.getErrorCode())) {
-                        socialInfo = (SocialInfo) data.getSerializable(SocialSignInHandler.SOCIAL_DTO);
-                        DialogFragment dialogFragment = EnterEmailDialog.newInstance(this);
-                        dialogFragment.show(baseActivity.getFragmentManager(), DIALOG_TAG);
-                    } else {
-                        baseActivity.showErrorToast(data);
-                    }
-                } else {
-                    onLoginSuccessFull();
-                }
-                break;
-            case RestHandlerFactory.ACTION_CONFIRM_SOCIAL_SIGN_UP:
-                if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
-                    onLoginSuccessFull();
-                } else {
-                    baseActivity.showErrorToast(data);
-                }
-                break;
-            default:
-                break;
+            } else {
+                onLoginSuccessFull();
+            }
+        } else if (BaseIntentHandler.ServiceActionNames.ACTION_CONFIRM_SOCIAL_SIGN_UP.name().equals(action)) {
+            if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
+                onLoginSuccessFull();
+            } else {
+                baseActivity.showErrorToast(data);
+            }
         }
     }
 

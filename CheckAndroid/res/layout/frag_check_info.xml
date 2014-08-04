@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res/com.lashgo.android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/black"
+        >
+    <com.lashgo.android.ui.views.RobotoTextView
+            android:id="@+id/check_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="44dp"
+            android:layout_marginRight="44dp"
+            app:fontName="@string/condensed_regular"
+            android:textSize="24sp"
+            android:textColor="@color/check_name_color"
+            />
+    <FrameLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                 android:layout_marginLeft="65dp"
+                 android:layout_marginRight="65dp"
+                 android:layout_marginTop="34dp"
+            >
+        <ImageView
+                android:id="@+id/check_photo"
+                android:layout_gravity="top|right"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:padding="21dp"
+                />
+        <View android:layout_width="62dp" android:layout_height="62dp"
+              android:layout_gravity="top|right"
+              android:layout_marginRight="8dp"
+              android:layout_marginTop="8dp"
+              android:background="@drawable/btn_camera"
+                />
+    </FrameLayout>
+    <com.lashgo.android.ui.views.RobotoTextView
+            android:id="@+id/task_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="41dp"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:gravity="center_horizontal"
+            app:fontName="@string/condensed_regular"
+            android:textSize="18sp"
+            android:textColor="@color/check_description_color_2"
+            />
+    <View android:layout_width="1dp" android:layout_height="0dp"
+          android:layout_weight="1"
+            />
+    <FrameLayout android:layout_width="match_parent" android:layout_height="48dp"
+                 android:paddingLeft="8dp"
+                 android:paddingRight="16dp"
+            >
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent"
+                      android:orientation="horizontal"
+                      android:gravity="center_vertical"
+                >
+            <View
+                    android:id="@+id/btn_share"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/btn_share"
+                    />
+            <com.lashgo.android.ui.views.RobotoTextView
+                    android:id="@+id/shares_count"
+                    android:layout_marginLeft="5dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:fontName="@string/condensed_regular"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:text="38"
+                    />
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content" android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_gravity="center"
+                >
+            <ImageView android:layout_width="21dp" android:layout_height="21dp"
+                       android:src="@drawable/time"
+                    />
+            <com.lashgo.android.ui.views.RobotoTextView
+                    android:id="@+id/check_time"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    app:fontName="@string/condensed_regular"
+                    android:textSize="16sp"
+                    android:textColor="@color/check_time_color_2"
+                    android:text="11:24"
+                    />
+        </LinearLayout>
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent"
+                      android:orientation="horizontal"
+                      android:gravity="center_vertical"
+                      android:layout_gravity="right"
+                >
+            <View
+                    android:id="@+id/btn_peoples_count"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/ic_mob_normal"
+                    />
+            <com.lashgo.android.ui.views.RobotoTextView
+                    android:id="@+id/peoples_count"
+                    android:layout_marginLeft="5dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:fontName="@string/condensed_regular"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:text="17"
+                    />
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>

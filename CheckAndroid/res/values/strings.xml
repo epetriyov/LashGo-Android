@@ -49,8 +49,11 @@
     <string name="finished_checks">Завершенные</string>
     <string name="regular">Roboto-Regular</string>
     <string name="medium">Roboto-Medium</string>
+    <string name="condensed_regular">RobotoCondensed-Regular</string>
     <string name="login_or_register">Войдите или зарегистрируйтесь</string>
     <string name="tasks">Задания</string>
     <string name="news">Новости</string>
     <string name="subscribes">Подписки</string>
+    <string name="vote_checks">Идёт голосование</string>
+    <string name="task">Задание</string>
 </resources>

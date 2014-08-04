@@ -7,9 +7,8 @@ import android.os.Handler;
 import android.os.ResultReceiver;
 import com.lashgo.android.LashgoApplication;
 import com.lashgo.android.R;
-import com.lashgo.android.service.RestService;
+import com.lashgo.android.service.transport.RestService;
 import com.lashgo.android.settings.SettingsHelper;
-import com.lashgo.android.utils.ContextUtils;
 import com.lashgo.android.utils.NetworkUtils;
 import com.lashgo.model.dto.ErrorDto;
 import com.lashgo.model.dto.ResponseObject;
@@ -28,6 +27,42 @@ import java.io.IOException;
  * base intent executer
  */
 public abstract class BaseIntentHandler {
+
+    public static BaseIntentHandler getIntentHandler(String action) {
+        if (ServiceActionNames.ACTION_LOGIN.name().equals(action)) {
+            return new LoginHandler();
+        } else if (ServiceActionNames.ACTION_REGISTER.name().equals(action)) {
+            return new RegisterHandler();
+        } else if (ServiceActionNames.ACTION_SOCIAL_SIGN_IN.name().equals(action)) {
+            return new SocialSignInHandler();
+        } else if (ServiceActionNames.ACTION_GCM_REGISTER_ID.name().equals(action)) {
+            return new GcmRegisterHandler();
+        } else if (ServiceActionNames.ACTION_CONFIRM_SOCIAL_SIGN_UP.name().equals(action)) {
+            return new SocialSignUpHandler();
+        } else if (ServiceActionNames.ACTION_GET_MAIN_SCREEN_INFO.name().equals(action)) {
+            return new GetMainScreenHandler();
+        } else if (ServiceActionNames.ACTION_GET_CHECK_LIST.name().equals(action)) {
+            return new GetCheckListHandler();
+        } else {
+            throw new IllegalArgumentException("illegal action - " + action);
+        }
+    }
+
+    public static enum ServiceActionNames {
+        ACTION_LOGIN,
+        ACTION_REGISTER, ACTION_SOCIAL_SIGN_IN,
+        ACTION_GCM_REGISTER_ID, ACTION_PASSWORD_RECOVER,
+        ACTION_CONFIRM_SOCIAL_SIGN_UP, ACTION_GET_MAIN_SCREEN_INFO,
+        ACTION_GET_CHECK_LIST
+    }
+
+    public static enum ServiceExtraNames {
+        GCM_REGISTRATION,
+        KEY_CHECK_DTO_LIST, LAST_NEWS_VIEW_DATE,
+        LAST_SUBSCRIPTIONS_VIEW_DATE, MAIN_SCREEN_INFO,
+        LOGIN_DTO, SESSION_INFO, REGISTER_DTO, SOCIAL_DTO,
+        EXTENDED_SOCIAL_DTO
+    }
 
     public static final String ERROR_EXTRA = "error_extra";
     public static final int SUCCESS_RESPONSE = 1;
@@ -54,7 +89,7 @@ public abstract class BaseIntentHandler {
     }
 
     public final void execute(Intent intent, ResultReceiver callback) {
-        ErrorDto errorDto = null;
+        ErrorDto errorDto;
         try {
             if (NetworkUtils.isNetAvailable(context)) {
                 Bundle bundle = doExecute(intent);

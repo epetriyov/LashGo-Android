@@ -34,7 +34,7 @@ public class TwitterHelper {
     @Inject
     public TwitterHelper(BaseActivity baseActivity) {
         this.loginActivity = baseActivity;
-        baseActivity.inject(this);
+        loginActivity.inject(this);
     }
 
     public void onCreate(Bundle requestTokenBundle) {
@@ -81,7 +81,9 @@ public class TwitterHelper {
                         Twitter twitter = new TwitterFactory().getInstance();
                         twitter.setOAuthConsumer(loginActivity.getResources().getString(R.string.twitter_consumerKey), loginActivity.getResources().getString(R.string.twitter_consumerSecret));
                         AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, verifier);
-                        socialInfo = new SocialInfo(accessToken.getToken(), accessToken.getTokenSecret(), SocialNames.TWITTER);
+                        if (accessToken != null) {
+                            socialInfo = new SocialInfo(accessToken.getToken(), accessToken.getTokenSecret(), SocialNames.TWITTER);
+                        }
                     } catch (TwitterException e) {
                         loginActivity.onDisplayError(e.toString());
                         e.printStackTrace();

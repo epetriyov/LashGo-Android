@@ -4,13 +4,12 @@
         <!-- Setting values in the android namespace affects API levels 14+ -->
         <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
         <item name="android:editTextStyle">@style/EditText.Styled</item>
-        <item name="android:windowActionBarOverlay">true</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_back</item>
     </style>
 
     <style name="Widget.Styled.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
         <item name="android:layout_height">56dp</item>
-        <item name="android:background">@color/transparent</item>
+        <item name="android:background">@color/splash_top_color</item>
         <item name="android:titleTextStyle">@style/Widget.Styled.ActionBar.TitleText</item>
         <!-- Setting values in the android namespace affects API levels 14+ -->
     </style>

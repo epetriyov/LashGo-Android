@@ -1,4 +1,4 @@
-package com.lashgo.android.service;
+package com.lashgo.android.service.transport;
 
 import com.lashgo.model.Path;
 import com.lashgo.model.dto.*;

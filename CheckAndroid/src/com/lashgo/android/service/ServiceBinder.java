@@ -1,10 +1,7 @@
 package com.lashgo.android.service;
 
 import android.os.Bundle;
-import com.lashgo.android.ForFragment;
-import com.lashgo.android.ui.ServiceResult;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 

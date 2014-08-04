@@ -89,8 +89,6 @@ public class GcmIntentService extends IntentService {
         Notification.Builder mBuilder =
                 new Notification.Builder(this)
         .setContentTitle("GCM Notification")
-        .setStyle(new Notification.BigTextStyle()
-        .bigText(msg))
         .setContentText(msg);
 
         mBuilder.setContentIntent(contentIntent);

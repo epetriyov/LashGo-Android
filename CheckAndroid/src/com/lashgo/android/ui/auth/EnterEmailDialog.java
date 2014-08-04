@@ -15,6 +15,8 @@ import com.lashgo.android.R;
  */
 public class EnterEmailDialog extends DialogFragment implements View.OnClickListener {
 
+    public static final String DIALOG_TAG = "EnterEmailDialog";
+
     private EmailEnterListener emailEnterListener;
 
     private EditText emailEdit;

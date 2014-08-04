@@ -1,4 +1,4 @@
-package com.lashgo.android.service;
+package com.lashgo.android.service.transport;
 
 import android.text.TextUtils;
 import com.lashgo.android.LashgoApplication;

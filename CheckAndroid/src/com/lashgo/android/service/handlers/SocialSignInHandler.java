@@ -18,19 +18,15 @@ import java.io.IOException;
  */
 public class SocialSignInHandler extends BaseIntentHandler {
 
-    public static final String SOCIAL_DTO = "social_dto";
-
     public SocialSignInHandler() {
         super();
     }
 
     @Override
     protected Bundle doExecute(Intent intent) throws RetrofitError, IOException {
-        SocialInfo socialInfo = (SocialInfo) intent.getSerializableExtra(SOCIAL_DTO);
+        SocialInfo socialInfo = (SocialInfo) intent.getSerializableExtra(ServiceExtraNames.SOCIAL_DTO.name());
         ResponseObject<SessionInfo> sessionInfo = service.socialSignIn(socialInfo);
         settingsHelper.socialLogin(sessionInfo.getResult(), socialInfo);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(SOCIAL_DTO, socialInfo);
-        return bundle;
+        return intent.getExtras();
     }
 }

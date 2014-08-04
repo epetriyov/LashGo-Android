@@ -34,6 +34,8 @@ import java.util.List;
  */
 public abstract class BaseActivity extends Activity implements ServiceReceiver {
 
+    public static enum ExtraNames {CHECK_DTO}
+
     private ObjectGraph loginGraph;
 
     @Inject

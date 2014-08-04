@@ -169,7 +169,9 @@ public class SettingsHelper {
     }
 
     public void socialLogin(SessionInfo sessionInfo, SocialInfo socialInfo) {
-        setString(KEY_SESSION, sessionInfo.getSessionId());
+        if (sessionInfo != null) {
+            setString(KEY_SESSION, sessionInfo.getSessionId());
+        }
         saveSerializable(KEY_SOCIAL_INFO, socialInfo);
     }
 
@@ -178,10 +180,10 @@ public class SettingsHelper {
     }
 
     public String getLastNewsView() {
-        return getString(KEY_LAST_NEWS_VIEW, null);
+        return getString(KEY_LAST_NEWS_VIEW, new SimpleDateFormat(LashgoConfig.DATE_FORMAT).format(new Date()));
     }
 
     public String getLastSubscriptionsView() {
-        return getString(KEY_LAST_SUBSCRIPTIONS_VIEW, null);
+        return getString(KEY_LAST_SUBSCRIPTIONS_VIEW, new SimpleDateFormat(LashgoConfig.DATE_FORMAT).format(new Date()));
     }
 }

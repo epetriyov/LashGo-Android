@@ -16,18 +16,14 @@ import java.io.IOException;
  */
 public class RegisterHandler extends BaseIntentHandler {
 
-    public static final String REGISTER_DTO = "register_dto";
-
     public RegisterHandler() {
         super();
     }
 
     @Override
     protected Bundle doExecute(Intent intent) throws RetrofitError, IOException {
-        LoginInfo registerInfo = (LoginInfo) intent.getSerializableExtra(REGISTER_DTO);
+        LoginInfo registerInfo = (LoginInfo) intent.getSerializableExtra(ServiceExtraNames.REGISTER_DTO.name());
         service.register(registerInfo);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(REGISTER_DTO, registerInfo);
-        return bundle;
+        return intent.getExtras();
     }
 }

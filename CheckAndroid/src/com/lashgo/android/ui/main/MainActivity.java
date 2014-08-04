@@ -20,8 +20,6 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.lashgo.android.LashgoConfig;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
-import com.lashgo.android.service.handlers.GetMainScreenHandler;
-import com.lashgo.android.service.handlers.RestHandlerFactory;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.auth.AuthController;
 import com.lashgo.android.ui.check.CheckListFragment;
@@ -40,7 +38,6 @@ import java.io.IOException;
  * Created by Eugene on 17.06.2014.
  */
 public class MainActivity extends BaseActivity implements View.OnClickListener {
-    public static final String KEY_CHECK_DTO = "check_dto";
     private String[] menuItems;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
@@ -70,13 +67,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void registerActionsListener() {
-        addActionListener(RestHandlerFactory.ACTION_LOGIN);
-        addActionListener(RestHandlerFactory.ACTION_REGISTER);
-        addActionListener(RestHandlerFactory.ACTION_PASSWORD_RECOVER);
-        addActionListener(RestHandlerFactory.ACTION_SOCIAL_SIGN_IN);
-        addActionListener(RestHandlerFactory.ACTION_CONFIRM_SOCIAL_SIGN_UP);
-        addActionListener(RestHandlerFactory.ACTION_GCM_REGISTER_ID);
-        addActionListener(RestHandlerFactory.ACTION_GET_MAIN_SCREEN_INFO);
+        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_LOGIN.name());
+        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_REGISTER.name());
+        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_PASSWORD_RECOVER.name());
+        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_SOCIAL_SIGN_IN.name());
+        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_CONFIRM_SOCIAL_SIGN_UP.name());
+        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GCM_REGISTER_ID.name());
+        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_MAIN_SCREEN_INFO.name());
     }
 
 
@@ -90,12 +87,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void processServerResult(String action, int resultCode, Bundle data) {
-        authController.handleServerResponse(action, resultCode, data);
-        if (RestHandlerFactory.ACTION_GET_MAIN_SCREEN_INFO.equals(action)) {
+        stopProgress();
+        if (BaseIntentHandler.ServiceActionNames.ACTION_GET_MAIN_SCREEN_INFO.name().equals(action)) {
             if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
-                MainScreenInfoDto mainScreenInfoDto = (MainScreenInfoDto) data.getSerializable(GetMainScreenHandler.MAIN_SCREEN_INFO);
+                MainScreenInfoDto mainScreenInfoDto = (MainScreenInfoDto) data.getSerializable(BaseIntentHandler.ServiceExtraNames.MAIN_SCREEN_INFO.name());
                 updateMainScreenInfo(mainScreenInfoDto);
+            } else {
+                showErrorToast(data);
             }
+        } else {
+            authController.handleServerResponse(action, resultCode, data);
         }
     }
 
@@ -109,9 +110,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             int tasksCount = mainScreenInfoDto.getTasksCount();
             tasksCountView.setText(String.valueOf(tasksCount));
             if (tasksCount > 9) {
-                taskCountBg.setImageResource(R.drawable.ic_notification_small);
-            } else if (tasksCount > 0 && tasksCount <= 9) {
                 taskCountBg.setImageResource(R.drawable.ic_notification_big);
+            } else if (tasksCount > 0 && tasksCount <= 9) {
+                taskCountBg.setImageResource(R.drawable.ic_notification_small);
             } else {
                 tasksCountRoot.setVisibility(View.GONE);
             }
@@ -119,9 +120,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             int newsCount = mainScreenInfoDto.getNewsCount();
             newsCountView.setText(String.valueOf(newsCount));
             if (newsCount > 9) {
-                newsCountBg.setImageResource(R.drawable.ic_notification_small);
-            } else if (newsCount > 0 && newsCount <= 9) {
                 newsCountBg.setImageResource(R.drawable.ic_notification_big);
+            } else if (newsCount > 0 && newsCount <= 9) {
+                newsCountBg.setImageResource(R.drawable.ic_notification_small);
             } else {
                 newsCountRoot.setVisibility(View.GONE);
             }
@@ -129,9 +130,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             int subscribesCount = mainScreenInfoDto.getSubscribesCount();
             subscribesCountView.setText(String.valueOf(subscribesCount));
             if (subscribesCount > 9) {
-                subscribesCountBg.setImageResource(R.drawable.ic_notification_small);
-            } else if (subscribesCount > 0 && subscribesCount <= 9) {
                 subscribesCountBg.setImageResource(R.drawable.ic_notification_big);
+            } else if (subscribesCount > 0 && subscribesCount <= 9) {
+                subscribesCountBg.setImageResource(R.drawable.ic_notification_small);
             } else {
                 subscribesCountRoot.setVisibility(View.GONE);
             }
@@ -140,13 +141,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void unregisterActionsListener() {
-        removeActionListener(RestHandlerFactory.ACTION_LOGIN);
-        removeActionListener(RestHandlerFactory.ACTION_REGISTER);
-        removeActionListener(RestHandlerFactory.ACTION_PASSWORD_RECOVER);
-        removeActionListener(RestHandlerFactory.ACTION_SOCIAL_SIGN_IN);
-        removeActionListener(RestHandlerFactory.ACTION_CONFIRM_SOCIAL_SIGN_UP);
-        removeActionListener(RestHandlerFactory.ACTION_GCM_REGISTER_ID);
-        removeActionListener(RestHandlerFactory.ACTION_GET_MAIN_SCREEN_INFO);
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_LOGIN.name());
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_REGISTER.name());
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_PASSWORD_RECOVER.name());
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_SOCIAL_SIGN_IN.name());
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_CONFIRM_SOCIAL_SIGN_UP.name());
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GCM_REGISTER_ID.name());
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_MAIN_SCREEN_INFO.name());
     }
 
     @Override
@@ -165,6 +166,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         title = drawerTitle = getTitle();
         menuItems = getResources().getStringArray(R.array.menus_array);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerMenu = findViewById(R.id.drawer_menu);
         drawerTopView = findViewById(R.id.drawer_top_view);
         drawerTopGradient = findViewById(R.id.drawer_gradient);
         userAvatarView = (ImageView) findViewById(R.id.drawer_ava);
@@ -215,14 +217,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         userName.setText(R.string.login_or_register);
         drawerTopGradient.setVisibility(View.GONE);
         ViewStub drawerMenuStub = (ViewStub) findViewById(R.id.view_login_stub);
-        drawerMenu = drawerMenuStub.inflate();
+        View drawerMenu = drawerMenuStub.inflate();
         authController.initViews(drawerMenu);
         showFragment(CheckListFragment.newInstance());
     }
 
     private void initAuthDrawerMenu() {
         ViewStub drawerMenuStub = (ViewStub) findViewById(R.id.view_auth_stub);
-        drawerMenu = drawerMenuStub.inflate();
+        View drawerMenu = drawerMenuStub.inflate();
         itemTasks = drawerMenu.findViewById(R.id.item_tasks);
         itemTasks.setOnClickListener(this);
         taskCountBg = (ImageView) drawerMenu.findViewById(R.id.tasks_count_bg);

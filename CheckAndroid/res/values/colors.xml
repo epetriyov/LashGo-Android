@@ -22,4 +22,12 @@
     <color name="drawer_item_counter_normal">#FFFFFF</color>
     <color name="drawer_item_counter_focused">#80FFFFFF</color>
     <color name="drawer_item_counter_pressed">#f42067</color>
+    <color name="check_state_color">#8E8E8F</color>
+    <color name="check_title_color">#3F3F3F</color>
+    <color name="check_description_color">#979797</color>
+    <color name="check_time_color">#F06292</color>
+    <color name="check_name_color">#ECEEEE</color>
+    <color name="check_description_color_2">#B0B1B2</color>
+    <color name="check_time_color_2">#FF5E7C</color>
+    <color name="black">#000000</color>
 </resources>

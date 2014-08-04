@@ -3,7 +3,7 @@ package com.lashgo.android.ui.auth;
 import android.content.Intent;
 import android.os.Bundle;
 import com.lashgo.android.R;
-import com.lashgo.android.service.handlers.RestHandlerFactory;
+import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
 
 import javax.inject.Inject;
@@ -29,11 +29,11 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void registerActionsListener() {
-        addActionListener(RestHandlerFactory.ACTION_LOGIN);
-        addActionListener(RestHandlerFactory.ACTION_REGISTER);
-        addActionListener(RestHandlerFactory.ACTION_PASSWORD_RECOVER);
-        addActionListener(RestHandlerFactory.ACTION_SOCIAL_SIGN_IN);
-        addActionListener(RestHandlerFactory.ACTION_CONFIRM_SOCIAL_SIGN_UP);
+        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_LOGIN.name());
+        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_REGISTER.name());
+        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_PASSWORD_RECOVER.name());
+        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_SOCIAL_SIGN_IN.name());
+        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_CONFIRM_SOCIAL_SIGN_UP.name());
     }
 
 
@@ -47,15 +47,16 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void processServerResult(String action, int resultCode, Bundle data) {
+        stopProgress();
         authController.handleServerResponse(action, resultCode, data);
     }
 
     @Override
     protected void unregisterActionsListener() {
-        removeActionListener(RestHandlerFactory.ACTION_LOGIN);
-        removeActionListener(RestHandlerFactory.ACTION_REGISTER);
-        removeActionListener(RestHandlerFactory.ACTION_PASSWORD_RECOVER);
-        removeActionListener(RestHandlerFactory.ACTION_SOCIAL_SIGN_IN);
-        removeActionListener(RestHandlerFactory.ACTION_CONFIRM_SOCIAL_SIGN_UP);
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_LOGIN.name());
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_REGISTER.name());
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_PASSWORD_RECOVER.name());
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_SOCIAL_SIGN_IN.name());
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_CONFIRM_SOCIAL_SIGN_UP.name());
     }
 }

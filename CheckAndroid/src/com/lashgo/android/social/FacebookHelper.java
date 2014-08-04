@@ -29,7 +29,7 @@ public class FacebookHelper {
     private Session.StatusCallback facebookCallback = new Session.StatusCallback() {
         @Override
         public void call(Session session, SessionState state, Exception exception) {
-            if (session.isOpened()) {
+            if (session != null && session.isOpened()) {
                 /**
                  * successful login into facebook
                  */
@@ -44,7 +44,7 @@ public class FacebookHelper {
 
     public void loginWithFacebook() {
         Session session = Session.getActiveSession();
-        if (!session.isOpened() && !session.isClosed()) {
+        if (session != null && !session.isOpened() && !session.isClosed()) {
             session.openForRead(new Session.OpenRequest(loginActivity)
                     .setPermissions(Arrays.asList("basic_info", "email", "user_about_me", "user_birthday"))
                     .setCallback(facebookCallback));

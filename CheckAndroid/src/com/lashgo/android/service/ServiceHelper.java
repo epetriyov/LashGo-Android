@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import com.lashgo.android.LashgoApplication;
-import com.lashgo.android.service.handlers.*;
+import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.settings.SettingsHelper;
 import com.lashgo.model.ErrorCodes;
 import com.lashgo.model.dto.*;
@@ -34,6 +34,7 @@ public class ServiceHelper {
     private Context context;
 
     private String expiredActionName;
+    private Bundle expiredExtras;
 
     @Inject
     public ServiceHelper(Context context, SettingsHelper settingsHelper) {
@@ -62,6 +63,13 @@ public class ServiceHelper {
                              * handle session expiration
                              */
                             expiredActionName = actionName;
+                            Intent expiredIntent = pendingActivities.get(expiredActionName);
+                            if (expiredIntent != null) {
+                                expiredExtras = expiredIntent.getExtras();
+                            }
+                            if (isPending(actionName)) {
+                                pendingActivities.remove(actionName);
+                            }
                             LoginInfo loginInfo = settingsHelper.getLoginInfo();
                             if (loginInfo != null) {
                                 login(loginInfo);
@@ -70,7 +78,7 @@ public class ServiceHelper {
                             }
                         } else {
                             if (expiredActionName != null) {
-                                runRequest(expiredActionName, pendingActivities.get(expiredActionName).getExtras());
+                                runRequest(expiredActionName, expiredExtras);
                                 expiredActionName = null;
                             }
                             if (isPending(actionName)) {
@@ -113,42 +121,42 @@ public class ServiceHelper {
 
     public void login(LoginInfo loginInfo) {
         Bundle extras = new Bundle();
-        extras.putSerializable(LoginHandler.LOGIN_DTO, loginInfo);
-        runRequest(RestHandlerFactory.ACTION_LOGIN, extras);
+        extras.putSerializable(BaseIntentHandler.ServiceExtraNames.LOGIN_DTO.name(), loginInfo);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_LOGIN.name(), extras);
     }
 
     public void register(LoginInfo registerInfo) {
         Bundle extras = new Bundle();
-        extras.putSerializable(RegisterHandler.REGISTER_DTO, registerInfo);
-        runRequest(RestHandlerFactory.ACTION_REGISTER, extras);
+        extras.putSerializable(BaseIntentHandler.ServiceExtraNames.REGISTER_DTO.name(), registerInfo);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_REGISTER.name(), extras);
     }
 
     public void socialSignIn(SocialInfo socialInfo) {
         Bundle extras = new Bundle();
-        extras.putSerializable(SocialSignInHandler.SOCIAL_DTO, socialInfo);
-        runRequest(RestHandlerFactory.ACTION_SOCIAL_SIGN_IN, extras);
+        extras.putSerializable(BaseIntentHandler.ServiceExtraNames.SOCIAL_DTO.name(), socialInfo);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_SOCIAL_SIGN_IN.name(), extras);
     }
 
     public void socialSignUp(ExtendedSocialInfo extendedSocialInfo) {
         Bundle extras = new Bundle();
-        extras.putSerializable(SocialSignUpHandler.EXTENDED_SOCIAL_DTO, extendedSocialInfo);
-        runRequest(RestHandlerFactory.ACTION_CONFIRM_SOCIAL_SIGN_UP, extras);
+        extras.putSerializable(BaseIntentHandler.ServiceExtraNames.EXTENDED_SOCIAL_DTO.name(), extendedSocialInfo);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_CONFIRM_SOCIAL_SIGN_UP.name(), extras);
     }
 
     public void gcmRegisterId(GcmRegistrationDto gcmRegistrationDto) {
         Bundle extras = new Bundle();
-        extras.putSerializable(GcmRegisterHandler.GCM_REGISTRATION, gcmRegistrationDto);
-        runRequest(RestHandlerFactory.ACTION_GCM_REGISTER_ID, extras);
+        extras.putSerializable(BaseIntentHandler.ServiceExtraNames.GCM_REGISTRATION.name(), gcmRegistrationDto);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GCM_REGISTER_ID.name(), extras);
     }
 
     public void getMainScreenInfo(String lastNewsViewDate, String lastSubscribtionsViewDate) {
         Bundle extras = new Bundle();
-        extras.putString(GetMainScreenHandler.LAST_NEWS_VIEW_DATE, lastNewsViewDate);
-        extras.putString(GetMainScreenHandler.LAST_SUBSCRIPTIONS_VIEW_DATE, lastSubscribtionsViewDate);
-        runRequest(RestHandlerFactory.ACTION_GET_MAIN_SCREEN_INFO, extras);
+        extras.putString(BaseIntentHandler.ServiceExtraNames.LAST_NEWS_VIEW_DATE.name(), lastNewsViewDate);
+        extras.putString(BaseIntentHandler.ServiceExtraNames.LAST_SUBSCRIPTIONS_VIEW_DATE.name(), lastSubscribtionsViewDate);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_MAIN_SCREEN_INFO.name(), extras);
     }
 
     public void getChecks() {
-        runRequest(RestHandlerFactory.ACTION_GET_CHECK_LIST, null);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_LIST.name(), new Bundle());
     }
 }

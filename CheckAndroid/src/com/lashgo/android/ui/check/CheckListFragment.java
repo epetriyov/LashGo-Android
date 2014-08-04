@@ -9,8 +9,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
-import com.lashgo.android.service.handlers.GetCheckListHandler;
-import com.lashgo.android.service.handlers.RestHandlerFactory;
 import com.lashgo.android.ui.BaseFragment;
 import com.lashgo.android.ui.adapters.MultyTypeAdapter;
 import com.lashgo.model.dto.CheckDto;
@@ -49,19 +47,19 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
 
     @Override
     protected void registerActionsListener() {
-        addActionListener(RestHandlerFactory.ACTION_GET_CHECK_LIST);
+        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_LIST.name());
     }
 
     @Override
     protected void unregisterActionsListener() {
-        removeActionListener(RestHandlerFactory.ACTION_GET_CHECK_LIST);
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_LIST.name());
     }
 
     @Override
     public void processServerResult(String action, int resultCode, Bundle data) {
-        if (RestHandlerFactory.ACTION_GET_CHECK_LIST.equals(action)) {
+        if (BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_LIST.name().equals(action)) {
             if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
-                ResponseList<CheckDto> checkDtoResponseList = (ResponseList<CheckDto>) data.getSerializable(GetCheckListHandler.KEY_CHECK_DTO_LIST);
+                ResponseList<CheckDto> checkDtoResponseList = (ResponseList<CheckDto>) data.getSerializable(BaseIntentHandler.ServiceExtraNames.KEY_CHECK_DTO_LIST.name());
                 if (checkDtoResponseList != null) {
                     onCheckListLoaded(checkDtoResponseList.getResultCollection());
                 }
@@ -71,25 +69,38 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
 
     private void onCheckListLoaded(Collection<CheckDto> resultCollection) {
         if (resultCollection != null) {
-            Calendar calendar = Calendar.getInstance();
+            Calendar checkActiveCalendar = Calendar.getInstance();
+            Calendar checkVoteCalendar = Calendar.getInstance();
             boolean isFirstIteration = true;
             boolean isLastActive = false;
+            boolean isLastVote = false;
             String checkStatus;
             for (CheckDto checkDto : resultCollection) {
-                calendar.setTime(checkDto.getStartDate());
-                calendar.add(Calendar.HOUR, checkDto.getDuration());
-                if (isFirstIteration || (isLastActive && (calendar.getTimeInMillis() > System.currentTimeMillis()))) {
-                    if ((calendar.getTimeInMillis() > System.currentTimeMillis())) {
+                checkActiveCalendar.setTime(checkDto.getStartDate());
+                checkVoteCalendar.setTime(checkDto.getStartDate());
+                checkActiveCalendar.add(Calendar.HOUR_OF_DAY, checkDto.getDuration());
+                checkVoteCalendar.add(Calendar.HOUR_OF_DAY, checkDto.getDuration() + checkDto.getVoteDuration());
+                if (isFirstIteration ||
+                        (isLastActive && (checkActiveCalendar.getTimeInMillis() <= System.currentTimeMillis())) ||
+                        (isLastVote && (checkVoteCalendar.getTimeInMillis() < System.currentTimeMillis()))) {
+                    if ((checkActiveCalendar.getTimeInMillis() > System.currentTimeMillis())) {
                         checkStatus = getString(R.string.active_checks);
+                    } else if (checkVoteCalendar.getTimeInMillis() > System.currentTimeMillis()) {
+                        checkStatus = getString(R.string.vote_checks);
                     } else {
                         checkStatus = getString(R.string.finished_checks);
                     }
                     multyTypeAdapter.addItem(checkStatus, R.layout.adt_check_state, false);
                 }
                 multyTypeAdapter.addItem(checkDto, R.layout.adt_check_item, true);
-                if ((calendar.getTimeInMillis() <= System.currentTimeMillis())) {
+                if (checkActiveCalendar.getTimeInMillis() > System.currentTimeMillis()) {
                     isLastActive = true;
                 } else {
+                    if (checkVoteCalendar.getTimeInMillis() > System.currentTimeMillis()) {
+                        isLastVote = true;
+                    } else {
+                        isLastVote = false;
+                    }
                     isLastActive = false;
                 }
                 isFirstIteration = false;
@@ -104,6 +115,11 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        Object selectedItem = multyTypeAdapter.getItem(position);
+        if (selectedItem instanceof CheckDto) {
+            startActivity(CheckInfoActivity.newIntent(getActivity(), (CheckDto) selectedItem));
+        } else {
+            throw new IllegalStateException("Selected item is not CheckDto object");
+        }
     }
 }
