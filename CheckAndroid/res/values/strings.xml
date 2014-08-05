@@ -56,4 +56,16 @@
     <string name="subscribes">Подписки</string>
     <string name="vote_checks">Идёт голосование</string>
     <string name="task">Задание</string>
+    <string name="make_photo">Выполнить задание с помощью...</string>
+    <string name="empty_image_was_chosen">Выбрана пустая фотография</string>
+    <string name="congratulations">Поздравляем!</string>
+    <string name="now_you_are_with_us">Теперь вы с нами.</string>
+    <string name="subscibes_count">подписок</string>
+    <string name="subscibers_count">подписчиков</string>
+    <string name="fill_profile">ЗАПОЛНИТЬ ПРОФИЛЬ</string>
+    <string name="continue">ПРОДОЛЖИТЬ</string>
+    <string-array name="make_photo_items">
+        <item>Камера</item>
+        <item>Галерея</item>
+    </string-array>
 </resources>

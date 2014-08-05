@@ -30,4 +30,5 @@
     <color name="check_description_color_2">#B0B1B2</color>
     <color name="check_time_color_2">#FF5E7C</color>
     <color name="black">#000000</color>
+    <color name="bg_after_reg_bottom">#EAEAEC</color>
 </resources>
