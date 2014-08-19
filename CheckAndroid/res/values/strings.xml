@@ -63,7 +63,11 @@
     <string name="subscibes_count">подписок</string>
     <string name="subscibers_count">подписчиков</string>
     <string name="fill_profile">ЗАПОЛНИТЬ ПРОФИЛЬ</string>
-    <string name="continue">ПРОДОЛЖИТЬ</string>
+    <string name="continue_register">ПРОДОЛЖИТЬ</string>
+    <string name="error_empty_email">Введите email</string>
+    <string name="error_empty_password">Введите пароль</string>
+    <string name="loading">Загрузка...</string>
+    <string name="error_send_photo">Произошла ошибка. Сделайте фото ещё раз.</string>
     <string-array name="make_photo_items">
         <item>Камера</item>
         <item>Галерея</item>

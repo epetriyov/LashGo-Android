@@ -34,7 +34,7 @@
                 android:id="@+id/drawer_gradient"
                 android:layout_height="84dp" android:layout_width="match_parent"
                 android:layout_gravity="bottom"
-                android:background="@drawable/gradient_bottom"
+                android:background="@drawable/drawer_gradient"
                 />
     </FrameLayout>
     <ViewStub

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res/com.lashgo.android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+    <ImageView
+            android:id="@+id/full_photo"
+            android:layout_width="match_parent" android:layout_height="match_parent"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="56dp"
+                  android:orientation="horizontal"
+                  android:gravity="center_vertical"
+                  android:id="@+id/top_check_panel"
+            >
+        <ImageView
+                android:id="@+id/task_photo"
+                android:layout_width="40dp" android:layout_height="40dp"
+                android:layout_marginLeft="16dp"
+                />
+        <com.lashgo.android.ui.views.RobotoTextView
+                android:id="@+id/check_name"
+                android:layout_marginLeft="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:ellipsize="end"
+                app:fontName="@string/condensed_regular"
+                android:textSize="18sp"
+                android:textColor="@color/check_description_color_2"
+
+                />
+    </LinearLayout>
+    <FrameLayout
+            android:id="@+id/bottom_photo_bg"
+            android:layout_width="match_parent" android:layout_height="48dp"
+            android:background="@color/check_description_color_2"
+            android:layout_gravity="bottom"
+            />
+    <include layout="@layout/view_check_bottom_panel"
+             android:layout_width="match_parent"
+             android:layout_height="48dp"
+             android:layout_gravity="bottom"
+            />
+</FrameLayout>

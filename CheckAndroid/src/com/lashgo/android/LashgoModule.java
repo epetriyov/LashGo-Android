@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lashgo.android.service.*;
+import com.lashgo.android.service.ServiceHelper;
 import com.lashgo.android.service.handlers.*;
 import com.lashgo.android.service.transport.CheckErrorHandler;
 import com.lashgo.android.service.transport.CheckInterceptor;
@@ -33,6 +33,7 @@ import java.text.SimpleDateFormat;
                 GcmRegisterHandler.class,
                 SocialSignInHandler.class,
                 SocialSignUpHandler.class,
+                SendPhotoHandler.class,
                 GetMainScreenHandler.class,
                 GetCheckListHandler.class,
                 ServiceHelper.class,

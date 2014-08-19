@@ -17,10 +17,7 @@ import com.lashgo.android.ui.main.MainActivity;
 import com.lashgo.android.utils.ContextUtils;
 import com.lashgo.android.utils.Md5Util;
 import com.lashgo.model.ErrorCodes;
-import com.lashgo.model.dto.ErrorDto;
-import com.lashgo.model.dto.ExtendedSocialInfo;
-import com.lashgo.model.dto.LoginInfo;
-import com.lashgo.model.dto.SocialInfo;
+import com.lashgo.model.dto.*;
 import com.vk.sdk.VKSdk;
 
 import javax.inject.Inject;
@@ -70,14 +67,12 @@ public class AuthController implements View.OnClickListener, EnterEmailDialog.Em
         } else if (view.getId() == R.id.btn_login) {
             LoginInfo loginInfo = buildLoginInfo();
             if (loginInfo != null) {
-                baseActivity.startProgress();
                 serviceHelper.login(loginInfo);
             }
         } else if (view.getId() == R.id.btn_password_recover) {
         } else if (view.getId() == R.id.btn_register) {
             LoginInfo loginInfo = buildLoginInfo();
             if (loginInfo != null) {
-                baseActivity.startProgress();
                 serviceHelper.register(loginInfo);
             }
         }
@@ -87,9 +82,9 @@ public class AuthController implements View.OnClickListener, EnterEmailDialog.Em
         String loginValue = login.getText().toString();
         String passwordValue = password.getText().toString();
         if (TextUtils.isEmpty(loginValue)) {
-            login.setError(baseActivity.getString(R.string.error_empty_field));
+            login.setError(baseActivity.getString(R.string.error_empty_email));
         } else if (TextUtils.isEmpty(passwordValue)) {
-            password.setError(baseActivity.getString(R.string.error_empty_field));
+            password.setError(baseActivity.getString(R.string.error_empty_password));
         } else {
             return new LoginInfo(login.getText().toString(), Md5Util.md5(password.getText().toString()));
         }
@@ -105,8 +100,9 @@ public class AuthController implements View.OnClickListener, EnterEmailDialog.Em
             }
         } else if (BaseIntentHandler.ServiceActionNames.ACTION_REGISTER.name().equals(action)) {
             if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
-                baseActivity.startProgress();
-                serviceHelper.login((LoginInfo) data.getSerializable(BaseIntentHandler.ServiceExtraNames.REGISTER_DTO.name()));
+                if (data != null) {
+                    onRegisterSuccessFull((RegisterResponse) data.getSerializable(BaseIntentHandler.ServiceExtraNames.REGISTER_RESPONSE_INFO.name()));
+                }
             } else {
                 baseActivity.showErrorToast(data);
             }
@@ -127,13 +123,30 @@ public class AuthController implements View.OnClickListener, EnterEmailDialog.Em
                     baseActivity.showErrorToast(data);
                 }
             } else {
-                onLoginSuccessFull();
+                if (data != null) {
+                    onRegisterSuccessFull((RegisterResponse) data.getSerializable(BaseIntentHandler.ServiceExtraNames.REGISTER_RESPONSE_INFO.name()));
+                }
             }
         } else if (BaseIntentHandler.ServiceActionNames.ACTION_CONFIRM_SOCIAL_SIGN_UP.name().equals(action)) {
             if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
-                onLoginSuccessFull();
+                if (data != null) {
+                    onRegisterSuccessFull((RegisterResponse) data.getSerializable(BaseIntentHandler.ServiceExtraNames.REGISTER_RESPONSE_INFO.name()));
+                }
             } else {
                 baseActivity.showErrorToast(data);
+            }
+        }
+
+    }
+
+    private void onRegisterSuccessFull(RegisterResponse registerResponse) {
+        if (registerResponse != null) {
+            if (registerResponse.getUserName() != null) {
+                baseActivity.startActivity(SuccessfulRegisterActivity.buildIntent(baseActivity, registerResponse));
+                baseActivity.setResult(Activity.RESULT_OK);
+                baseActivity.finish();
+            } else {
+                onLoginSuccessFull();
             }
         }
     }
@@ -146,7 +159,6 @@ public class AuthController implements View.OnClickListener, EnterEmailDialog.Em
 
     @Override
     public void sendSocialEmail(String email) {
-        baseActivity.startProgress();
         serviceHelper.socialSignUp(new ExtendedSocialInfo(socialInfo, email));
     }
 }

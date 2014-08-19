@@ -2,6 +2,7 @@ package com.lashgo.android.service.handlers;
 
 import android.content.Intent;
 import android.os.Bundle;
+import com.lashgo.model.dto.RegisterResponse;
 import com.lashgo.model.dto.ResponseObject;
 import com.lashgo.model.dto.SessionInfo;
 import com.lashgo.model.dto.SocialInfo;
@@ -24,9 +25,13 @@ public class SocialSignInHandler extends BaseIntentHandler {
 
     @Override
     protected Bundle doExecute(Intent intent) throws RetrofitError, IOException {
+        Bundle bundle = new Bundle();
         SocialInfo socialInfo = (SocialInfo) intent.getSerializableExtra(ServiceExtraNames.SOCIAL_DTO.name());
-        ResponseObject<SessionInfo> sessionInfo = service.socialSignIn(socialInfo);
-        settingsHelper.socialLogin(sessionInfo.getResult(), socialInfo);
-        return intent.getExtras();
+        ResponseObject<RegisterResponse> registerResponse = service.socialSignIn(socialInfo);
+        if (registerResponse != null && registerResponse.getResult() != null) {
+            settingsHelper.socialLogin(new SessionInfo(registerResponse.getResult().getSessionId(), registerResponse.getResult().getUserId()), socialInfo);
+            bundle.putSerializable(ServiceExtraNames.REGISTER_RESPONSE_INFO.name(), registerResponse.getResult());
+        }
+        return bundle;
     }
 }

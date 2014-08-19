@@ -1,6 +1,7 @@
 package com.lashgo.android.ui;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,7 +35,9 @@ import java.util.List;
  */
 public abstract class BaseActivity extends Activity implements ServiceReceiver {
 
-    public static enum ExtraNames {CHECK_DTO}
+    protected static final String PROGRESS_DIALOG = "progress";
+
+    public static enum ExtraNames {CHECK_DTO, PHOTO_URL}
 
     private ObjectGraph loginGraph;
 
@@ -61,6 +64,39 @@ public abstract class BaseActivity extends Activity implements ServiceReceiver {
 
     @Inject
     ServiceBinder serviceBinder;
+
+    private DialogFragment dialogFragment;
+
+    private boolean isDialogShowNeeded;
+
+    private String tag;
+
+    private boolean isDialogDismissNeeded;
+
+    private boolean isActivityOnForeground;
+
+    public void showDialog(DialogFragment dialogFragment, String tag) {
+        if (isActivityOnForeground) {
+            if (dialogFragment != null && !dialogFragment.isAdded() && getFragmentManager().findFragmentByTag(tag) == null) {
+                dialogFragment.show(getFragmentManager(), tag);
+            }
+        } else {
+            isDialogShowNeeded = true;
+            this.dialogFragment = dialogFragment;
+            this.tag = tag;
+        }
+    }
+
+    public void dismissDialog(DialogFragment dialogFragment) {
+        if (isActivityOnForeground) {
+            if (dialogFragment != null && dialogFragment.getFragmentManager() != null) {
+                dialogFragment.dismiss();
+            }
+        } else {
+            isDialogDismissNeeded = true;
+            this.dialogFragment = dialogFragment;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +146,15 @@ public abstract class BaseActivity extends Activity implements ServiceReceiver {
     @Override
     protected void onResume() {
         super.onResume();
+        isActivityOnForeground = true;
+        if (isDialogShowNeeded) {
+            showDialog(dialogFragment, tag);
+            isDialogShowNeeded = false;
+        }
+        if (isDialogDismissNeeded) {
+            dismissDialog(dialogFragment);
+            isDialogDismissNeeded = false;
+        }
         serviceBinder.onResume();
         facebookUiHelper.onResume();
         VKUIHelper.onResume(this);
@@ -118,6 +163,7 @@ public abstract class BaseActivity extends Activity implements ServiceReceiver {
     @Override
     protected void onPause() {
         super.onPause();
+        isActivityOnForeground = false;
         serviceBinder.onPause();
         facebookUiHelper.onPause();
     }

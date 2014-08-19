@@ -22,11 +22,13 @@ public class LoginHandler extends BaseIntentHandler {
 
     @Override
     public Bundle doExecute(Intent intent) throws RetrofitError, IOException {
+        Bundle bundle = intent.getExtras();
         LoginInfo loginInfo = (LoginInfo) intent.getSerializableExtra(ServiceExtraNames.LOGIN_DTO.name());
         ResponseObject<SessionInfo> sessionInfo = service.login(loginInfo);
-        settingsHelper.login(sessionInfo.getResult(), loginInfo);
-        Bundle bundle = intent.getExtras();
-        bundle.putSerializable(ServiceExtraNames.SESSION_INFO.name(), sessionInfo);
+        if (sessionInfo != null && sessionInfo.getResult() != null) {
+            settingsHelper.login(sessionInfo.getResult(), loginInfo);
+            bundle.putSerializable(ServiceExtraNames.SESSION_INFO.name(), sessionInfo);
+        }
         return bundle;
     }
 }

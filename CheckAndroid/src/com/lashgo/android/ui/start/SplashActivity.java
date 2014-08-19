@@ -35,7 +35,6 @@ public class SplashActivity extends Activity implements View.OnClickListener {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SPASH_REQUEST_CODE && resultCode == RESULT_OK) {
             finish();
         }

@@ -7,10 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import com.lashgo.android.LashgoConfig;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseFragment;
 import com.lashgo.android.ui.adapters.MultyTypeAdapter;
+import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.model.dto.CheckDto;
 import com.lashgo.model.dto.ResponseList;
 
@@ -83,6 +85,9 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
                 if (isFirstIteration ||
                         (isLastActive && (checkActiveCalendar.getTimeInMillis() <= System.currentTimeMillis())) ||
                         (isLastVote && (checkVoteCalendar.getTimeInMillis() < System.currentTimeMillis()))) {
+                    /**
+                     * check state differs from previous
+                     */
                     if ((checkActiveCalendar.getTimeInMillis() > System.currentTimeMillis())) {
                         checkStatus = getString(R.string.active_checks);
                     } else if (checkVoteCalendar.getTimeInMillis() > System.currentTimeMillis()) {
@@ -117,7 +122,22 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Object selectedItem = multyTypeAdapter.getItem(position);
         if (selectedItem instanceof CheckDto) {
-            startActivity(CheckInfoActivity.newIntent(getActivity(), (CheckDto) selectedItem));
+            CheckDto selectedCheck = (CheckDto) selectedItem;
+            LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(selectedCheck);
+            switch (checkState) {
+                case ACTIVE:
+                    startActivity(CheckActiveActivity.buildIntent(getActivity(), selectedCheck));
+                    break;
+                case VOTE:
+                    startActivity(CheckVoteActivity.buildIntent(getActivity(), selectedCheck));
+                    break;
+                case FINISHED:
+                    startActivity(CheckFinishedActivity.buildIntent(getActivity(), selectedCheck));
+                    break;
+                default:
+                    break;
+            }
+            startActivity(CheckActiveActivity.buildIntent(getActivity(), selectedCheck));
         } else {
             throw new IllegalStateException("Selected item is not CheckDto object");
         }

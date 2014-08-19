@@ -1,13 +1,10 @@
 package com.lashgo.android.service.transport;
 
+import com.lashgo.model.CheckApiHeaders;
 import com.lashgo.model.Path;
 import com.lashgo.model.dto.*;
-import retrofit.http.Body;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.http.Query;
-
-import java.util.Date;
+import retrofit.http.*;
+import retrofit.mime.TypedFile;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,13 +18,13 @@ public interface RestService {
     ResponseObject<SessionInfo> login(@Body LoginInfo loginInfo);
 
     @POST(Path.Users.REGISTER)
-    ResponseObject register(@Body LoginInfo registerInfo);
+    ResponseObject<RegisterResponse> register(@Body LoginInfo registerInfo);
 
     @POST(Path.Users.SOCIAL_SIGN_IN)
-    ResponseObject<SessionInfo> socialSignIn(@Body SocialInfo socialInfo);
+    ResponseObject<RegisterResponse> socialSignIn(@Body SocialInfo socialInfo);
 
     @POST(Path.Users.SOCIAL_SIGN_UP)
-    ResponseObject<SessionInfo> confirmSocialSignUp(@Body ExtendedSocialInfo socialInfo);
+    ResponseObject<RegisterResponse> confirmSocialSignUp(@Body ExtendedSocialInfo socialInfo);
 
     @POST(Path.Gcm.REGISTER)
     ResponseObject registerDevice(@Body GcmRegistrationDto gcmRegistrationDto);
@@ -37,4 +34,8 @@ public interface RestService {
 
     @GET(Path.Checks.GET)
     ResponseList<CheckDto> getChecks();
+
+    @Multipart
+    @POST(Path.Checks.PHOTOS)
+    ResponseObject saveCheckPhoto(@Header(CheckApiHeaders.SESSION_ID) String sessionId, @retrofit.http.Path("checkId") long checkId, @Part("photo") TypedFile photo);
 }

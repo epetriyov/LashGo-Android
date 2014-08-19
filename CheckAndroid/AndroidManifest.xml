@@ -41,7 +41,7 @@
                 />
         <activity android:name="com.vk.sdk.VKOpenAuthActivity"/>
         <activity android:name=".ui.auth.LoginActivity"
-                  android:launchMode="singleTask"
+                  android:launchMode="singleTop"
                 >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -52,9 +52,13 @@
                         android:scheme="check"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.main.MainActivity"/>
+        <activity android:name=".ui.main.MainActivity"
+                  android:launchMode="singleTask"
+                />
+        <activity android:name=".ui.auth.SuccessfulRegisterActivity"/>
+        <activity android:name=".ui.profile.ProfileActivity"/>
         <activity android:name=".ui.start.SplashActivity"/>
-        <activity android:name=".ui.check.CheckInfoActivity"
+        <activity android:name=".ui.check.CheckActiveActivity"
                   android:label="@string/task"
                 />
         <activity

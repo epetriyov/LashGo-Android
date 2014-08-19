@@ -30,10 +30,12 @@ public class SettingsHelper {
     private static final String KEY_SOCIAL_INFO = "social_info";
     private static final String KEY_LAST_SUBSCRIPTIONS_VIEW = "last_subscription_date";
     private static final String KEY_LAST_NEWS_VIEW = "last_news_view";
+    private SessionInfo sessionInfo;
     private SharedPreferences preferences;
 
     public SettingsHelper(Context context) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        initSessionInfo();
     }
 
     private float getFloat(String key, float defaultValue) {
@@ -96,12 +98,18 @@ public class SettingsHelper {
         return preferences.getString(key, defaultValue);
     }
 
+    private void saveSessionInfo(SessionInfo sessionInfo) {
+        saveSerializable(KEY_SESSION, sessionInfo);
+        this.sessionInfo = sessionInfo;
+    }
+
     public void login(SessionInfo sessionInfo, LoginInfo loginInfo) {
-        setString(KEY_SESSION, sessionInfo.getSessionId());
+        saveSessionInfo(sessionInfo);
         saveSerializable(KEY_LOGIN_INFO, loginInfo);
     }
 
     public void logout() {
+        sessionInfo = null;
         remove(KEY_SESSION);
         remove(KEY_LOGIN_INFO);
         remove(KEY_SOCIAL_INFO);
@@ -124,12 +132,11 @@ public class SettingsHelper {
     }
 
     public boolean isLoggedIn() {
-        String session = getString(KEY_SESSION, "");
-        return !TextUtils.isEmpty(session);
+        return sessionInfo != null;
     }
 
     public void setFirstLaunch() {
-        setBoolean(KEY_IS_FIRST_LAUNCH, true);
+        setBoolean(KEY_IS_FIRST_LAUNCH, false);
     }
 
     public boolean isFirstLaunch() {
@@ -169,14 +176,20 @@ public class SettingsHelper {
     }
 
     public void socialLogin(SessionInfo sessionInfo, SocialInfo socialInfo) {
-        if (sessionInfo != null) {
-            setString(KEY_SESSION, sessionInfo.getSessionId());
-        }
+        saveSessionInfo(sessionInfo);
         saveSerializable(KEY_SOCIAL_INFO, socialInfo);
     }
 
-    public String getSessionId() {
-        return getString(KEY_SESSION, null);
+    private void initSessionInfo() {
+        sessionInfo = (SessionInfo) getSerializable(KEY_SESSION, SessionInfo.class);
+    }
+
+    public SessionInfo getSessionInfo() {
+        return sessionInfo;
+    }
+
+    public void setSessionInfo(SessionInfo sessionInfo) {
+        this.sessionInfo = sessionInfo;
     }
 
     public String getLastNewsView() {
@@ -185,5 +198,9 @@ public class SettingsHelper {
 
     public String getLastSubscriptionsView() {
         return getString(KEY_LAST_SUBSCRIPTIONS_VIEW, new SimpleDateFormat(LashgoConfig.DATE_FORMAT).format(new Date()));
+    }
+
+    public void clearFirstLaunch() {
+        remove(KEY_IS_FIRST_LAUNCH);
     }
 }

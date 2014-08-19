@@ -8,9 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.lashgo.android.LashgoConfig;
 import com.lashgo.android.R;
 import com.lashgo.android.ui.adapters.AdapterBinder;
 import com.lashgo.android.ui.images.CircleTransformation;
+import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.model.dto.CheckDto;
 import com.squareup.picasso.Picasso;
@@ -56,29 +58,28 @@ public class CheckItemBinder extends AdapterBinder {
             Picasso.with(getContext()).load(PhotoUtils.getFullPhotoUrl(checkDto.getPhotoUrl())).centerInside().
                     resize(imageSize, imageSize).transform(new CircleTransformation()).into(viewHolder.checkIcon);
         }
-        Calendar checkFinishCalendar = Calendar.getInstance();
-        checkFinishCalendar.setTime(checkDto.getStartDate());
-        checkFinishCalendar.add(Calendar.HOUR, checkDto.getDuration());
-        Calendar checkVoteCalendar = Calendar.getInstance();
-        checkVoteCalendar.setTime(checkDto.getStartDate());
-        checkVoteCalendar.add(Calendar.HOUR, checkDto.getDuration() + checkDto.getVoteDuration());
-        if (checkFinishCalendar.getTimeInMillis() - System.currentTimeMillis() > 0) {
-            /**
-             * check is active
-             */
-            viewHolder.checkRemainingTime.setVisibility(View.VISIBLE);
-            new CheckCounter(checkFinishCalendar.getTimeInMillis() - System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS, viewHolder.checkRemainingTime).start();
-        } else if (checkVoteCalendar.getTimeInMillis() - System.currentTimeMillis() > 0) {
-            /**
-             * vote is going
-             */
-            viewHolder.checkRemainingTime.setVisibility(View.VISIBLE);
-            new CheckCounter(checkVoteCalendar.getTimeInMillis() - System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS, viewHolder.checkRemainingTime).start();
-        } else {
-            /**
-             * check finished
-             */
-            viewHolder.checkRemainingTime.setVisibility(View.GONE);
+        LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
+        switch (checkState)
+        {
+            case ACTIVE:
+                Calendar checkActiveCalendar = Calendar.getInstance();
+                checkActiveCalendar.setTime(checkDto.getStartDate());
+                checkActiveCalendar.add(Calendar.HOUR_OF_DAY, checkDto.getDuration());
+                viewHolder.checkRemainingTime.setVisibility(View.VISIBLE);
+                new CheckCounter(checkActiveCalendar.getTimeInMillis() - System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS, viewHolder.checkRemainingTime).start();
+                break;
+            case VOTE:
+                Calendar checkVoteCalendar = Calendar.getInstance();
+                checkVoteCalendar.setTime(checkDto.getStartDate());
+                checkVoteCalendar.add(Calendar.HOUR_OF_DAY, checkDto.getDuration() + checkDto.getVoteDuration());
+                viewHolder.checkRemainingTime.setVisibility(View.VISIBLE);
+                new CheckCounter(checkVoteCalendar.getTimeInMillis() - System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS, viewHolder.checkRemainingTime).start();
+                break;
+            case FINISHED:
+                viewHolder.checkRemainingTime.setVisibility(View.GONE);
+                break;
+            default:
+                break;
         }
         return convertView;
     }

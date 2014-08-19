@@ -3,6 +3,9 @@ package com.lashgo.android.service.handlers;
 import android.content.Intent;
 import android.os.Bundle;
 import com.lashgo.model.dto.LoginInfo;
+import com.lashgo.model.dto.RegisterResponse;
+import com.lashgo.model.dto.ResponseObject;
+import com.lashgo.model.dto.SessionInfo;
 import retrofit.RetrofitError;
 
 import java.io.IOException;
@@ -22,8 +25,13 @@ public class RegisterHandler extends BaseIntentHandler {
 
     @Override
     protected Bundle doExecute(Intent intent) throws RetrofitError, IOException {
+        Bundle bundle = new Bundle();
         LoginInfo registerInfo = (LoginInfo) intent.getSerializableExtra(ServiceExtraNames.REGISTER_DTO.name());
-        service.register(registerInfo);
-        return intent.getExtras();
+        ResponseObject<RegisterResponse> registerResponse = service.register(registerInfo);
+        if (registerResponse != null && registerResponse.getResult() != null) {
+            settingsHelper.login(new SessionInfo(registerResponse.getResult().getSessionId(), registerResponse.getResult().getUserId()), registerInfo);
+            bundle.putSerializable(ServiceExtraNames.REGISTER_RESPONSE_INFO.name(), registerResponse.getResult());
+        }
+        return bundle;
     }
 }

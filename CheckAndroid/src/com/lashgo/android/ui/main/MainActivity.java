@@ -160,9 +160,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_main);
-        if (!settingsHelper.isFirstLaunch()) {
-            settingsHelper.setFirstLaunch();
-        }
+        settingsHelper.setFirstLaunch();
         title = drawerTitle = getTitle();
         menuItems = getResources().getStringArray(R.array.menus_array);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);

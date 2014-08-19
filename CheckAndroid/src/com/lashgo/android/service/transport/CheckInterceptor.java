@@ -7,7 +7,6 @@ import com.lashgo.android.settings.SettingsHelper;
 import com.lashgo.model.CheckApiHeaders;
 import retrofit.RequestInterceptor;
 
-import javax.inject.Inject;
 import java.util.UUID;
 
 /**
@@ -31,7 +30,7 @@ public class CheckInterceptor implements RequestInterceptor {
     public void intercept(RequestFacade requestFacade) {
         requestFacade.addHeader(CheckApiHeaders.UUID, UUID.randomUUID().toString());
         requestFacade.addHeader(CheckApiHeaders.CLIENT_TYPE, LashgoConfig.CLIENT_TYPE);
-        String session = settingsHelper.getSessionId();
+        String session = settingsHelper.getSessionInfo();
         if (!TextUtils.isEmpty(session)) {
             requestFacade.addHeader(CheckApiHeaders.SESSION_ID, session);
         }

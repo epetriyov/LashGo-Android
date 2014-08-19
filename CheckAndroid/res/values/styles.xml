@@ -10,6 +10,7 @@
         <item name="android:layout_height">56dp</item>
         <item name="android:background">@color/splash_top_color</item>
         <item name="android:titleTextStyle">@style/Widget.Styled.ActionBar.TitleText</item>
+        <item name="android:indeterminateProgressStyle">@style/LashgoProgressBar</item>
         <!-- Setting values in the android namespace affects API levels 14+ -->
     </style>
 
@@ -22,5 +23,8 @@
     </style>
     <style name="Widget.Styled.ActionBar.TitleText" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="LashgoProgressBar"  parent="@android:style/Widget.ProgressBar.Large">
+        <item name="android:indeterminateDrawable">@drawable/custom_progress</item>
     </style>
 </resources>

@@ -149,6 +149,12 @@ public class ServiceHelper {
         runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GCM_REGISTER_ID.name(), extras);
     }
 
+    public void sendPhoto(String photoPath) {
+        Bundle extras = new Bundle();
+        extras.putString(BaseIntentHandler.ServiceExtraNames.PHOTO_PATH.name(), photoPath);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_SEND_PHOTO.name(), extras);
+    }
+
     public void getMainScreenInfo(String lastNewsViewDate, String lastSubscribtionsViewDate) {
         Bundle extras = new Bundle();
         extras.putString(BaseIntentHandler.ServiceExtraNames.LAST_NEWS_VIEW_DATE.name(), lastNewsViewDate);

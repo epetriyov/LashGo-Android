@@ -2,7 +2,6 @@ package com.lashgo.android;
 
 import com.lashgo.android.service.ServiceBinder;
 import com.lashgo.android.ui.BaseFragment;
-import com.lashgo.android.ui.check.CheckInfoActivity;
 import com.lashgo.android.ui.check.CheckListFragment;
 import dagger.Module;
 import dagger.Provides;

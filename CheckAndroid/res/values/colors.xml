@@ -31,4 +31,9 @@
     <color name="check_time_color_2">#FF5E7C</color>
     <color name="black">#000000</color>
     <color name="bg_after_reg_bottom">#EAEAEC</color>
+    <color name="line_color">#F06292</color>
+    <color name="login_start_color">#AFB2B7</color>
+    <color name="drawer_gradient_bottom">#94989C</color>
+    <color name="bg_start_check">#3d425a</color>
+    <color name="bg_end_check">#181c22</color>
 </resources>
