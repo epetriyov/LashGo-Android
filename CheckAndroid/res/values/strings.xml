@@ -55,7 +55,7 @@
     <string name="news">Новости</string>
     <string name="subscribes">Подписки</string>
     <string name="vote_checks">Идёт голосование</string>
-    <string name="task">Задание</string>
+    <string name="task">Чек</string>
     <string name="make_photo">Выполнить задание с помощью...</string>
     <string name="empty_image_was_chosen">Выбрана пустая фотография</string>
     <string name="congratulations">Поздравляем!</string>
@@ -68,6 +68,10 @@
     <string name="error_empty_password">Введите пароль</string>
     <string name="loading">Загрузка...</string>
     <string name="error_send_photo">Произошла ошибка. Сделайте фото ещё раз.</string>
+    <string name="choose_photo">Выберите одну\nиз четырёх фото</string>
+    <string name="error_empty_check">Пустой чек</string>
+    <string name="now_this_button">Теперь эту кнопочку</string>
+    <string name="go_to_next_partition">Перейти к\nследующей партии</string>
     <string-array name="make_photo_items">
         <item>Камера</item>
         <item>Галерея</item>

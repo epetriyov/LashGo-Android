@@ -58,7 +58,14 @@
         <activity android:name=".ui.auth.SuccessfulRegisterActivity"/>
         <activity android:name=".ui.profile.ProfileActivity"/>
         <activity android:name=".ui.start.SplashActivity"/>
+        <activity android:name=".ui.check.PhotoActivity"/>
         <activity android:name=".ui.check.CheckActiveActivity"
+                  android:label="@string/task"
+                />
+        <activity android:name=".ui.check.CheckVoteActivity"
+                  android:label="@string/task"
+                />
+        <activity android:name=".ui.check.FirstVoteActivity"
                   android:label="@string/task"
                 />
         <activity

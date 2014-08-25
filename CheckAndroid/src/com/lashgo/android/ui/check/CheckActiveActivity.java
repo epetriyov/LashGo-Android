@@ -5,11 +5,9 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +22,6 @@ import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.model.dto.CheckDto;
 import com.squareup.picasso.Picasso;
 
-import java.util.concurrent.TimeUnit;
-
 /**
  * Created by Eugene on 16.06.2014.
  */
@@ -38,6 +34,7 @@ public class CheckActiveActivity extends BaseActivity implements View.OnClickLis
     private CheckPagerAdapter pagerAdapter;
     private int imageSize;
     private ViewPager viewPager;
+    private CheckBottomPanelController bottomPanelController;
 
     public static Intent buildIntent(Context context, CheckDto checkDto) {
         Intent intent = new Intent(context, CheckActiveActivity.class);
@@ -76,44 +73,19 @@ public class CheckActiveActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.frag_check_info);
+        setContentView(R.layout.act_check_active);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         initCheckDto(savedInstanceState);
         initViews();
+        bottomPanelController = new CheckBottomPanelController(this, checkDto);
     }
 
     private void initViews() {
         if (checkDto != null) {
             imageSize = PhotoUtils.convertPixelsToDp(PhotoUtils.getScreenWidth(this) - CHECH_PHOTO_PADDINGS, this);
-            findViewById(R.id.likes_layout).setVisibility(View.GONE);
-            findViewById(R.id.comments_layout).setVisibility(View.GONE);
             findViewById(R.id.btn_camera).setOnClickListener(this);
-            findViewById(R.id.btn_share).setOnClickListener(this);
-            final TextView checkTimeText = (TextView) findViewById(R.id.check_time);
             ((TextView) findViewById(R.id.check_name)).setText(checkDto.getName());
             ((TextView) findViewById(R.id.task_description)).setText(checkDto.getDescription());
-            ((TextView) findViewById(R.id.shares_count)).setText(String.valueOf(checkDto.getSharesCount()));
-            ((TextView) findViewById(R.id.peoples_count)).setText(String.valueOf(checkDto.getPlayersCount()));
-            if (checkDto.getStartDate() != null) {
-                long finishMillis = checkDto.getStartDate().getTime() + checkDto.getDuration() * DateUtils.HOUR_IN_MILLIS;
-                if (finishMillis > System.currentTimeMillis()) {
-                    new CountDownTimer(finishMillis - System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS) {
-                        @Override
-                        public void onTick(long millisUntilFinished) {
-                            long remainingMinutes = TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished);
-                            long remainingSeconds = (millisUntilFinished - remainingMinutes * DateUtils.MINUTE_IN_MILLIS) / DateUtils.SECOND_IN_MILLIS;
-                            checkTimeText.setText(String.valueOf(remainingMinutes) + ":" + String.valueOf(remainingSeconds));
-                        }
-
-                        @Override
-                        public void onFinish() {
-                            startActivity(CheckVoteActivity.buildIntent(CheckActiveActivity.this,
-                                    checkDto));
-                            finish();
-                        }
-                    }.start();
-                }
-            }
             viewPager = (ViewPager) findViewById(R.id.check_pager);
             viewPager.setPageMargin(15);
             viewPager.setClipChildren(true);

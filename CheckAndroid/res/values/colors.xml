@@ -36,4 +36,7 @@
     <color name="drawer_gradient_bottom">#94989C</color>
     <color name="bg_start_check">#3d425a</color>
     <color name="bg_end_check">#181c22</color>
+    <color name="vote_check_description_color">#9a9a9a</color>
+    <color name="check_vote_bg">#FAFAFA</color>
+    <color name="photo_not_selected">#99EBECEE</color>
 </resources>

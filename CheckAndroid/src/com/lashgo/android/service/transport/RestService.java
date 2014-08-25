@@ -37,5 +37,11 @@ public interface RestService {
 
     @Multipart
     @POST(Path.Checks.PHOTOS)
-    ResponseObject saveCheckPhoto(@Header(CheckApiHeaders.SESSION_ID) String sessionId, @retrofit.http.Path("checkId") long checkId, @Part("photo") TypedFile photo);
+    ResponseObject saveCheckPhoto(@retrofit.http.Path("checkId") long checkId, @Part("photo") TypedFile photo);
+
+    @GET(Path.Checks.VOTE_PHOTOS)
+    ResponseList<VotePhoto> getVotePhotos();
+
+    @POST(Path.Photos.VOTE)
+    ResponseObject votePhoto(@Body VoteAction voteAction);
 }

@@ -177,7 +177,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         // Set the adapter for the list view
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
-                R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
+                R.drawable.drawer_normal, R.string.drawer_open, R.string.drawer_close) {
 
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {

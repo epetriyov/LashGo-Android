@@ -12,10 +12,10 @@
             android:adjustViewBounds="true"
             android:padding="21dp"
             />
-    <View android:id = "@+id/btn_send_photo"
+    <ImageView android:id = "@+id/btn_send_photo"
           android:layout_gravity="center_horizontal|bottom"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:background="@drawable/btn_send_photo"
+          android:src="@drawable/btn_send_photo"
           />
 </FrameLayout>

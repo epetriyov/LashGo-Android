@@ -10,11 +10,11 @@
                   android:gravity="center"
                   android:layout_weight="1"
             >
-        <View
+        <ImageView
                 android:id="@+id/btn_share"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
-                android:background="@drawable/btn_share"
+                android:src="@drawable/btn_share"
                 />
         <com.lashgo.android.ui.views.RobotoTextView
                 android:id="@+id/shares_count"
@@ -35,10 +35,10 @@
             android:layout_weight="1"
             android:id="@+id/likes_layout"
             >
-        <View
+        <ImageView
                 android:id="@+id/btn_likes"
                 android:layout_width="48dp" android:layout_height="match_parent"
-                android:background="@drawable/ic_like"
+                android:src="@drawable/ic_like"
                 />
         <com.lashgo.android.ui.views.RobotoTextView
                 android:id="@+id/likes_count"
@@ -59,10 +59,10 @@
             android:layout_weight="1"
             android:id="@+id/comments_layout"
             >
-        <View
+        <ImageView
                 android:id="@+id/btn_comments"
                 android:layout_width="48dp" android:layout_height="match_parent"
-                android:background="@drawable/ic_comments"
+                android:src="@drawable/ic_comments"
                 />
         <com.lashgo.android.ui.views.RobotoTextView
                 android:id="@+id/comments_count"
@@ -83,8 +83,8 @@
             android:layout_weight="1"
             android:id="@+id/time_layout"
             >
-        <View android:layout_width="48dp" android:layout_height="match_parent"
-              android:background="@drawable/time"
+        <ImageView android:layout_width="48dp" android:layout_height="match_parent"
+              android:src="@drawable/time"
                 />
         <com.lashgo.android.ui.views.RobotoTextView
                 android:id="@+id/check_time"
@@ -103,11 +103,11 @@
                   android:gravity="center"
                   android:layout_weight="1"
             >
-        <View
+        <ImageView
                 android:id="@+id/btn_peoples_count"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
-                android:background="@drawable/ic_mob_normal"
+                android:src="@drawable/ic_mob_normal"
                 />
         <com.lashgo.android.ui.views.RobotoTextView
                 android:id="@+id/peoples_count"

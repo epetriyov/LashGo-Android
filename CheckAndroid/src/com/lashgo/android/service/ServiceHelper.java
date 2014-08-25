@@ -165,4 +165,15 @@ public class ServiceHelper {
     public void getChecks() {
         runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_LIST.name(), new Bundle());
     }
+
+    public void getVotePhotos() {
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_VOTE_PHOTOS.name(), new Bundle());
+    }
+
+    public void votePhoto(VoteAction voteAction)
+    {
+        Bundle extras = new Bundle();
+        extras.putSerializable(BaseIntentHandler.ServiceExtraNames.VOTE_ACTION.name(), voteAction);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_VOTE.name(), extras);
+    }
 }
