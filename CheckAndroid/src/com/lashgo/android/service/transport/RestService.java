@@ -40,7 +40,7 @@ public interface RestService {
     ResponseObject saveCheckPhoto(@retrofit.http.Path("checkId") long checkId, @Part("photo") TypedFile photo);
 
     @GET(Path.Checks.VOTE_PHOTOS)
-    ResponseList<VotePhoto> getVotePhotos();
+    ResponseObject<VotePhotosResult> getVotePhotos(@Query("is_count_included") boolean isCountIncluded);
 
     @POST(Path.Photos.VOTE)
     ResponseObject votePhoto(@Body VoteAction voteAction);

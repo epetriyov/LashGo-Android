@@ -19,6 +19,7 @@ import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.model.dto.CheckDto;
 import com.lashgo.model.dto.VoteAction;
 import com.lashgo.model.dto.VotePhoto;
+import com.lashgo.model.dto.VotePhotosResult;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class FirstVoteActivity extends BaseActivity implements View.OnClickListener, VotePhotoController.VotePhotoListener {
 
+    private static final int VOTE_PHOTOS_LIMIT = 4;
     private ScreenState screenState;
     private CheckDto checkDto;
     private List<VotePhoto> votePhotos;
@@ -42,6 +44,8 @@ public class FirstVoteActivity extends BaseActivity implements View.OnClickListe
     private VotePhotoController secondPhotoController;
     private VotePhotoController thirdPhotoController;
     private VotePhotoController fourthPhotoController;
+    private int photosCount;
+    private int votedPhotosCount = 1;
 
     public static Intent buildIntent(Context context, CheckDto checkDto) {
         Intent intent = new Intent(context, CheckActiveActivity.class);
@@ -104,7 +108,7 @@ public class FirstVoteActivity extends BaseActivity implements View.OnClickListe
         initCheckDto(savedInstanceState);
         initViews();
         bottomPanelController = new CheckBottomPanelController(this, checkDto);
-        serviceHelper.getVotePhotos();
+        serviceHelper.getVotePhotos(true);
         screenState = ScreenState.CHOOSE_PHOTO;
     }
 
@@ -116,7 +120,7 @@ public class FirstVoteActivity extends BaseActivity implements View.OnClickListe
                 screenState = ScreenState.CHOOSE_PHOTO;
                 voteButton.setBackgroundResource(R.drawable.btn_like);
                 voteHint.setText(R.string.choose_photo);
-                updatePhotos((List<VotePhoto>) data.getSerializable(BaseIntentHandler.ServiceExtraNames.VOTE_PHOTO_LIST.name()));
+                updatePhotos((VotePhotosResult) data.getSerializable(BaseIntentHandler.ServiceExtraNames.VOTE_PHOTO_LIST.name()));
             } else if (BaseIntentHandler.ServiceActionNames.ACTION_VOTE.name().equals(action)) {
                 firstPhotoController.voteDone();
                 secondPhotoController.voteDone();
@@ -129,21 +133,28 @@ public class FirstVoteActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-    private void updatePhotos(List<VotePhoto> votePhotos) {
-        this.votePhotos = new ArrayList<>(votePhotos);
+    private void updatePhotos(VotePhotosResult votePhotos) {
         if (votePhotos != null) {
-            if (votePhotos.size() > 0) {
-                firstPhotoController.setImage(this, votePhotos.get(0).getPhotoUrl());
+            List<VotePhoto> votePhotoList = votePhotos.getVotePhotoList();
+            if (votePhotoList != null) {
+                this.votePhotos = new ArrayList<>(votePhotoList);
+                if (votePhotoList.size() > 0) {
+                    firstPhotoController.setImage(this, votePhotoList.get(0).getPhotoUrl());
+                }
+                if (votePhotoList.size() > 1) {
+                    secondPhotoController.setImage(this, votePhotoList.get(1).getPhotoUrl());
+                }
+                if (votePhotoList.size() > 2) {
+                    thirdPhotoController.setImage(this, votePhotoList.get(2).getPhotoUrl());
+                }
+                if (votePhotoList.size() > 3) {
+                    fourthPhotoController.setImage(this, votePhotoList.get(3).getPhotoUrl());
+                }
             }
-            if (votePhotos.size() > 1) {
-                secondPhotoController.setImage(this, votePhotos.get(1).getPhotoUrl());
+            if (votePhotos.getPhotosCount() != null) {
+                photosCount = votePhotos.getPhotosCount();
             }
-            if (votePhotos.size() > 2) {
-                thirdPhotoController.setImage(this, votePhotos.get(2).getPhotoUrl());
-            }
-            if (votePhotos.size() > 3) {
-                fourthPhotoController.setImage(this, votePhotos.get(3).getPhotoUrl());
-            }
+            updateCounter();
         }
     }
 
@@ -189,7 +200,7 @@ public class FirstVoteActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void updateCounter() {
-
+        photosCounter.setText(String.format("%d-%d/%d", votedPhotosCount, votedPhotosCount + VOTE_PHOTOS_LIMIT, photosCount));
     }
 
     @Override
@@ -219,7 +230,8 @@ public class FirstVoteActivity extends BaseActivity implements View.OnClickListe
                     serviceHelper.votePhoto(buildVoteAction(selectedPhoto));
                 }
             } else {
-                serviceHelper.getVotePhotos();
+                votedPhotosCount += VOTE_PHOTOS_LIMIT;
+                serviceHelper.getVotePhotos(false);
             }
         }
     }
