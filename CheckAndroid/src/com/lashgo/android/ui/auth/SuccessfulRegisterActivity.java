@@ -23,16 +23,25 @@ public class SuccessfulRegisterActivity extends BaseActivity implements View.OnC
 
     private RegisterResponse registerResponse;
 
+    private LoginActivity.OpenMode openMode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_success_register);
         initRegisterResponse(savedInstanceState);
+        Intent intent = getIntent();
+        if (intent != null) {
+            openMode = (LoginActivity.OpenMode) intent.getSerializableExtra(ExtraNames.OPEN_MODE.name());
+        }
+        if (openMode == null && savedInstanceState != null) {
+            openMode = (LoginActivity.OpenMode) savedInstanceState.getSerializable(ExtraNames.OPEN_MODE.name());
+        }
         findViewById(R.id.fill_profile).setOnClickListener(this);
         findViewById(R.id.continue_register).setOnClickListener(this);
         findViewById(R.id.make_photo).setOnClickListener(this);
         if (registerResponse != null) {
-            int imageSize = PhotoUtils.convertPixelsToDp(64, this);
+            int imageSize = PhotoUtils.convertDpToPixels(64, this);
             Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(registerResponse.getAvatar())).centerInside().
                     resize(imageSize, imageSize).transform(new CircleTransformation()).error(R.drawable.ava).placeholder(R.drawable.ava).into((ImageView) findViewById(R.id.user_avatar));
             ((TextView) findViewById(R.id.user_subscribes)).setText(String.valueOf(registerResponse.getSubscribesCount()));
@@ -54,10 +63,11 @@ public class SuccessfulRegisterActivity extends BaseActivity implements View.OnC
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putSerializable(BaseIntentHandler.ServiceExtraNames.REGISTER_RESPONSE_INFO.name(), registerResponse);
+        outState.putSerializable(ExtraNames.OPEN_MODE.name(), openMode);
         super.onSaveInstanceState(outState);
     }
 
-    public static Intent buildIntent(Context context, RegisterResponse registerResponse) {
+    public static Intent buildIntent(Context context, RegisterResponse registerResponse, LoginActivity.OpenMode openMode) {
         Intent intent = new Intent(context, SuccessfulRegisterActivity.class);
         intent.putExtra(BaseIntentHandler.ServiceExtraNames.REGISTER_RESPONSE_INFO.name(), registerResponse);
         return intent;

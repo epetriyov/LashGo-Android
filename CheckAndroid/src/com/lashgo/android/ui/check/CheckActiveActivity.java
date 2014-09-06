@@ -2,60 +2,45 @@ package com.lashgo.android.ui.check;
 
 import android.app.Activity;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
-import com.lashgo.android.ui.BaseActivity;
+import com.lashgo.android.ui.auth.LoginActivity;
 import com.lashgo.android.ui.images.CircleTransformation;
+import com.lashgo.android.ui.views.PagerContainer;
 import com.lashgo.android.utils.PhotoUtils;
-import com.lashgo.model.dto.CheckDto;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 /**
  * Created by Eugene on 16.06.2014.
  */
-public class CheckActiveActivity extends BaseActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
+public class CheckActiveActivity extends CheckBaseActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
 
     private static final int CHECH_PHOTO_PADDINGS = 130;
     private static final String TASK_PHOTO_TAG = "task_photo";
-    private CheckDto checkDto;
     private String imgPath;
     private CheckPagerAdapter pagerAdapter;
     private int imageSize;
     private ViewPager viewPager;
-    private CheckBottomPanelController bottomPanelController;
-
-    public static Intent buildIntent(Context context, CheckDto checkDto) {
-        Intent intent = new Intent(context, CheckActiveActivity.class);
-        intent.putExtra(ExtraNames.CHECK_DTO.name(), checkDto);
-        return intent;
-    }
+    private ImageView cameraBtn;
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(ExtraNames.CHECK_DTO.name(), checkDto);
+        outState.putString(ExtraNames.PHOTO_URL.name(), imgPath);
         super.onSaveInstanceState(outState);
-    }
-
-    private void initCheckDto(Bundle savedInstanceState) {
-        Intent intent = getIntent();
-        if (intent != null) {
-            checkDto = (CheckDto) intent.getSerializableExtra(ExtraNames.CHECK_DTO.name());
-        }
-        if (checkDto == null && savedInstanceState != null) {
-            checkDto = (CheckDto) savedInstanceState.getSerializable(ExtraNames.CHECK_DTO.name());
-        }
     }
 
     @Override
@@ -74,53 +59,68 @@ public class CheckActiveActivity extends BaseActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_check_active);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        initCheckDto(savedInstanceState);
         initViews();
-        bottomPanelController = new CheckBottomPanelController(this, checkDto);
+    }
+
+    @Override
+    protected void initCheckDto(Bundle savedInstanceState) {
+        super.initCheckDto(savedInstanceState);
+        Intent intent = getIntent();
+        if (intent != null) {
+            imgPath = intent.getStringExtra(ExtraNames.PHOTO_URL.name());
+        }
+        if (imgPath == null && savedInstanceState != null) {
+            imgPath = savedInstanceState.getString(ExtraNames.PHOTO_URL.name());
+        }
     }
 
     private void initViews() {
         if (checkDto != null) {
-            imageSize = PhotoUtils.convertPixelsToDp(PhotoUtils.getScreenWidth(this) - CHECH_PHOTO_PADDINGS, this);
-            findViewById(R.id.btn_camera).setOnClickListener(this);
+            imageSize = PhotoUtils.getScreenWidth(this) - CHECH_PHOTO_PADDINGS;
+            cameraBtn = (ImageView) findViewById(R.id.btn_camera);
+            cameraBtn.setOnClickListener(this);
             ((TextView) findViewById(R.id.check_name)).setText(checkDto.getName());
             ((TextView) findViewById(R.id.task_description)).setText(checkDto.getDescription());
-            viewPager = (ViewPager) findViewById(R.id.check_pager);
-            viewPager.setPageMargin(15);
-            viewPager.setClipChildren(true);
+//            viewPager = (ViewPager) findViewById(R.id.check_pager);
+//            viewPager.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, imageSize));
+//            viewPager.requestLayout();
+//            viewPager.setPageMargin(-50);
+//            viewPager.setClipChildren(true);
+            PagerContainer mContainer = (PagerContainer) findViewById(R.id.pager_container);
+            viewPager = mContainer.getViewPager();
+            viewPager.setPageMargin(50);
+            viewPager.setClipChildren(false);
+            mContainer.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, imageSize));
+            mContainer.requestLayout();
+            mContainer.setOnPageChangeListener(this);
             pagerAdapter = new CheckPagerAdapter();
             viewPager.setAdapter(pagerAdapter);
-            viewPager.setOnPageChangeListener(this);
+            viewPager.setOffscreenPageLimit(pagerAdapter.getCount());
             if (pagerAdapter.getCount() > 1) {
                 viewPager.setCurrentItem(1);
             }
+            initBottomPanel();
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        super.onOptionsItemSelected(item);
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return true;
     }
 
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.btn_camera) {
-            DialogFragment makePhotoFragment = new MakePhotoDialog();
-            makePhotoFragment.show(getFragmentManager(), MakePhotoDialog.TAG);
+            if (settingsHelper.isLoggedIn()) {
+                DialogFragment makePhotoFragment = new MakePhotoDialog();
+                makePhotoFragment.show(getFragmentManager(), MakePhotoDialog.TAG);
+            } else {
+                startActivity(new Intent(this, LoginActivity.class));
+            }
         } else if (view.getId() == R.id.btn_send_photo) {
             if (!TextUtils.isEmpty(imgPath)) {
-                serviceHelper.sendPhoto(imgPath);
+                serviceHelper.sendPhoto(checkDto.getId(), imgPath);
             } else {
                 Toast.makeText(this, R.string.error_send_photo, Toast.LENGTH_LONG).show();
             }
         } else if (view.getId() == R.id.check_photo) {
-            String photoUrl = view.getTag() != null && view.getTag().equals(TASK_PHOTO_TAG) ? checkDto.getTaskPhotoUrl() : checkDto.getPhotoUrl();
-            startActivity(PhotoActivity.newIntent(this, photoUrl, checkDto));
+            String photoUrl = view.getTag() != null && view.getTag().equals(TASK_PHOTO_TAG) ? checkDto.getTaskPhotoUrl() : checkDto.getUserPhoto();
+            startActivity(CheckPhotoActivity.newIntent(this, photoUrl, checkDto));
         }
     }
 
@@ -154,6 +154,7 @@ public class CheckActiveActivity extends BaseActivity implements View.OnClickLis
      * check photo done
      */
     private void addMinePhoto() {
+        cameraBtn.setImageResource(R.drawable.btn_pink_camera);
         pagerAdapter.photoAdded();
         viewPager.setCurrentItem(1);
     }
@@ -184,8 +185,9 @@ public class CheckActiveActivity extends BaseActivity implements View.OnClickLis
 
         public CheckPagerAdapter() {
             super();
-            if (!TextUtils.isEmpty(checkDto.getPhotoUrl()) && !TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
+            if ((!TextUtils.isEmpty(checkDto.getUserPhoto()) || !TextUtils.isEmpty(imgPath)) && !TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
                 pagesCount = 2;
+                cameraBtn.setVisibility(View.GONE);
             } else {
                 pagesCount = 1;
             }
@@ -201,8 +203,18 @@ public class CheckActiveActivity extends BaseActivity implements View.OnClickLis
         }
 
         @Override
+        public void destroyItem(View container, int position, Object object) {
+            ((ViewPager) container).removeView((View) object);
+        }
+
+        @Override
         public int getCount() {
             return pagesCount;
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
         }
 
         @Override
@@ -210,7 +222,7 @@ public class CheckActiveActivity extends BaseActivity implements View.OnClickLis
             View view = getLayoutInflater().inflate(R.layout.adt_check_pager, null);
             ImageView checkImage = (ImageView) view.findViewById(R.id.check_photo);
             checkImage.setOnClickListener(CheckActiveActivity.this);
-            btnSend = view.findViewById(R.id.btn_send_photo);
+            View btnSend = view.findViewById(R.id.btn_send_photo);
             btnSend.setOnClickListener(CheckActiveActivity.this);
             container.addView(view);
             switch (position) {
@@ -218,19 +230,20 @@ public class CheckActiveActivity extends BaseActivity implements View.OnClickLis
                     checkImage.setTag(TASK_PHOTO_TAG);
                     btnSend.setVisibility(View.GONE);
                     if (!TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
-                        Picasso.with(CheckActiveActivity.this).load(PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl())).centerInside().
+                        Picasso.with(CheckActiveActivity.this).load(PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl())).centerCrop().
                                 resize(imageSize, imageSize).transform(new CircleTransformation()).into(checkImage);
                     }
                     break;
                 case 1:
+                    this.btnSend = btnSend;
                     if (!TextUtils.isEmpty(imgPath)) {
                         btnSend.setVisibility(View.VISIBLE);
-                        Picasso.with(CheckActiveActivity.this).load(imgPath).centerInside().
+                        Picasso.with(CheckActiveActivity.this).load(Uri.fromFile(new File(imgPath))).centerCrop().
                                 resize(imageSize, imageSize).transform(new CircleTransformation()).into(checkImage);
                     } else {
                         btnSend.setVisibility(View.GONE);
-                        if (!TextUtils.isEmpty(checkDto.getPhotoUrl())) {
-                            Picasso.with(CheckActiveActivity.this).load(checkDto.getPhotoUrl()).centerInside().
+                        if (!TextUtils.isEmpty(checkDto.getUserPhoto())) {
+                            Picasso.with(CheckActiveActivity.this).load(PhotoUtils.getFullPhotoUrl(checkDto.getUserPhoto())).centerCrop().
                                     resize(imageSize, imageSize).transform(new CircleTransformation()).into(checkImage);
                         }
                     }
@@ -247,11 +260,16 @@ public class CheckActiveActivity extends BaseActivity implements View.OnClickLis
         }
 
         public void showSendPhotoBtn() {
-            btnSend.setVisibility(View.VISIBLE);
+            if (btnSend != null) {
+                btnSend.setVisibility(View.VISIBLE);
+            }
         }
 
         public void hideSendPhotoBtn() {
-            btnSend.setVisibility(View.GONE);
+
+            if (btnSend != null) {
+                btnSend.setVisibility(View.GONE);
+            }
         }
     }
 }

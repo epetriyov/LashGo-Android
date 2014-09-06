@@ -8,8 +8,9 @@ import com.lashgo.android.social.VkontakteListener;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.auth.LoginActivity;
 import com.lashgo.android.ui.auth.SuccessfulRegisterActivity;
-import com.lashgo.android.ui.check.CheckActiveActivity;
+import com.lashgo.android.ui.check.*;
 import com.lashgo.android.ui.main.MainActivity;
+import com.lashgo.android.ui.profile.ProfileActivity;
 import com.lashgo.android.ui.start.StartActivity;
 import dagger.Module;
 import dagger.Provides;
@@ -25,7 +26,13 @@ import dagger.Provides;
         injects = {
                 StartActivity.class,
                 MainActivity.class,
+                CheckBottomPanelController.class,
                 CheckActiveActivity.class,
+                CheckVoteActivity.class,
+                CheckFinishedActivity.class,
+                CheckPhotoActivity.class,
+                VoteProcessActivity.class,
+                ProfileActivity.class,
                 LoginActivity.class,
                 SuccessfulRegisterActivity.class,
                 FacebookHelper.class,

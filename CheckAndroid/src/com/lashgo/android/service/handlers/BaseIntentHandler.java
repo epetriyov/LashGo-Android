@@ -49,6 +49,8 @@ public abstract class BaseIntentHandler {
             return new GetVotePhotosHandler();
         } else if (ServiceActionNames.ACTION_VOTE.name().equals(action)) {
             return new VoteHandler();
+        } else if (ServiceActionNames.ACTION_LIKE_CHECK.name().equals(action)) {
+            return new CheckLikeHandler();
         } else {
             throw new IllegalArgumentException("illegal action - " + action);
         }
@@ -59,7 +61,7 @@ public abstract class BaseIntentHandler {
         ACTION_REGISTER, ACTION_SOCIAL_SIGN_IN,
         ACTION_GCM_REGISTER_ID, ACTION_PASSWORD_RECOVER,
         ACTION_CONFIRM_SOCIAL_SIGN_UP, ACTION_GET_MAIN_SCREEN_INFO,
-        ACTION_SEND_PHOTO, ACTION_GET_VOTE_PHOTOS, ACTION_VOTE, ACTION_GET_CHECK_LIST
+        ACTION_SEND_PHOTO, ACTION_GET_VOTE_PHOTOS, ACTION_VOTE, ACTION_LIKE_CHECK, ACTION_GET_CHECK_LIST
     }
 
     public static enum ServiceExtraNames {
@@ -68,7 +70,7 @@ public abstract class BaseIntentHandler {
         LAST_SUBSCRIPTIONS_VIEW_DATE, MAIN_SCREEN_INFO,
         LOGIN_DTO, SESSION_INFO, REGISTER_DTO, SOCIAL_DTO,
         EXTENDED_SOCIAL_DTO, PHOTO_PATH, REGISTER_RESPONSE_INFO,
-        VOTE_PHOTO_LIST, VOTE_ACTION, IS_PHOTOS_COUNT_INCLUDED
+        VOTE_PHOTO_LIST, VOTE_ACTION, CHECK_ID, IS_LIKE_ADDED, IS_PHOTOS_COUNT_INCLUDED
     }
 
     public static final String ERROR_EXTRA = "error_extra";

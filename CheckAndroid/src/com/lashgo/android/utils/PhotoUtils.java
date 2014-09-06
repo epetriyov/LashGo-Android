@@ -23,7 +23,7 @@ public final class PhotoUtils {
         return new StringBuilder(LashgoConfig.BASE_URL).append(LashgoConfig.PHOTO_BASE_URI).append(photoName).toString();
     }
 
-    public static int convertPixelsToDp(float dp, Context context) {
+    public static int convertDpToPixels(float dp, Context context) {
         Resources resources = context.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
         float px = dp * (metrics.densityDpi / 160f);
@@ -34,6 +34,12 @@ public final class PhotoUtils {
         DisplayMetrics displaymetrics = new DisplayMetrics();
         context.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         return displaymetrics.widthPixels;
+    }
+
+    public static int getScreenHeight(Activity context) {
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        context.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        return displaymetrics.heightPixels;
     }
 
     public static Bitmap decodeFile(String path) {

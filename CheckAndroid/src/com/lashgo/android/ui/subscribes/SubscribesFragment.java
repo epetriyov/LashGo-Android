@@ -1,17 +1,16 @@
 package com.lashgo.android.ui.subscribes;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import com.lashgo.android.R;
+import com.lashgo.android.ui.BaseFragment;
 
 /**
  * Created by Eugene on 19.06.2014.
  */
-public class SubscribesFragment extends Fragment {
+public class SubscribesFragment extends BaseFragment {
 
     public SubscribesFragment()
     {
@@ -26,6 +25,7 @@ public class SubscribesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.frag_check_list, container, false);
         getActivity().setTitle(R.string.subscribes_list);
         return rootView;

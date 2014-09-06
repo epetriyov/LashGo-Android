@@ -22,8 +22,10 @@ public class ServiceBinder implements ServiceCallbackListener {
     }
 
     private void deliverServiceResults() {
-        for (ServiceResult serviceResult : serviceResultList) {
-            onCommandFinished(serviceResult);
+        synchronized (serviceResultList) {
+            for (ServiceResult serviceResult : serviceResultList) {
+                onCommandFinished(serviceResult);
+            }
         }
     }
 

@@ -14,7 +14,7 @@ import java.io.IOException;
 public class GetVotePhotosHandler extends BaseIntentHandler {
     @Override
     protected Bundle doExecute(Intent intent) throws IOException, RetrofitError {
-        ResponseObject<VotePhotosResult> votePhotoResponseList = service.getVotePhotos(intent.getBooleanExtra(ServiceExtraNames.IS_PHOTOS_COUNT_INCLUDED.name(), false));
+        ResponseObject<VotePhotosResult> votePhotoResponseList = service.getVotePhotos(intent.getIntExtra(ServiceExtraNames.CHECK_ID.name(), -1), intent.getBooleanExtra(ServiceExtraNames.IS_PHOTOS_COUNT_INCLUDED.name(), false));
         Bundle bundle = intent.getExtras();
         bundle.putSerializable(ServiceExtraNames.VOTE_PHOTO_LIST.name(), votePhotoResponseList.getResult());
         return bundle;

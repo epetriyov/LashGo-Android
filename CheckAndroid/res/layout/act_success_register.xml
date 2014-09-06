@@ -27,13 +27,14 @@
                               android:orientation="horizontal"
                               android:layout_marginTop="20dp"
                               android:layout_marginRight="16dp"
+                              android:id="@+id/user_subscribes_layout"
                         >
                     <com.lashgo.android.ui.views.RobotoTextView
                             android:id="@+id/user_subscribes"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="18sp"
-                            android:textColor="@color/white"
+                            android:textColor="@drawable/profile_text_color"
                             app:fontName="@string/condensed_regular"
                             android:text="0"
                             />
@@ -41,7 +42,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="14sp"
-                            android:textColor="@color/white"
+                            android:textColor="@drawable/profile_text_color"
                             app:fontName="@string/condensed_regular"
                             android:text="@string/subscibes_count"
                             android:layout_marginLeft="5dp"
@@ -57,13 +58,14 @@
                               android:orientation="horizontal"
                               android:layout_marginTop="31dp"
                               android:layout_marginRight="16dp"
+                              android:id="@+id/user_subscribers_layout"
                         >
                     <com.lashgo.android.ui.views.RobotoTextView
                             android:id="@+id/user_subscribers"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="18sp"
-                            android:textColor="@color/white"
+                            android:textColor="@drawable/profile_text_color"
                             app:fontName="@string/condensed_regular"
                             android:text="0"
                             />
@@ -71,7 +73,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="14sp"
-                            android:textColor="@color/white"
+                            android:textColor="@drawable/profile_text_color"
                             app:fontName="@string/condensed_regular"
                             android:text="@string/subscibers_count"
                             android:layout_marginLeft="5dp"

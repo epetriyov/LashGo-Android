@@ -72,6 +72,7 @@
     <string name="error_empty_check">Пустой чек</string>
     <string name="now_this_button">Теперь эту кнопочку</string>
     <string name="go_to_next_partition">Перейти к\nследующей партии</string>
+    <string name="vote_is_going">Идёт\nголосование</string>
     <string-array name="make_photo_items">
         <item>Камера</item>
         <item>Галерея</item>

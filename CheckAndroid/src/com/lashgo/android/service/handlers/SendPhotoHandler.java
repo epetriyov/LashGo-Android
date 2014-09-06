@@ -18,7 +18,7 @@ public class SendPhotoHandler extends BaseIntentHandler {
     protected Bundle doExecute(Intent intent) throws IOException, RetrofitError {
         SessionInfo sessionInfo = settingsHelper.getSessionInfo();
         if (sessionInfo != null) {
-            service.saveCheckPhoto(sessionInfo.getUserId(), new TypedFile("multipart/form-data", new File(intent.getStringExtra(ServiceExtraNames.PHOTO_PATH.name()))));
+            service.saveCheckPhoto(intent.getIntExtra(ServiceExtraNames.CHECK_ID.name(), -1), new TypedFile("multipart/form-data", new File(intent.getStringExtra(ServiceExtraNames.PHOTO_PATH.name()))));
         }
         return intent.getExtras();
     }

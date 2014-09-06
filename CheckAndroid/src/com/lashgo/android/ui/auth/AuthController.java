@@ -44,6 +44,7 @@ public class AuthController implements View.OnClickListener, EnterEmailDialog.Em
 
     @Inject
     TwitterHelper twitterHelper;
+    private LoginActivity.OpenMode openMode;
 
     public void initViews(View rootView) {
         login = (EditText) rootView.findViewById(R.id.edit_email);
@@ -70,6 +71,7 @@ public class AuthController implements View.OnClickListener, EnterEmailDialog.Em
                 serviceHelper.login(loginInfo);
             }
         } else if (view.getId() == R.id.btn_password_recover) {
+            //TODO implement recover password
         } else if (view.getId() == R.id.btn_register) {
             LoginInfo loginInfo = buildLoginInfo();
             if (loginInfo != null) {
@@ -142,7 +144,7 @@ public class AuthController implements View.OnClickListener, EnterEmailDialog.Em
     private void onRegisterSuccessFull(RegisterResponse registerResponse) {
         if (registerResponse != null) {
             if (registerResponse.getUserName() != null) {
-                baseActivity.startActivity(SuccessfulRegisterActivity.buildIntent(baseActivity, registerResponse));
+                baseActivity.startActivity(SuccessfulRegisterActivity.buildIntent(baseActivity, registerResponse,openMode));
                 baseActivity.setResult(Activity.RESULT_OK);
                 baseActivity.finish();
             } else {
@@ -152,13 +154,23 @@ public class AuthController implements View.OnClickListener, EnterEmailDialog.Em
     }
 
     private void onLoginSuccessFull() {
-        baseActivity.startActivity(new Intent(baseActivity, MainActivity.class));
         baseActivity.setResult(Activity.RESULT_OK);
         baseActivity.finish();
+        if (openMode == null || !openMode.equals(LoginActivity.OpenMode.FROM_CHECK)) {
+            baseActivity.startActivity(new Intent(baseActivity, MainActivity.class));
+        }
     }
 
     @Override
     public void sendSocialEmail(String email) {
         serviceHelper.socialSignUp(new ExtendedSocialInfo(socialInfo, email));
+    }
+
+    public void setOpenMode(LoginActivity.OpenMode openMode) {
+        this.openMode = openMode;
+    }
+
+    public LoginActivity.OpenMode getOpenMode() {
+        return openMode;
     }
 }

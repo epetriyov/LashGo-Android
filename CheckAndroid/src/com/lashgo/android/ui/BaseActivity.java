@@ -1,10 +1,10 @@
 package com.lashgo.android.ui;
 
-import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.Window;
 import com.facebook.UiLifecycleHelper;
@@ -19,6 +19,7 @@ import com.lashgo.android.settings.SettingsHelper;
 import com.lashgo.android.social.FacebookHelper;
 import com.lashgo.android.social.TwitterHelper;
 import com.lashgo.android.social.VkontakteListener;
+import com.lashgo.android.ui.check.CheckBottomPanelController;
 import com.lashgo.android.utils.ContextUtils;
 import com.lashgo.model.dto.ErrorDto;
 import com.lashgo.model.dto.SocialInfo;
@@ -33,11 +34,13 @@ import java.util.List;
 /**
  * Created by Eugene on 18.02.14.
  */
-public abstract class BaseActivity extends Activity implements ServiceReceiver {
+public abstract class BaseActivity extends FragmentActivity implements ServiceReceiver {
 
     protected static final String PROGRESS_DIALOG = "progress";
 
-    public static enum ExtraNames {CHECK_DTO, PHOTO_URL}
+    public static enum ExtraNames {
+        CHECK_DTO, PHOTO_URL, OPEN_MODE
+    }
 
     private ObjectGraph loginGraph;
 

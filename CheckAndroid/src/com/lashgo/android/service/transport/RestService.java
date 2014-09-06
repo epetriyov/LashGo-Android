@@ -1,6 +1,5 @@
 package com.lashgo.android.service.transport;
 
-import com.lashgo.model.CheckApiHeaders;
 import com.lashgo.model.Path;
 import com.lashgo.model.dto.*;
 import retrofit.http.*;
@@ -37,11 +36,14 @@ public interface RestService {
 
     @Multipart
     @POST(Path.Checks.PHOTOS)
-    ResponseObject saveCheckPhoto(@retrofit.http.Path("checkId") long checkId, @Part("photo") TypedFile photo);
+    ResponseObject saveCheckPhoto(@retrofit.http.Path("checkId") int checkId, @Part("photo") TypedFile photo);
 
     @GET(Path.Checks.VOTE_PHOTOS)
-    ResponseObject<VotePhotosResult> getVotePhotos(@Query("is_count_included") boolean isCountIncluded);
+    ResponseObject<VotePhotosResult> getVotePhotos(@retrofit.http.Path("checkId") int checkId, @Query("is_count_included") boolean isCountIncluded);
 
     @POST(Path.Photos.VOTE)
     ResponseObject votePhoto(@Body VoteAction voteAction);
+
+    @POST(Path.Checks.LIKE)
+    ResponseObject<Boolean> likeCheck(@Body Integer checkId);
 }

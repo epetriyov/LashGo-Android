@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import com.lashgo.android.R;
@@ -17,7 +18,7 @@ import com.squareup.picasso.Picasso;
 /**
  * Created by Eugene on 18.08.2014.
  */
-public class PhotoActivity extends BaseActivity implements View.OnClickListener {
+public class CheckPhotoActivity extends BaseActivity implements View.OnClickListener {
 
     private String photoUrl;
 
@@ -30,7 +31,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
     private View topPhotoPanel;
 
     public static Intent newIntent(Context context, String photoUrl, CheckDto checkDto) {
-        Intent intent = new Intent(context, PhotoActivity.class);
+        Intent intent = new Intent(context, CheckPhotoActivity.class);
         intent.putExtra(ExtraNames.CHECK_DTO.name(), checkDto);
         intent.putExtra(ExtraNames.PHOTO_URL.name(), photoUrl);
         return intent;
@@ -62,6 +63,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         initPhotoUrl(savedInstanceState);
         setContentView(R.layout.act_photo);
         initViews();
@@ -73,10 +75,10 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
             if (!TextUtils.isEmpty(photoUrl)) {
                 ImageView fullImage = ((ImageView) findViewById(R.id.full_photo));
                 fullImage.setOnClickListener(this);
-                Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(photoUrl)).centerInside().into(fullImage);
+                Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(photoUrl)).resize(PhotoUtils.getScreenWidth(this),PhotoUtils.getScreenHeight(this)).centerInside().into(fullImage);
             }
             topPhotoPanel = findViewById(R.id.top_check_panel);
-            int imageSize = PhotoUtils.convertPixelsToDp(40, this);
+            int imageSize = PhotoUtils.convertDpToPixels(40, this);
             Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl())).centerInside().
                     resize(imageSize, imageSize).transform(new CircleTransformation()).into((ImageView) findViewById(R.id.task_photo));
             ((RobotoTextView) findViewById(R.id.check_name)).setText(checkDto.getName());
@@ -95,5 +97,14 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                 bottomBg.setVisibility(View.VISIBLE);
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return true;
     }
 }

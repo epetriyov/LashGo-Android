@@ -83,7 +83,7 @@
             android:layout_weight="1"
             android:id="@+id/time_layout"
             >
-        <ImageView android:layout_width="48dp" android:layout_height="match_parent"
+        <ImageView android:layout_width="20dp" android:layout_height="match_parent"
               android:src="@drawable/time"
                 />
         <com.lashgo.android.ui.views.RobotoTextView
@@ -108,6 +108,7 @@
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_mob_normal"
+
                 />
         <com.lashgo.android.ui.views.RobotoTextView
                 android:id="@+id/peoples_count"

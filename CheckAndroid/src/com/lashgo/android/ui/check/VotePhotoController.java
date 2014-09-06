@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import com.lashgo.android.R;
-import com.lashgo.android.ui.images.CircleTransformation;
 import com.lashgo.android.utils.PhotoUtils;
 import com.squareup.picasso.Picasso;
 
@@ -14,6 +13,8 @@ import com.squareup.picasso.Picasso;
  */
 public class VotePhotoController implements View.OnClickListener {
 
+    private final int imageWidth;
+    private final int imageHeight;
     private View photoLayout;
 
     private ImageView photoImg;
@@ -28,7 +29,7 @@ public class VotePhotoController implements View.OnClickListener {
 
     private VotePhotoListener votePhotoListener;
 
-    public VotePhotoController(VotePhotoListener votePhotoListener, View rootLayout, int photoLayoutId, int photoImageId, int photoCheckId, int photoShadowId) {
+    public VotePhotoController(VotePhotoListener votePhotoListener, View rootLayout, int photoLayoutId, int photoImageId, int photoCheckId, int photoShadowId, int imageWidth, int imageHeight) {
         if (rootLayout == null) {
             throw new IllegalArgumentException("Root layout can't be null");
         }
@@ -36,6 +37,8 @@ public class VotePhotoController implements View.OnClickListener {
             throw new IllegalArgumentException("Vote photo listener can't be null");
         }
         this.votePhotoListener = votePhotoListener;
+        this.imageWidth = imageWidth;
+        this.imageHeight= imageHeight;
         photoLayout = rootLayout.findViewById(photoLayoutId);
         photoLayout.setOnClickListener(this);
         photoLayout.setVisibility(View.GONE);
@@ -51,7 +54,7 @@ public class VotePhotoController implements View.OnClickListener {
     public void setImage(Context context, String imageUrl) {
         if (!TextUtils.isEmpty(imageUrl)) {
             Picasso.with(context).load(PhotoUtils.getFullPhotoUrl(imageUrl)).centerCrop().
-                    resize(photoImg.getWidth(), photoImg.getHeight()).transform(new CircleTransformation()).into(photoImg);
+                    resize(imageWidth, imageHeight).into(photoImg);
             photoLayout.setVisibility(View.VISIBLE);
         }
     }

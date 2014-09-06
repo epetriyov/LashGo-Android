@@ -27,6 +27,8 @@
     <color name="check_description_color">#979797</color>
     <color name="check_time_color">#F06292</color>
     <color name="check_name_color">#ECEEEE</color>
+    <color name="check_name_color_focused">#80ECEEEE</color>
+    <color name="check_name_color_pressed">#00E5FF</color>
     <color name="check_description_color_2">#B0B1B2</color>
     <color name="check_time_color_2">#FF5E7C</color>
     <color name="black">#000000</color>
@@ -39,4 +41,7 @@
     <color name="vote_check_description_color">#9a9a9a</color>
     <color name="check_vote_bg">#FAFAFA</color>
     <color name="photo_not_selected">#99EBECEE</color>
+    <color name="transparent_white">#4DB1B1B1</color>
+    <color name="profile_text_focused">#B3FFFFFF</color>
+    <color name="check_finished_darkening">#80000000</color>
 </resources>

@@ -7,7 +7,5 @@
                                             android:textSize="14sp"
                                             android:textColor="@color/check_state_color"
                                             android:paddingLeft="10dp"
-                                            android:paddingTop="15dp"
-                                            android:paddingBottom="17dp"
-                                            app:fontName="@string/regular"
+                                            app:fontName="@string/medium"
         />

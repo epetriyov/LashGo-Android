@@ -1,22 +1,17 @@
 package com.lashgo.android.ui.check;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
-import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
-import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.images.CircleTransformation;
 import com.lashgo.android.utils.PhotoUtils;
-import com.lashgo.model.dto.CheckDto;
+import com.lashgo.android.utils.UiUtils;
 import com.lashgo.model.dto.VoteAction;
 import com.lashgo.model.dto.VotePhoto;
 import com.lashgo.model.dto.VotePhotosResult;
@@ -25,19 +20,16 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Eugene on 20.08.2014.
  */
-public class FirstVoteActivity extends BaseActivity implements View.OnClickListener, VotePhotoController.VotePhotoListener {
+public class VoteProcessActivity extends CheckBaseActivity implements View.OnClickListener, VotePhotoController.VotePhotoListener {
 
     private static final int VOTE_PHOTOS_LIMIT = 4;
     private ScreenState screenState;
-    private CheckDto checkDto;
     private List<VotePhoto> votePhotos;
-    private CheckBottomPanelController bottomPanelController;
-    private View voteButton;
+    private ImageView voteButton;
     private TextView voteHint;
     private TextView photosCounter;
     private VotePhotoController firstPhotoController;
@@ -46,12 +38,6 @@ public class FirstVoteActivity extends BaseActivity implements View.OnClickListe
     private VotePhotoController fourthPhotoController;
     private int photosCount;
     private int votedPhotosCount = 1;
-
-    public static Intent buildIntent(Context context, CheckDto checkDto) {
-        Intent intent = new Intent(context, CheckActiveActivity.class);
-        intent.putExtra(ExtraNames.CHECK_DTO.name(), checkDto);
-        return intent;
-    }
 
     @Override
     public void clearOtherChecks(VotePhotoController votePhotoController) {
@@ -67,22 +53,6 @@ public class FirstVoteActivity extends BaseActivity implements View.OnClickListe
         }
         if (fourthPhotoController != votePhotoController) {
             fourthPhotoController.clearCheck();
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(ExtraNames.CHECK_DTO.name(), checkDto);
-        super.onSaveInstanceState(outState);
-    }
-
-    private void initCheckDto(Bundle savedInstanceState) {
-        Intent intent = getIntent();
-        if (intent != null) {
-            checkDto = (CheckDto) intent.getSerializableExtra(ExtraNames.CHECK_DTO.name());
-        }
-        if (checkDto == null && savedInstanceState != null) {
-            checkDto = (CheckDto) savedInstanceState.getSerializable(ExtraNames.CHECK_DTO.name());
         }
     }
 
@@ -103,12 +73,9 @@ public class FirstVoteActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.act_check_active);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        initCheckDto(savedInstanceState);
+        setContentView(R.layout.act_first_vote);
         initViews();
-        bottomPanelController = new CheckBottomPanelController(this, checkDto);
-        serviceHelper.getVotePhotos(true);
+        serviceHelper.getVotePhotos(checkDto.getId(), true);
         screenState = ScreenState.CHOOSE_PHOTO;
     }
 
@@ -118,7 +85,7 @@ public class FirstVoteActivity extends BaseActivity implements View.OnClickListe
         if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
             if (BaseIntentHandler.ServiceActionNames.ACTION_GET_VOTE_PHOTOS.name().equals(action) && data != null) {
                 screenState = ScreenState.CHOOSE_PHOTO;
-                voteButton.setBackgroundResource(R.drawable.btn_like);
+                voteButton.setImageResource(R.drawable.btn_like);
                 voteHint.setText(R.string.choose_photo);
                 updatePhotos((VotePhotosResult) data.getSerializable(BaseIntentHandler.ServiceExtraNames.VOTE_PHOTO_LIST.name()));
             } else if (BaseIntentHandler.ServiceActionNames.ACTION_VOTE.name().equals(action)) {
@@ -127,7 +94,7 @@ public class FirstVoteActivity extends BaseActivity implements View.OnClickListe
                 thirdPhotoController.voteDone();
                 fourthPhotoController.voteDone();
                 screenState = ScreenState.NEXT_PHOTOS;
-                voteButton.setBackgroundResource(R.drawable.btn_next_vote);
+                voteButton.setImageResource(R.drawable.btn_next_vote);
                 voteHint.setText(R.string.go_to_next_partition);
             }
         }
@@ -164,7 +131,7 @@ public class FirstVoteActivity extends BaseActivity implements View.OnClickListe
             finish();
         } else {
             if (!TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
-                int taskImageSize = PhotoUtils.convertPixelsToDp(48, this);
+                int taskImageSize = PhotoUtils.convertDpToPixels(48, this);
                 Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl())).centerInside().
                         resize(taskImageSize, taskImageSize).transform(new CircleTransformation()).into((ImageView) findViewById(R.id.task_photo));
             }
@@ -172,44 +139,47 @@ public class FirstVoteActivity extends BaseActivity implements View.OnClickListe
             Calendar checkVoteCalendar = Calendar.getInstance();
             checkVoteCalendar.setTime(checkDto.getStartDate());
             checkVoteCalendar.add(Calendar.HOUR_OF_DAY, checkDto.getDuration() + checkDto.getVoteDuration());
-            new CountDownTimer(checkVoteCalendar.getTimeInMillis() - System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS) {
+            UiUtils.startTimer(checkVoteCalendar.getTimeInMillis(), voteTime, new TimerFinishedListener() {
                 @Override
-                public void onTick(long millisUntilFinished) {
-                    long remainingMinutes = TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished);
-                    long remainingSeconds = (millisUntilFinished - remainingMinutes * DateUtils.MINUTE_IN_MILLIS) / DateUtils.SECOND_IN_MILLIS;
-                    voteTime.setText(String.valueOf(remainingMinutes) + ":" + String.valueOf(remainingSeconds));
-                }
-
-                @Override
-                public void onFinish() {
+                public void onTimerFinished() {
                     finish();
                 }
-            }.start();
+            });
             ((TextView) findViewById(R.id.check_name)).setText(checkDto.getName());
             ((TextView) findViewById(R.id.check_description)).setText(checkDto.getDescription());
-            firstPhotoController = new VotePhotoController(this, getWindow().getDecorView().getRootView(), R.id.first_vote_photo_layout, R.id.first_vote_photo, R.id.first_photo_check, R.id.first_photo_shadow);
-            secondPhotoController = new VotePhotoController(this, getWindow().getDecorView().getRootView(), R.id.second_vote_photo_layout, R.id.second_vote_photo, R.id.second_photo_check, R.id.second_photo_shadow);
-            thirdPhotoController = new VotePhotoController(this, getWindow().getDecorView().getRootView(), R.id.third_vote_photo_layout, R.id.third_vote_photo, R.id.third_photo_check, R.id.third_photo_shadow);
-            fourthPhotoController = new VotePhotoController(this, getWindow().getDecorView().getRootView(), R.id.fourth_vote_photo_layout, R.id.fourth_vote_photo, R.id.fourth_photo_check, R.id.fourth_photo_shadow);
-            voteButton = findViewById(R.id.vote_button);
+            final View voteGallery = findViewById(R.id.vote_gallery_layout);
+            voteGallery.getViewTreeObserver().addOnGlobalLayoutListener(
+                    new ViewTreeObserver.OnGlobalLayoutListener() {
+
+                        @Override
+                        public void onGlobalLayout() {
+                            // gets called after layout has been done but before display
+                            // so we can get the height then hide the view
+                            int imageHeight = voteGallery.getHeight() / 2;  // Ahaha!  Gotcha
+                            int imageWidth = (PhotoUtils.getScreenWidth(VoteProcessActivity.this) - 20) / 2;
+                            firstPhotoController = new VotePhotoController(VoteProcessActivity.this, getWindow().getDecorView().getRootView(), R.id.first_vote_photo_layout, R.id.first_vote_photo, R.id.first_photo_check, R.id.first_photo_shadow, imageWidth, imageHeight);
+                            secondPhotoController = new VotePhotoController(VoteProcessActivity.this, getWindow().getDecorView().getRootView(), R.id.second_vote_photo_layout, R.id.second_vote_photo, R.id.second_photo_check, R.id.second_photo_shadow, imageWidth, imageHeight);
+                            thirdPhotoController = new VotePhotoController(VoteProcessActivity.this, getWindow().getDecorView().getRootView(), R.id.third_vote_photo_layout, R.id.third_vote_photo, R.id.third_photo_check, R.id.third_photo_shadow, imageWidth, imageHeight);
+                            fourthPhotoController = new VotePhotoController(VoteProcessActivity.this, getWindow().getDecorView().getRootView(), R.id.fourth_vote_photo_layout, R.id.fourth_vote_photo, R.id.fourth_photo_check, R.id.fourth_photo_shadow, imageWidth, imageHeight);
+                            voteGallery.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                        }
+
+                    });
+            voteButton = (ImageView) findViewById(R.id.vote_button);
             voteButton.setOnClickListener(this);
             voteHint = (TextView) findViewById(R.id.vote_hint);
             photosCounter = (TextView) findViewById(R.id.checks_counter);
             updateCounter();
+            initBottomPanel();
         }
+    }
+
+    public void initBottomPanel() {
+        bottomPanelController = new CheckBottomPanelController(this, checkDto, CheckBottomPanelController.ButtonColors.GRAY);
     }
 
     private void updateCounter() {
-        photosCounter.setText(String.format("%d-%d/%d", votedPhotosCount, votedPhotosCount + VOTE_PHOTOS_LIMIT, photosCount));
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        super.onOptionsItemSelected(item);
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return true;
+        photosCounter.setText(String.format("%d-%d/%d", votedPhotosCount, votedPhotosCount + VOTE_PHOTOS_LIMIT - 1, photosCount));
     }
 
     @Override
@@ -231,7 +201,7 @@ public class FirstVoteActivity extends BaseActivity implements View.OnClickListe
                 }
             } else {
                 votedPhotosCount += VOTE_PHOTOS_LIMIT;
-                serviceHelper.getVotePhotos(false);
+                serviceHelper.getVotePhotos(checkDto.getId(), false);
             }
         }
     }

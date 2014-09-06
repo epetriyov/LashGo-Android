@@ -149,9 +149,10 @@ public class ServiceHelper {
         runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GCM_REGISTER_ID.name(), extras);
     }
 
-    public void sendPhoto(String photoPath) {
+    public void sendPhoto(int checkId, String photoPath) {
         Bundle extras = new Bundle();
         extras.putString(BaseIntentHandler.ServiceExtraNames.PHOTO_PATH.name(), photoPath);
+        extras.putInt(BaseIntentHandler.ServiceExtraNames.CHECK_ID.name(), checkId);
         runRequest(BaseIntentHandler.ServiceActionNames.ACTION_SEND_PHOTO.name(), extras);
     }
 
@@ -166,15 +167,22 @@ public class ServiceHelper {
         runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_LIST.name(), new Bundle());
     }
 
-    public void getVotePhotos(boolean isPhotosCountedIncluded) {
+    public void getVotePhotos(int checkId, boolean isPhotosCountedIncluded) {
         Bundle extras = new Bundle();
         extras.putBoolean(BaseIntentHandler.ServiceExtraNames.IS_PHOTOS_COUNT_INCLUDED.name(), isPhotosCountedIncluded);
-        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_VOTE_PHOTOS.name(), new Bundle());
+        extras.putInt(BaseIntentHandler.ServiceExtraNames.CHECK_ID.name(), checkId);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_VOTE_PHOTOS.name(), extras);
     }
 
     public void votePhoto(VoteAction voteAction) {
         Bundle extras = new Bundle();
         extras.putSerializable(BaseIntentHandler.ServiceExtraNames.VOTE_ACTION.name(), voteAction);
         runRequest(BaseIntentHandler.ServiceActionNames.ACTION_VOTE.name(), extras);
+    }
+
+    public void likeCheck(int checkId) {
+        Bundle extras = new Bundle();
+        extras.putInt(BaseIntentHandler.ServiceExtraNames.CHECK_ID.name(), checkId);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_LIKE_CHECK.name(), extras);
     }
 }

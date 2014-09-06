@@ -1,7 +1,7 @@
 package com.lashgo.android.ui.check;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,6 +71,7 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
 
     private void onCheckListLoaded(Collection<CheckDto> resultCollection) {
         if (resultCollection != null) {
+            multyTypeAdapter.clear();
             Calendar checkActiveCalendar = Calendar.getInstance();
             Calendar checkVoteCalendar = Calendar.getInstance();
             boolean isFirstIteration = true;
@@ -126,18 +127,17 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
             LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(selectedCheck);
             switch (checkState) {
                 case ACTIVE:
-                    startActivity(CheckActiveActivity.buildIntent(getActivity(), selectedCheck));
+                    startActivity(CheckActiveActivity.buildIntent(getActivity(), selectedCheck,CheckActiveActivity.class));
                     break;
                 case VOTE:
-                    startActivity(CheckVoteActivity.buildIntent(getActivity(), selectedCheck));
+                    startActivity(CheckVoteActivity.buildIntent(getActivity(), selectedCheck,CheckVoteActivity.class));
                     break;
                 case FINISHED:
-                    startActivity(CheckFinishedActivity.buildIntent(getActivity(), selectedCheck));
+                    startActivity(CheckFinishedActivity.buildIntent(getActivity(), selectedCheck,CheckFinishedActivity.class));
                     break;
                 default:
                     break;
             }
-            startActivity(CheckActiveActivity.buildIntent(getActivity(), selectedCheck));
         } else {
             throw new IllegalStateException("Selected item is not CheckDto object");
         }

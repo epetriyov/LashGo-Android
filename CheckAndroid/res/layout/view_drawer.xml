@@ -27,14 +27,8 @@
                 android:paddingBottom="16dp"
                 android:paddingLeft="16dp"
                 android:textSize="16sp"
-                android:textColor="@color/login_drawer_text_color"
+                android:textColor="@drawable/user_name_color"
                 app:fontName="@string/regular"
-                />
-        <View
-                android:id="@+id/drawer_gradient"
-                android:layout_height="84dp" android:layout_width="match_parent"
-                android:layout_gravity="bottom"
-                android:background="@drawable/drawer_gradient"
                 />
     </FrameLayout>
     <ViewStub

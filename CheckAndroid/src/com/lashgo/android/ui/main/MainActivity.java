@@ -1,12 +1,11 @@
 package com.lashgo.android.ui.main;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -63,7 +62,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private View newsCountRoot;
     private View subscribesCountRoot;
     private View drawerTopView;
-    private View drawerTopGradient;
 
     @Override
     protected void registerActionsListener() {
@@ -166,7 +164,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerMenu = findViewById(R.id.drawer_menu);
         drawerTopView = findViewById(R.id.drawer_top_view);
-        drawerTopGradient = findViewById(R.id.drawer_gradient);
         userAvatarView = (ImageView) findViewById(R.id.drawer_ava);
         userName = (TextView) findViewById(R.id.drawer_text);
         if (settingsHelper.isLoggedIn()) {
@@ -213,7 +210,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private void initNotAuthDrawerMenu() {
         userName.setText(R.string.login_or_register);
-        drawerTopGradient.setVisibility(View.GONE);
         ViewStub drawerMenuStub = (ViewStub) findViewById(R.id.view_login_stub);
         View drawerMenu = drawerMenuStub.inflate();
         authController.initViews(drawerMenu);
@@ -328,15 +324,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         showFragment(fragment);
 
-        // Highlight the selected item, update the title, and close the drawer
-        view.setBackgroundColor(getResources().getColor(R.color.white));
         setTitle(menuItems[position]);
         drawerLayout.closeDrawer(drawerMenu);
     }
 
     private void showFragment(Fragment fragment) {
         // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getFragmentManager();
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.content_frame, fragment)
                 .commit();

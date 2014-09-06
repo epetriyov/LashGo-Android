@@ -36,6 +36,10 @@ import java.text.SimpleDateFormat;
                 SendPhotoHandler.class,
                 GetMainScreenHandler.class,
                 GetCheckListHandler.class,
+                CheckLikeHandler.class,
+                GetVotePhotosHandler.class,
+                SendPhotoHandler.class,
+                VoteHandler.class,
                 ServiceHelper.class,
                 CheckInterceptor.class
         },
