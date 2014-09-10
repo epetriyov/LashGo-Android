@@ -44,6 +44,7 @@ public class VotePhotoController implements View.OnClickListener {
         photoLayout.setVisibility(View.GONE);
         photoImg = (ImageView) rootLayout.findViewById(photoImageId);
         photoCheck = (ImageView) rootLayout.findViewById(photoCheckId);
+        photoCheck.setOnClickListener(this);
         photoShadow = rootLayout.findViewById(photoShadowId);
     }
 
@@ -86,16 +87,22 @@ public class VotePhotoController implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        if (view.equals(photoLayout) && !voteDone) {
+        if (view.equals(photoCheck) && !voteDone) {
             updateCheckState(!isChecked);
             if (isChecked) {
                 photoShadow.setVisibility(View.GONE);
                 votePhotoListener.clearOtherChecks(this);
             }
         }
+        else if (view.equals(photoLayout))
+        {
+            votePhotoListener.openPhotoActivity(this);
+        }
     }
 
     public static interface VotePhotoListener {
         void clearOtherChecks(VotePhotoController votePhotoController);
+
+        void openPhotoActivity(VotePhotoController votePhotoController);
     }
 }

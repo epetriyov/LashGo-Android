@@ -9,6 +9,7 @@
                   android:orientation="horizontal"
                   android:gravity="center"
                   android:layout_weight="1"
+                  android:id="@+id/shares_layout"
             >
         <ImageView
                 android:id="@+id/btn_share"
@@ -102,6 +103,7 @@
                   android:orientation="horizontal"
                   android:gravity="center"
                   android:layout_weight="1"
+                  android:id="@+id/peoples_layout"
             >
         <ImageView
                 android:id="@+id/btn_peoples_count"

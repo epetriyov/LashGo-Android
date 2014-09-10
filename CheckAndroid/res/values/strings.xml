@@ -73,6 +73,22 @@
     <string name="now_this_button">Теперь эту кнопочку</string>
     <string name="go_to_next_partition">Перейти к\nследующей партии</string>
     <string name="vote_is_going">Идёт\nголосование</string>
+    <string name="checks_count">%d чеков</string>
+    <string name="comments_count">%d комментариев</string>
+    <string name="likes_count">%d лайков</string>
+    <string name="cheers">Ура!</string>
+    <string name="photo_sent">Ваше фото успешно отправлено.\n\nЖдите результат голосования</string>
+    <string name="i_want">Я хочу:</string>
+    <string name="take_picture">СДЕЛАТЬ ФОТО</string>
+    <string name="choose_from_gallery">ВЫБРАТЬ ФОТО ИЗ ГАЛЕРЕИ</string>
+    <string name="hint_fio">Фамилия Имя Отчество</string>
+    <string name="hint_location">Город</string>
+    <string name="hint_about">О себе</string>
+    <string name="hint_change_password">Сменить пароль</string>
+    <string name="profile_saved">Профиль успешно сохранён</string>
+    <string name="edit">Редактировать</string>
+    <string name="skip">ПРОПУСТИТЬ</string>
+    <string name="splash_enter">ВХОД</string>
     <string-array name="make_photo_items">
         <item>Камера</item>
         <item>Галерея</item>

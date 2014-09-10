@@ -58,7 +58,7 @@ public class ServiceHelper {
                     @Override
                     protected void onReceiveResult(int resultCode, Bundle resultData) {
                         ErrorDto errorDto = (ErrorDto) resultData.getSerializable(BaseIntentHandler.ERROR_EXTRA);
-                        if (errorDto != null && ErrorCodes.SESSION_EXPIRED.equals(errorDto.getErrorCode())) {
+                        if (errorDto != null && (ErrorCodes.WRONG_SESSION.equals(errorDto.getErrorCode()) || ErrorCodes.SESSION_EXPIRED.equals(errorDto.getErrorCode()) || ErrorCodes.SESSION_IS_EMPTY.equals(errorDto.getErrorCode()))) {
                             /**
                              * handle session expiration
                              */
@@ -184,5 +184,49 @@ public class ServiceHelper {
         Bundle extras = new Bundle();
         extras.putInt(BaseIntentHandler.ServiceExtraNames.CHECK_ID.name(), checkId);
         runRequest(BaseIntentHandler.ServiceActionNames.ACTION_LIKE_CHECK.name(), extras);
+    }
+
+    public void getUserProfile(int userId) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(BaseIntentHandler.ServiceExtraNames.USER_ID.name(), userId);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_USER_PROFILE.name(), bundle);
+    }
+
+    public void getMyUserProfile() {
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_MY_USER_PROFILE.name(), new Bundle());
+    }
+
+    public void getCheckPhotos(int checkId) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(BaseIntentHandler.ServiceExtraNames.CHECK_ID.name(), checkId);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_PHOTOS.name(), bundle);
+    }
+
+    public void getUserPhotos(int userId) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(BaseIntentHandler.ServiceExtraNames.USER_ID.name(), userId);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_USER_PHOTOS.name(), bundle);
+    }
+
+    public void getMyPhotos() {
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_MY_PHOTOS.name(), new Bundle());
+    }
+
+    public void getCheck(int checkId) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(BaseIntentHandler.ServiceExtraNames.CHECK_ID.name(), checkId);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK.name(), bundle);
+    }
+
+    public void saveAvatar(String avatarPath) {
+        Bundle extras = new Bundle();
+        extras.putString(BaseIntentHandler.ServiceExtraNames.AVATAR_PATH.name(), avatarPath);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_SAVE_AVATAR.name(), extras);
+    }
+
+    public void saveProfile(UserDto userDto) {
+        Bundle extras = new Bundle();
+        extras.putSerializable(BaseIntentHandler.ServiceExtraNames.USER_PROFILE.name(), userDto);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_SAVE_PROFILE.name(), extras);
     }
 }

@@ -12,8 +12,8 @@ import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.images.CircleTransformation;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.android.utils.UiUtils;
+import com.lashgo.model.dto.PhotoDto;
 import com.lashgo.model.dto.VoteAction;
-import com.lashgo.model.dto.VotePhoto;
 import com.lashgo.model.dto.VotePhotosResult;
 import com.squareup.picasso.Picasso;
 
@@ -28,7 +28,7 @@ public class VoteProcessActivity extends CheckBaseActivity implements View.OnCli
 
     private static final int VOTE_PHOTOS_LIMIT = 4;
     private ScreenState screenState;
-    private List<VotePhoto> votePhotos;
+    private List<PhotoDto> votePhotos;
     private ImageView voteButton;
     private TextView voteHint;
     private TextView photosCounter;
@@ -54,6 +54,21 @@ public class VoteProcessActivity extends CheckBaseActivity implements View.OnCli
         if (fourthPhotoController != votePhotoController) {
             fourthPhotoController.clearCheck();
         }
+    }
+
+    @Override
+    public void openPhotoActivity(VotePhotoController votePhotoController) {
+        int photoPosition = 0;
+        if (votePhotoController.equals(firstPhotoController)) {
+            photoPosition = 0;
+        } else if (votePhotoController.equals(secondPhotoController)) {
+            photoPosition = 1;
+        } else if (votePhotoController.equals(thirdPhotoController)) {
+            photoPosition = 2;
+        } else if (votePhotoController.equals(fourthPhotoController)) {
+            photoPosition = 3;
+        }
+        startActivity(PhotoActivity.newIntent(this, votePhotos.get(photoPosition), PhotoActivity.PhotoType.FROM_CHECK_GALLERY));
     }
 
     @Override
@@ -102,20 +117,20 @@ public class VoteProcessActivity extends CheckBaseActivity implements View.OnCli
 
     private void updatePhotos(VotePhotosResult votePhotos) {
         if (votePhotos != null) {
-            List<VotePhoto> votePhotoList = votePhotos.getVotePhotoList();
+            List<PhotoDto> votePhotoList = votePhotos.getVotePhotoList();
             if (votePhotoList != null) {
                 this.votePhotos = new ArrayList<>(votePhotoList);
                 if (votePhotoList.size() > 0) {
-                    firstPhotoController.setImage(this, votePhotoList.get(0).getPhotoUrl());
+                    firstPhotoController.setImage(this, votePhotoList.get(0).getUrl());
                 }
                 if (votePhotoList.size() > 1) {
-                    secondPhotoController.setImage(this, votePhotoList.get(1).getPhotoUrl());
+                    secondPhotoController.setImage(this, votePhotoList.get(1).getUrl());
                 }
                 if (votePhotoList.size() > 2) {
-                    thirdPhotoController.setImage(this, votePhotoList.get(2).getPhotoUrl());
+                    thirdPhotoController.setImage(this, votePhotoList.get(2).getUrl());
                 }
                 if (votePhotoList.size() > 3) {
-                    fourthPhotoController.setImage(this, votePhotoList.get(3).getPhotoUrl());
+                    fourthPhotoController.setImage(this, votePhotoList.get(3).getUrl());
                 }
             }
             if (votePhotos.getPhotosCount() != null) {
@@ -209,10 +224,10 @@ public class VoteProcessActivity extends CheckBaseActivity implements View.OnCli
     private VoteAction buildVoteAction(int selectedPhoto) {
         VoteAction voteAction = new VoteAction();
         if (votePhotos != null) {
-            voteAction.setVotedPhotoId(votePhotos.get(selectedPhoto - 1).getPhotoId());
+            voteAction.setVotedPhotoId(votePhotos.get(selectedPhoto - 1).getId());
             long[] photoIds = new long[votePhotos.size()];
             for (int i = 0; i < votePhotos.size(); i++) {
-                photoIds[i] = votePhotos.get(i).getPhotoId();
+                photoIds[i] = votePhotos.get(i).getId();
             }
             voteAction.setPhotoIds(photoIds);
         }

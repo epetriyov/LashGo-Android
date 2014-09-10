@@ -27,7 +27,8 @@
 
     <application
             android:name=".LashgoApplication"
-            android:icon="@drawable/ic_logo"
+            android:icon="@drawable/ic_lashgo"
+            android:logo="@drawable/ic_logo"
             android:label="@string/app_name"
             android:theme="@style/Theme.Styled"
             >
@@ -56,9 +57,13 @@
                   android:launchMode="singleTask"
                 />
         <activity android:name=".ui.auth.SuccessfulRegisterActivity"/>
+        <activity android:name=".ui.check.PhotoSentActivity"/>
         <activity android:name=".ui.profile.ProfileActivity"/>
+        <activity android:name=".ui.profile.EditProfileActivity"
+                  android:label="@string/edit"
+                />
         <activity android:name=".ui.start.SplashActivity"/>
-        <activity android:name=".ui.check.CheckPhotoActivity"/>
+        <activity android:name=".ui.check.PhotoActivity"/>
         <activity android:name=".ui.check.CheckActiveActivity"
                   android:label="@string/task"
                 />

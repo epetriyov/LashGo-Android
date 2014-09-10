@@ -10,6 +10,7 @@ import com.lashgo.android.ui.auth.LoginActivity;
 import com.lashgo.android.ui.auth.SuccessfulRegisterActivity;
 import com.lashgo.android.ui.check.*;
 import com.lashgo.android.ui.main.MainActivity;
+import com.lashgo.android.ui.profile.EditProfileActivity;
 import com.lashgo.android.ui.profile.ProfileActivity;
 import com.lashgo.android.ui.start.StartActivity;
 import dagger.Module;
@@ -30,11 +31,12 @@ import dagger.Provides;
                 CheckActiveActivity.class,
                 CheckVoteActivity.class,
                 CheckFinishedActivity.class,
-                CheckPhotoActivity.class,
+                PhotoActivity.class,
                 VoteProcessActivity.class,
                 ProfileActivity.class,
                 LoginActivity.class,
                 SuccessfulRegisterActivity.class,
+                EditProfileActivity.class,
                 FacebookHelper.class,
                 TwitterHelper.class,
                 VkontakteListener.class,

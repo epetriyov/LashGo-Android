@@ -51,6 +51,22 @@ public abstract class BaseIntentHandler {
             return new VoteHandler();
         } else if (ServiceActionNames.ACTION_LIKE_CHECK.name().equals(action)) {
             return new CheckLikeHandler();
+        } else if (ServiceActionNames.ACTION_GET_USER_PROFILE.name().equals(action)) {
+            return new GetUserProfileHandler();
+        } else if (ServiceActionNames.ACTION_GET_MY_USER_PROFILE.name().equals(action)) {
+            return new GetMyUserProfileHandler();
+        } else if (ServiceActionNames.ACTION_GET_CHECK_PHOTOS.name().equals(action)) {
+            return new GetCheckPhotosHandler();
+        } else if (ServiceActionNames.ACTION_GET_USER_PHOTOS.name().equals(action)) {
+            return new GetUserPhotosHandler();
+        } else if (ServiceActionNames.ACTION_GET_MY_PHOTOS.name().equals(action)) {
+            return new GetMyPhotosHandler();
+        } else if (ServiceActionNames.ACTION_GET_CHECK.name().equals(action)) {
+            return new GetCheckHandler();
+        } else if (ServiceActionNames.ACTION_SAVE_AVATAR.name().equals(action)) {
+            return new SaveAvatarHandler();
+        } else if (ServiceActionNames.ACTION_SAVE_PROFILE.name().equals(action)) {
+            return new SaveProfileHandler();
         } else {
             throw new IllegalArgumentException("illegal action - " + action);
         }
@@ -61,7 +77,12 @@ public abstract class BaseIntentHandler {
         ACTION_REGISTER, ACTION_SOCIAL_SIGN_IN,
         ACTION_GCM_REGISTER_ID, ACTION_PASSWORD_RECOVER,
         ACTION_CONFIRM_SOCIAL_SIGN_UP, ACTION_GET_MAIN_SCREEN_INFO,
-        ACTION_SEND_PHOTO, ACTION_GET_VOTE_PHOTOS, ACTION_VOTE, ACTION_LIKE_CHECK, ACTION_GET_CHECK_LIST
+        ACTION_SEND_PHOTO, ACTION_GET_VOTE_PHOTOS, ACTION_VOTE,
+        ACTION_LIKE_CHECK, ACTION_GET_USER_PROFILE,
+        ACTION_GET_MY_USER_PROFILE, ACTION_GET_CHECK_PHOTOS,
+        ACTION_GET_USER_PHOTOS, ACTION_GET_MY_PHOTOS,
+        ACTION_GET_CHECK, ACTION_SAVE_AVATAR,
+        ACTION_SAVE_PROFILE, ACTION_GET_CHECK_LIST
     }
 
     public static enum ServiceExtraNames {
@@ -70,7 +91,9 @@ public abstract class BaseIntentHandler {
         LAST_SUBSCRIPTIONS_VIEW_DATE, MAIN_SCREEN_INFO,
         LOGIN_DTO, SESSION_INFO, REGISTER_DTO, SOCIAL_DTO,
         EXTENDED_SOCIAL_DTO, PHOTO_PATH, REGISTER_RESPONSE_INFO,
-        VOTE_PHOTO_LIST, VOTE_ACTION, CHECK_ID, IS_LIKE_ADDED, IS_PHOTOS_COUNT_INCLUDED
+        VOTE_PHOTO_LIST, VOTE_ACTION, CHECK_ID, IS_LIKE_ADDED,
+        USER_ID, USER_PROFILE, PHOTOS_LIST, CHECK_DTO,
+        AVATAR_PATH, IS_PHOTOS_COUNT_INCLUDED
     }
 
     public static final String ERROR_EXTRA = "error_extra";

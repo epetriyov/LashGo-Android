@@ -1,25 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:orientation="horizontal"
-                                        android:gravity="bottom"
-                                        android:padding="@dimen/horizontal_padding"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res/com.lashgo.android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
         >
-    <Button
-            android:id="@+id/btn_start"
-            android:layout_weight="1"
-            android:layout_height="48dp"
-            android:layout_width="0dp"
-            android:text="@string/start"
+    <android.support.v4.view.ViewPager
+            android:id="@+id/splash_pager"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
             />
-    <View android:layout_width="25dp" android:layout_height="1dp"/>
-    <Button
-            android:id="@+id/btn_enter"
-            android:layout_weight="1"
-            android:layout_height="48dp"
-            android:layout_width="0dp"
-            android:text="@string/enter"
-            />
-</LinearLayout>
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
+        <ImageView android:layout_width="127dp" android:layout_height="46dp"
+                   android:src="@drawable/black_logo"
+                   android:layout_alignParentTop="true"
+                   android:layout_alignParentRight="true"
+                   android:layout_marginTop="24dp"
+                   android:layout_marginRight="24dp"
+                   android:id="@+id/lashgo_logo"
+                />
+        <ImageView android:layout_width="match_parent" android:layout_height="205dp"
+                   android:src="@drawable/frame"
+                   android:layout_marginRight="24dp"
+                   android:layout_marginLeft="24dp"
+                   android:layout_below="@id/lashgo_logo"
+                   android:layout_marginTop="57dp"
+                />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="51dp"
+                      android:orientation="horizontal"
+                      android:paddingLeft="46dp"
+                      android:paddingRight="46dp"
+                      android:layout_marginBottom="14dp"
+                      android:layout_alignParentBottom="true"
+                >
+            <com.lashgo.android.ui.views.RobotoButton
+                    android:layout_width="wrap_content" android:layout_height="match_parent"
+                    android:id="@+id/btn_enter"
+                    android:text="@string/splash_enter"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:gravity="center"
+                    app:fontName="@string/medium"
+                    android:textSize="14sp"
+                    android:textColor="@drawable/btn_pink_text"
+                    android:background="@drawable/btn_pink_bg"
+                    />
+            <com.lashgo.android.ui.views.RobotoButton
+                    android:layout_width="0dp" android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:id="@+id/btn_skip"
+                    android:layout_marginLeft="11dp"
+                    android:text="@string/skip"
+                    android:gravity="center"
+                    app:fontName="@string/medium"
+                    android:textSize="14sp"
+                    android:textColor="@drawable/btn_gray_text"
+                    android:background="@drawable/btn_gray_bg"
+                    />
+        </LinearLayout>
+    </RelativeLayout>
+</FrameLayout>

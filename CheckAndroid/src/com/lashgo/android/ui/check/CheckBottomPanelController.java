@@ -14,6 +14,7 @@ import com.lashgo.android.ui.auth.LoginActivity;
 import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.UiUtils;
 import com.lashgo.model.dto.CheckDto;
+import com.lashgo.model.dto.PhotoDto;
 
 import javax.inject.Inject;
 
@@ -28,7 +29,7 @@ public class CheckBottomPanelController implements View.OnClickListener {
     @Inject
     ServiceHelper serviceHelper;
 
-    private final CheckDto checkDto;
+    private CheckDto checkDto;
 
     private final BaseActivity activity;
 
@@ -50,27 +51,51 @@ public class CheckBottomPanelController implements View.OnClickListener {
 
     ImageView btnComments;
 
+    private PhotoDto photoDto;
+
+    public CheckBottomPanelController(final BaseActivity activity, final PhotoDto photoDto) {
+        commonInit(activity);
+        this.activity = activity;
+        this.photoDto = photoDto;
+        if (photoDto == null) {
+            throw new IllegalArgumentException("Photo info can't be empty!");
+        }
+        localLikesCount = photoDto.getLikesCount();
+        likesCountText.setText(String.valueOf(photoDto.getLikesCount()));
+        commentsCount.setText(String.valueOf(photoDto.getCommentsCount()));
+        activity.findViewById(R.id.time_layout).setVisibility(View.GONE);
+        activity.findViewById(R.id.shares_layout).setVisibility(View.GONE);
+        activity.findViewById(R.id.peoples_layout).setVisibility(View.GONE);
+    }
+
     public static enum ButtonColors {WHITE, GRAY}
 
-    public CheckBottomPanelController(final BaseActivity activity, final CheckDto checkDto) {
+    private void commonInit(final BaseActivity activity) {
         activity.inject(this);
+        likesCountText = ((TextView) activity.findViewById(R.id.likes_count));
+        btnLikes = (ImageView) activity.findViewById(R.id.btn_likes);
+        btnLikes.setOnClickListener(this);
+        commentsCount = ((TextView) activity.findViewById(R.id.comments_count));
+        btnComments = (ImageView) activity.findViewById(R.id.btn_comments);
+        btnComments.setOnClickListener(this);
+    }
+
+    public CheckBottomPanelController(final BaseActivity activity, final CheckDto checkDto) {
+        commonInit(activity);
         this.activity = activity;
         this.checkDto = checkDto;
         if (checkDto == null) {
             throw new IllegalArgumentException("Check can't be empty!");
         }
-        localLikesCount = checkDto.getLikesCount();
         btnShare = (ImageView) activity.findViewById(R.id.btn_share);
         btnShare.setOnClickListener(this);
         sharesCount = ((TextView) activity.findViewById(R.id.shares_count));
-        sharesCount.setText(String.valueOf(checkDto.getSharesCount()));
         peoplesCount = ((TextView) activity.findViewById(R.id.peoples_count));
-        peoplesCount.setText(String.valueOf(checkDto.getPlayersCount()));
         btnPeoplesCount = (ImageView) activity.findViewById(R.id.btn_peoples_count);
-        likesCountText = ((TextView) activity.findViewById(R.id.likes_count));
+        localLikesCount = checkDto.getLikesCount();
+        sharesCount.setText(String.valueOf(checkDto.getSharesCount()));
+        peoplesCount.setText(String.valueOf(checkDto.getPlayersCount()));
         likesCountText.setText(String.valueOf(checkDto.getLikesCount()));
-        btnLikes = (ImageView) activity.findViewById(R.id.btn_likes);
-        btnLikes.setOnClickListener(this);
         LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
 
         if (LashgoConfig.CheckState.ACTIVE.equals(checkState)) {
@@ -95,10 +120,7 @@ public class CheckBottomPanelController implements View.OnClickListener {
             }
         } else {
             activity.findViewById(R.id.time_layout).setVisibility(View.GONE);
-            commentsCount = ((TextView) activity.findViewById(R.id.comments_count));
             commentsCount.setText(String.valueOf(checkDto.getCommentsCount()));
-            btnComments = (ImageView) activity.findViewById(R.id.btn_comments);
-            btnComments.setOnClickListener(this);
             activity.findViewById(R.id.check_time).setVisibility(View.GONE);
         }
     }
@@ -111,12 +133,12 @@ public class CheckBottomPanelController implements View.OnClickListener {
     private void updateColorsSheme(ButtonColors buttonColors) {
         if (buttonColors != null && ButtonColors.GRAY.name().equals(buttonColors.name())) {
             btnLikes.setImageResource(R.drawable.ic_like_gray);
-            likesCountText.setTextColor(R.color.vote_check_description_color);
-            sharesCount.setTextColor(R.color.vote_check_description_color);
+            likesCountText.setTextColor(activity.getResources().getColor(R.color.vote_check_description_color));
+            sharesCount.setTextColor(activity.getResources().getColor(R.color.vote_check_description_color));
             btnShare.setImageResource(R.drawable.btn_share_gray);
-            commentsCount.setTextColor(R.color.vote_check_description_color);
+            commentsCount.setTextColor(activity.getResources().getColor(R.color.vote_check_description_color));
             btnComments.setImageResource(R.drawable.ic_g_comments);
-            peoplesCount.setTextColor(R.color.vote_check_description_color);
+            peoplesCount.setTextColor(activity.getResources().getColor(R.color.vote_check_description_color));
             btnPeoplesCount.setImageResource(R.drawable.ic_g_mob_normal);
         }
     }
@@ -144,3 +166,4 @@ public class CheckBottomPanelController implements View.OnClickListener {
         }
     }
 }
+

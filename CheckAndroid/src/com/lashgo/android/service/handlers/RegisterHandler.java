@@ -29,7 +29,7 @@ public class RegisterHandler extends BaseIntentHandler {
         LoginInfo registerInfo = (LoginInfo) intent.getSerializableExtra(ServiceExtraNames.REGISTER_DTO.name());
         ResponseObject<RegisterResponse> registerResponse = service.register(registerInfo);
         if (registerResponse != null && registerResponse.getResult() != null) {
-            settingsHelper.login(new SessionInfo(registerResponse.getResult().getSessionId(), registerResponse.getResult().getUserId()), registerInfo);
+            settingsHelper.login(new SessionInfo(registerResponse.getResult().getSessionId(), registerResponse.getResult().getUserDto() != null ? registerResponse.getResult().getUserDto().getId() : -1), registerInfo);
             bundle.putSerializable(ServiceExtraNames.REGISTER_RESPONSE_INFO.name(), registerResponse.getResult());
         }
         return bundle;

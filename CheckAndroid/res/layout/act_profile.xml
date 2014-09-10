@@ -19,16 +19,16 @@
         <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                      android:orientation="vertical"
-                      android:layout_gravity="top|right"
+                android:orientation="vertical"
+                android:layout_gravity="top|right"
                 >
             <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                          android:orientation="horizontal"
-                          android:layout_marginTop="20dp"
-                          android:layout_marginRight="16dp"
-                          android:id="@+id/user_subscribes_layout"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="16dp"
+                    android:id="@+id/user_subscribes_layout"
                     >
                 <com.lashgo.android.ui.views.RobotoTextView
                         android:id="@+id/user_subscribes"
@@ -126,7 +126,7 @@
                   android:layout_marginLeft="3dp"
                   android:layout_marginRight="3dp"
                   android:layout_gravity="center_vertical"
-                  />
+                    />
             <com.lashgo.android.ui.views.RobotoTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -155,11 +155,12 @@
             android:id="@+id/photos_galley"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_margin="8dp"
             android:gravity="center"
             android:numColumns="2"
-            android:verticalSpacing="5dp"
+            android:verticalSpacing="4dp"
+            android:horizontalSpacing="4dp"
             android:drawSelectorOnTop="true"
-            android:stretchMode="columnWidth" >
+            android:stretchMode="columnWidth">
     </GridView>
 </LinearLayout>

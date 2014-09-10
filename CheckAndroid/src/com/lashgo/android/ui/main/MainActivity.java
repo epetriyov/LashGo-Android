@@ -23,6 +23,7 @@ import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.auth.AuthController;
 import com.lashgo.android.ui.check.CheckListFragment;
 import com.lashgo.android.ui.news.NewsFragment;
+import com.lashgo.android.ui.profile.ProfileActivity;
 import com.lashgo.android.ui.subscribes.SubscribesFragment;
 import com.lashgo.android.utils.ContextUtils;
 import com.lashgo.android.utils.PhotoUtils;
@@ -163,9 +164,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         menuItems = getResources().getStringArray(R.array.menus_array);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerMenu = findViewById(R.id.drawer_menu);
+        drawerMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         drawerTopView = findViewById(R.id.drawer_top_view);
         userAvatarView = (ImageView) findViewById(R.id.drawer_ava);
         userName = (TextView) findViewById(R.id.drawer_text);
+        userName.setOnClickListener(this);
         if (settingsHelper.isLoggedIn()) {
             initAuthDrawerMenu();
         } else {
@@ -195,16 +203,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         drawerLayout.setDrawerListener(drawerToggle);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
-        if (checkPlayServices()) {
-            gcm = GoogleCloudMessaging.getInstance(this);
-            String regid = settingsHelper.getRegistrationId();
-            if (TextUtils.isEmpty(regid)) {
-                registerInBackground();
+        if (settingsHelper.isLoggedIn()) {
+            if (checkPlayServices()) {
+                gcm = GoogleCloudMessaging.getInstance(this);
+                String regid = settingsHelper.getRegistrationId();
+                if (TextUtils.isEmpty(regid)) {
+                    registerInBackground();
+                } else {
+                    sendRegistrationIdToBackend(regid);
+                }
             } else {
-                sendRegistrationIdToBackend(regid);
+                ContextUtils.showToast(this, "No valid Google Play Services APK found.");
             }
-        } else {
-            ContextUtils.showToast(this, "No valid Google Play Services APK found.");
         }
     }
 
@@ -302,7 +312,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        selectItem(v);
+        if (v.getId() == R.id.item_tasks || v.getId() == R.id.item_news || v.getId() == R.id.item_subscribes) {
+            selectItem(v);
+        } else if (v.getId() == R.id.drawer_text) {
+            startActivity(ProfileActivity.buildIntent(this, ProfileActivity.ProfileOwner.ME));
+        }
     }
 
     /**

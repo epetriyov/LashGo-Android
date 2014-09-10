@@ -19,6 +19,7 @@ import com.lashgo.android.utils.Md5Util;
 import com.lashgo.model.ErrorCodes;
 import com.lashgo.model.dto.*;
 import com.vk.sdk.VKSdk;
+import twitter4j.User;
 
 import javax.inject.Inject;
 
@@ -103,7 +104,7 @@ public class AuthController implements View.OnClickListener, EnterEmailDialog.Em
         } else if (BaseIntentHandler.ServiceActionNames.ACTION_REGISTER.name().equals(action)) {
             if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
                 if (data != null) {
-                    onRegisterSuccessFull((RegisterResponse) data.getSerializable(BaseIntentHandler.ServiceExtraNames.REGISTER_RESPONSE_INFO.name()));
+                    onRegisterSuccessFull(((RegisterResponse) data.getSerializable(BaseIntentHandler.ServiceExtraNames.REGISTER_RESPONSE_INFO.name())).getUserDto());
                 }
             } else {
                 baseActivity.showErrorToast(data);
@@ -126,13 +127,13 @@ public class AuthController implements View.OnClickListener, EnterEmailDialog.Em
                 }
             } else {
                 if (data != null) {
-                    onRegisterSuccessFull((RegisterResponse) data.getSerializable(BaseIntentHandler.ServiceExtraNames.REGISTER_RESPONSE_INFO.name()));
+                    onRegisterSuccessFull(((RegisterResponse) data.getSerializable(BaseIntentHandler.ServiceExtraNames.REGISTER_RESPONSE_INFO.name())).getUserDto());
                 }
             }
         } else if (BaseIntentHandler.ServiceActionNames.ACTION_CONFIRM_SOCIAL_SIGN_UP.name().equals(action)) {
             if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
                 if (data != null) {
-                    onRegisterSuccessFull((RegisterResponse) data.getSerializable(BaseIntentHandler.ServiceExtraNames.REGISTER_RESPONSE_INFO.name()));
+                    onRegisterSuccessFull(((RegisterResponse) data.getSerializable(BaseIntentHandler.ServiceExtraNames.REGISTER_RESPONSE_INFO.name())).getUserDto());
                 }
             } else {
                 baseActivity.showErrorToast(data);
@@ -141,9 +142,9 @@ public class AuthController implements View.OnClickListener, EnterEmailDialog.Em
 
     }
 
-    private void onRegisterSuccessFull(RegisterResponse registerResponse) {
+    private void onRegisterSuccessFull(UserDto registerResponse) {
         if (registerResponse != null) {
-            if (registerResponse.getUserName() != null) {
+            if (registerResponse.getLogin() != null) {
                 baseActivity.startActivity(SuccessfulRegisterActivity.buildIntent(baseActivity, registerResponse,openMode));
                 baseActivity.setResult(Activity.RESULT_OK);
                 baseActivity.finish();

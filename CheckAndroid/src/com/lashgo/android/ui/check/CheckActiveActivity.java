@@ -27,7 +27,7 @@ import java.io.File;
 /**
  * Created by Eugene on 16.06.2014.
  */
-public class CheckActiveActivity extends CheckBaseActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
+public class CheckActiveActivity extends CheckBaseActivity implements View.OnClickListener, ViewPager.OnPageChangeListener, MakePhotoDialog.OnImageDoneListener {
 
     private static final int CHECH_PHOTO_PADDINGS = 130;
     private static final String TASK_PHOTO_TAG = "task_photo";
@@ -81,11 +81,6 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
             cameraBtn.setOnClickListener(this);
             ((TextView) findViewById(R.id.check_name)).setText(checkDto.getName());
             ((TextView) findViewById(R.id.task_description)).setText(checkDto.getDescription());
-//            viewPager = (ViewPager) findViewById(R.id.check_pager);
-//            viewPager.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, imageSize));
-//            viewPager.requestLayout();
-//            viewPager.setPageMargin(-50);
-//            viewPager.setClipChildren(true);
             PagerContainer mContainer = (PagerContainer) findViewById(R.id.pager_container);
             viewPager = mContainer.getViewPager();
             viewPager.setPageMargin(50);
@@ -107,7 +102,7 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
     public void onClick(View view) {
         if (view.getId() == R.id.btn_camera) {
             if (settingsHelper.isLoggedIn()) {
-                DialogFragment makePhotoFragment = new MakePhotoDialog();
+                DialogFragment makePhotoFragment = new MakePhotoDialog(this);
                 makePhotoFragment.show(getFragmentManager(), MakePhotoDialog.TAG);
             } else {
                 startActivity(new Intent(this, LoginActivity.class));
@@ -119,8 +114,8 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
                 Toast.makeText(this, R.string.error_send_photo, Toast.LENGTH_LONG).show();
             }
         } else if (view.getId() == R.id.check_photo) {
-            String photoUrl = view.getTag() != null && view.getTag().equals(TASK_PHOTO_TAG) ? checkDto.getTaskPhotoUrl() : checkDto.getUserPhoto();
-            startActivity(CheckPhotoActivity.newIntent(this, photoUrl, checkDto));
+            PhotoActivity.PhotoType photoType = view.getTag() != null && view.getTag().equals(TASK_PHOTO_TAG) ? PhotoActivity.PhotoType.TASK_PHOTO : PhotoActivity.PhotoType.USER_PHOTO;
+            startActivity(PhotoActivity.newIntent(this, checkDto, photoType, imgPath));
         }
     }
 
@@ -129,6 +124,7 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
         super.processServerResult(action, resultCode, data);
         if (BaseIntentHandler.ServiceActionNames.ACTION_SEND_PHOTO.name().equals(action) && resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
             pagerAdapter.hideSendPhotoBtn();
+            startActivity(PhotoSentActivity.buildIntent(this, new String(imgPath)));
             imgPath = null;
         }
     }
@@ -159,10 +155,6 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
         viewPager.setCurrentItem(1);
     }
 
-    public void setImgPath(String imgPath) {
-        this.imgPath = imgPath;
-    }
-
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
     }
@@ -181,11 +173,16 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
 
     }
 
+    @Override
+    public void imageDone(String imagePath) {
+        this.imgPath = imagePath;
+    }
+
     private class CheckPagerAdapter extends PagerAdapter {
 
         public CheckPagerAdapter() {
             super();
-            if ((!TextUtils.isEmpty(checkDto.getUserPhoto()) || !TextUtils.isEmpty(imgPath)) && !TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
+            if ((checkDto.getUserPhotoDto() != null || !TextUtils.isEmpty(imgPath)) && !TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
                 pagesCount = 2;
                 cameraBtn.setVisibility(View.GONE);
             } else {
@@ -242,8 +239,8 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
                                 resize(imageSize, imageSize).transform(new CircleTransformation()).into(checkImage);
                     } else {
                         btnSend.setVisibility(View.GONE);
-                        if (!TextUtils.isEmpty(checkDto.getUserPhoto())) {
-                            Picasso.with(CheckActiveActivity.this).load(PhotoUtils.getFullPhotoUrl(checkDto.getUserPhoto())).centerCrop().
+                        if (checkDto.getUserPhotoDto() != null && !TextUtils.isEmpty(checkDto.getUserPhotoDto().getUrl())) {
+                            Picasso.with(CheckActiveActivity.this).load(PhotoUtils.getFullPhotoUrl(checkDto.getUserPhotoDto().getUrl())).centerCrop().
                                     resize(imageSize, imageSize).transform(new CircleTransformation()).into(checkImage);
                         }
                     }

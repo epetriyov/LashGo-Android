@@ -11,9 +11,11 @@ import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.images.CircleTransformation;
 import com.lashgo.android.ui.main.MainActivity;
+import com.lashgo.android.ui.profile.EditProfileActivity;
 import com.lashgo.android.ui.profile.ProfileActivity;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.model.dto.RegisterResponse;
+import com.lashgo.model.dto.UserDto;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -21,7 +23,7 @@ import com.squareup.picasso.Picasso;
  */
 public class SuccessfulRegisterActivity extends BaseActivity implements View.OnClickListener {
 
-    private RegisterResponse registerResponse;
+    private UserDto userDto;
 
     private LoginActivity.OpenMode openMode;
 
@@ -40,36 +42,36 @@ public class SuccessfulRegisterActivity extends BaseActivity implements View.OnC
         findViewById(R.id.fill_profile).setOnClickListener(this);
         findViewById(R.id.continue_register).setOnClickListener(this);
         findViewById(R.id.make_photo).setOnClickListener(this);
-        if (registerResponse != null) {
+        if (userDto != null) {
             int imageSize = PhotoUtils.convertDpToPixels(64, this);
-            Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(registerResponse.getAvatar())).centerInside().
+            Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(userDto.getAvatar())).centerInside().
                     resize(imageSize, imageSize).transform(new CircleTransformation()).error(R.drawable.ava).placeholder(R.drawable.ava).into((ImageView) findViewById(R.id.user_avatar));
-            ((TextView) findViewById(R.id.user_subscribes)).setText(String.valueOf(registerResponse.getSubscribesCount()));
-            ((TextView) findViewById(R.id.user_subscribers)).setText(String.valueOf(registerResponse.getSubscribersCount()));
-            ((TextView) findViewById(R.id.user_name)).setText(registerResponse.getUserName());
+            ((TextView) findViewById(R.id.user_subscribes)).setText(String.valueOf(userDto.getUserSubscribes()));
+            ((TextView) findViewById(R.id.user_subscribers)).setText(String.valueOf(userDto.getUserSubscribers()));
+            ((TextView) findViewById(R.id.user_name)).setText(userDto.getLogin());
         }
     }
 
     private void initRegisterResponse(Bundle savedInstanceState) {
         Intent intent = getIntent();
         if (intent != null) {
-            registerResponse = (RegisterResponse) intent.getSerializableExtra(BaseIntentHandler.ServiceExtraNames.REGISTER_RESPONSE_INFO.name());
+            userDto = (UserDto) intent.getSerializableExtra(ExtraNames.USER_DTO.name());
         }
-        if (savedInstanceState != null && registerResponse == null) {
-            registerResponse = (RegisterResponse) savedInstanceState.getSerializable(BaseIntentHandler.ServiceExtraNames.REGISTER_RESPONSE_INFO.name());
+        if (savedInstanceState != null && userDto == null) {
+            userDto = (UserDto) savedInstanceState.getSerializable(ExtraNames.USER_DTO.name());
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(BaseIntentHandler.ServiceExtraNames.REGISTER_RESPONSE_INFO.name(), registerResponse);
+        outState.putSerializable(ExtraNames.USER_DTO.name(), userDto);
         outState.putSerializable(ExtraNames.OPEN_MODE.name(), openMode);
         super.onSaveInstanceState(outState);
     }
 
-    public static Intent buildIntent(Context context, RegisterResponse registerResponse, LoginActivity.OpenMode openMode) {
+    public static Intent buildIntent(Context context, UserDto userDto, LoginActivity.OpenMode openMode) {
         Intent intent = new Intent(context, SuccessfulRegisterActivity.class);
-        intent.putExtra(BaseIntentHandler.ServiceExtraNames.REGISTER_RESPONSE_INFO.name(), registerResponse);
+        intent.putExtra(ExtraNames.USER_DTO.name(), userDto);
         return intent;
     }
 
@@ -79,7 +81,7 @@ public class SuccessfulRegisterActivity extends BaseActivity implements View.OnC
             startActivity(new Intent(this, MainActivity.class));
             finish();
         } else if (view.getId() == R.id.fill_profile) {
-            startActivity(new Intent(this, ProfileActivity.class));
+            startActivity(EditProfileActivity.buildIntent(this,userDto));
             finish();
         }
     }

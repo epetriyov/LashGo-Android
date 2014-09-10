@@ -56,7 +56,7 @@ public class CheckVoteActivity extends CheckBaseActivity implements View.OnClick
         if (view.getId() == R.id.btn_vote_start) {
             startActivity(VoteProcessActivity.buildIntent(this, checkDto, VoteProcessActivity.class));
         } else if (view.getId() == R.id.check_photo) {
-            startActivity(CheckPhotoActivity.newIntent(this, checkDto.getTaskPhotoUrl(), checkDto));
+            startActivity(PhotoActivity.newIntent(this, checkDto, PhotoActivity.PhotoType.TASK_PHOTO));
         }
     }
 }

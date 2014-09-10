@@ -46,4 +46,28 @@ public interface RestService {
 
     @POST(Path.Checks.LIKE)
     ResponseObject<Boolean> likeCheck(@Body Integer checkId);
+
+    @GET(Path.Users.PROFILE)
+    ResponseObject<UserDto> getUserProfile(@retrofit.http.Path("userId") int userId);
+
+    @GET(Path.Users.MY_PROFILE)
+    ResponseObject<UserDto> getMyUserProfile();
+
+    @GET(Path.Checks.PHOTOS)
+    ResponseList<PhotoDto> getCheckPhotos(@retrofit.http.Path("checkId") int checkId);
+
+    @GET(Path.Users.MY_PHOTOS)
+    ResponseList<PhotoDto> getMyPhotos();
+
+    @GET(Path.Users.PHOTOS)
+    ResponseList<PhotoDto> getUserPhotos(@retrofit.http.Path("userId") int userId);
+
+    @GET(Path.Checks.CHECK)
+    ResponseObject<CheckDto> getCheck(@retrofit.http.Path("checkId") int checkId);
+
+    @PUT(Path.Users.PROFILE)
+    ResponseObject saveProfile(@Body UserDto userDto);
+
+    @POST(Path.Users.AVATAR)
+    ResponseObject saveAvatar(@Part("avatar") TypedFile avatar);
 }

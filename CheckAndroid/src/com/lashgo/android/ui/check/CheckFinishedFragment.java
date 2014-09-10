@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -81,16 +80,16 @@ public class CheckFinishedFragment extends BaseFragment implements View.OnClickL
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ((CheckBaseActivity)getActivity()).initBottomPanel();
+        ((CheckBaseActivity) getActivity()).initBottomPanel();
     }
 
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.check_photo) {
             if (view.getTag() != null && view.getTag().equals(TASK_PHOTO_TAG)) {
-                startActivity(CheckPhotoActivity.newIntent(getActivity(), checkDto.getTaskPhotoUrl(), checkDto));
+                startActivity(PhotoActivity.newIntent(getActivity(), checkDto, PhotoActivity.PhotoType.TASK_PHOTO));
             } else {
-                startActivity(CheckPhotoActivity.newIntent(getActivity(), checkDto.getWinnerPhotoUrl(), checkDto));
+                startActivity(PhotoActivity.newIntent(getActivity(), checkDto, PhotoActivity.PhotoType.WINNER_PHOTO));
             }
         }
     }
@@ -129,8 +128,8 @@ public class CheckFinishedFragment extends BaseFragment implements View.OnClickL
                     winnerMedal.setVisibility(View.VISIBLE);
                     winnerName.setVisibility(View.VISIBLE);
                     winnerName.setText(checkDto.getWinnerInfo().getLogin());
-                    if (!TextUtils.isEmpty(checkDto.getWinnerPhotoUrl())) {
-                        Picasso.with(getActivity()).load(PhotoUtils.getFullPhotoUrl(checkDto.getWinnerPhotoUrl())).centerCrop().
+                    if (checkDto.getWinnerPhotoDto() != null && !TextUtils.isEmpty(checkDto.getWinnerPhotoDto().getUrl())) {
+                        Picasso.with(getActivity()).load(PhotoUtils.getFullPhotoUrl(checkDto.getWinnerPhotoDto().getUrl())).centerCrop().
                                 resize(imageSize, imageSize).transform(new CircleTransformation()).into(checkImage);
                     }
                     break;
