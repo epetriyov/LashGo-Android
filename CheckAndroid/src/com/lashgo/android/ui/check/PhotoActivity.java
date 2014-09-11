@@ -13,6 +13,7 @@ import com.lashgo.android.LashgoConfig;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
+import com.lashgo.android.ui.images.CircleTransformation;
 import com.lashgo.android.ui.profile.ProfileActivity;
 import com.lashgo.android.ui.views.RobotoTextView;
 import com.lashgo.android.utils.LashGoUtils;
@@ -114,7 +115,11 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
         setContentView(R.layout.act_photo);
         initViews();
         if (checkDto != null) {
-            bottomPanelController = new CheckBottomPanelController(this, checkDto);
+            if (PhotoType.WINNER_PHOTO.name().equals(photoType.name())) {
+                bottomPanelController = new CheckBottomPanelController(this, checkDto.getWinnerPhotoDto());
+            } else {
+                bottomPanelController = new CheckBottomPanelController(this, checkDto);
+            }
         } else {
             bottomPanelController = new CheckBottomPanelController(this, photoDto);
         }
@@ -122,7 +127,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
 
     private void setUpTopCheck(CheckDto checkDto) {
         if (!TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
-            Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl())).resize(imageSize, imageSize).centerCrop().into(taskPhoto);
+            Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl())).resize(imageSize, imageSize).centerCrop().transform(new CircleTransformation()).into(taskPhoto);
         }
         topText.setText(checkDto.getName());
     }
@@ -167,7 +172,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
     private void setUpTopUser(UserDto userDto) {
         if (userDto != null) {
             if (!TextUtils.isEmpty(userDto.getAvatar())) {
-                Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(userDto.getAvatar())).resize(imageSize, imageSize).centerCrop().into(taskPhoto);
+                Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(userDto.getAvatar())).resize(imageSize, imageSize).centerCrop().transform(new CircleTransformation()).into(taskPhoto);
             }
             topText.setText(userDto.getLogin());
         }

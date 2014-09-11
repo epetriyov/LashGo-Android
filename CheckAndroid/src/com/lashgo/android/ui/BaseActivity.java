@@ -39,7 +39,7 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
     protected static final String PROGRESS_DIALOG = "progress";
 
     public static enum ExtraNames {
-        CHECK_DTO, PHOTO_URL, PROFILE_OWNER, USER_ID, PHOTO_DTO, PHOTO_TYPE, USER_DTO, OPEN_MODE
+        CHECK_DTO, PHOTO_URL, PROFILE_OWNER, USER_ID, PHOTO_DTO, PHOTO_TYPE, USER_DTO, CHECK_ID, PHOTO_ID, OPEN_MODE
     }
 
     private ObjectGraph loginGraph;

@@ -25,7 +25,7 @@ public class SocialSignUpHandler extends BaseIntentHandler {
         ExtendedSocialInfo extendedSocialInfo = (ExtendedSocialInfo) intent.getSerializableExtra(ServiceExtraNames.EXTENDED_SOCIAL_DTO.name());
         ResponseObject<RegisterResponse> registerResponse = service.confirmSocialSignUp(extendedSocialInfo);
         if (registerResponse != null && registerResponse.getResult() != null) {
-            settingsHelper.socialLogin(new SessionInfo(registerResponse.getResult().getSessionId(), registerResponse.getResult().getUserId()), extendedSocialInfo);
+            settingsHelper.socialLogin(new SessionInfo(registerResponse.getResult().getSessionId(), registerResponse.getResult().getUserDto() != null ? registerResponse.getResult().getUserDto().getId() : -1), extendedSocialInfo);
             bundle.putSerializable(ServiceExtraNames.REGISTER_RESPONSE_INFO.name(), registerResponse.getResult());
         }
         return bundle;

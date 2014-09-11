@@ -59,6 +59,9 @@
         <activity android:name=".ui.auth.SuccessfulRegisterActivity"/>
         <activity android:name=".ui.check.PhotoSentActivity"/>
         <activity android:name=".ui.profile.ProfileActivity"/>
+        <activity android:name=".ui.comments.CommentsActivity"
+                android:label="@string/comments"
+                />
         <activity android:name=".ui.profile.EditProfileActivity"
                   android:label="@string/edit"
                 />

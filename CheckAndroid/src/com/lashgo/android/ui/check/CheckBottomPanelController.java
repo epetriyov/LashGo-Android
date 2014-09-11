@@ -11,6 +11,7 @@ import com.lashgo.android.service.ServiceHelper;
 import com.lashgo.android.settings.SettingsHelper;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.auth.LoginActivity;
+import com.lashgo.android.ui.comments.CommentsActivity;
 import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.UiUtils;
 import com.lashgo.model.dto.CheckDto;
@@ -154,7 +155,11 @@ public class CheckBottomPanelController implements View.OnClickListener {
                 activity.startActivity(new Intent(activity, LoginActivity.class));
             }
         } else if (view.getId() == R.id.btn_comments) {
-            //TODO implemnt comments screen
+            if (checkDto != null) {
+                activity.startActivity(CommentsActivity.buildCheckIntent(activity, checkDto.getId()));
+            } else if (photoDto != null) {
+                activity.startActivity(CommentsActivity.buildPhotoIntent(activity, photoDto.getId()));
+            }
         }
     }
 

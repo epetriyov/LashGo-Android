@@ -229,4 +229,30 @@ public class ServiceHelper {
         extras.putSerializable(BaseIntentHandler.ServiceExtraNames.USER_PROFILE.name(), userDto);
         runRequest(BaseIntentHandler.ServiceActionNames.ACTION_SAVE_PROFILE.name(), extras);
     }
+
+    public void getCheckComments(int checkId) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(BaseIntentHandler.ServiceExtraNames.CHECK_ID.name(), checkId);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_COMMENTS.name(), bundle);
+    }
+
+    public void getPhotoComments(long photoId) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(BaseIntentHandler.ServiceExtraNames.PHOTO_ID.name(), photoId);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_PHOTO_COMMENTS.name(), bundle);
+    }
+
+    public void addCheckComment(int checkId, String commentText) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(BaseIntentHandler.ServiceExtraNames.CHECK_ID.name(),checkId);
+        bundle.putString(BaseIntentHandler.ServiceExtraNames.COMMENT_TEXT.name(),commentText);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_ADD_CHECK_COMMENT.name(),bundle);
+    }
+
+    public void addPhotoComment(long photoId, String commentText) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(BaseIntentHandler.ServiceExtraNames.PHOTO_ID.name(),photoId);
+        bundle.putString(BaseIntentHandler.ServiceExtraNames.COMMENT_TEXT.name(),commentText);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_ADD_PHOTO_COMMENT.name(),bundle);
+    }
 }

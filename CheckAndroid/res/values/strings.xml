@@ -89,6 +89,9 @@
     <string name="edit">Редактировать</string>
     <string name="skip">ПРОПУСТИТЬ</string>
     <string name="splash_enter">ВХОД</string>
+    <string name="comments">Комментарии</string>
+    <string name="hint_comment">Оставьте комментарий</string>
+    <string name="error_empty_comment">Комментарий не может быть пустым</string>
     <string-array name="make_photo_items">
         <item>Камера</item>
         <item>Галерея</item>

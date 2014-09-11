@@ -67,6 +67,14 @@ public abstract class BaseIntentHandler {
             return new SaveAvatarHandler();
         } else if (ServiceActionNames.ACTION_SAVE_PROFILE.name().equals(action)) {
             return new SaveProfileHandler();
+        } else if (ServiceActionNames.ACTION_GET_CHECK_COMMENTS.name().equals(action)) {
+            return new GetCheckCommentsHandler();
+        } else if (ServiceActionNames.ACTION_GET_PHOTO_COMMENTS.name().equals(action)) {
+            return new GetPhotoCommentsHandler();
+        } else if (ServiceActionNames.ACTION_ADD_CHECK_COMMENT.name().equals(action)) {
+            return new AddCheckCommentHandler();
+        } else if (ServiceActionNames.ACTION_ADD_PHOTO_COMMENT.name().equals(action)) {
+            return new AddPhotoCommentHandler();
         } else {
             throw new IllegalArgumentException("illegal action - " + action);
         }
@@ -82,7 +90,7 @@ public abstract class BaseIntentHandler {
         ACTION_GET_MY_USER_PROFILE, ACTION_GET_CHECK_PHOTOS,
         ACTION_GET_USER_PHOTOS, ACTION_GET_MY_PHOTOS,
         ACTION_GET_CHECK, ACTION_SAVE_AVATAR,
-        ACTION_SAVE_PROFILE, ACTION_GET_CHECK_LIST
+        ACTION_SAVE_PROFILE, ACTION_GET_CHECK_COMMENTS, ACTION_GET_PHOTO_COMMENTS, ACTION_ADD_PHOTO_COMMENT, ACTION_ADD_CHECK_COMMENT, ACTION_GET_CHECK_LIST
     }
 
     public static enum ServiceExtraNames {
@@ -93,7 +101,7 @@ public abstract class BaseIntentHandler {
         EXTENDED_SOCIAL_DTO, PHOTO_PATH, REGISTER_RESPONSE_INFO,
         VOTE_PHOTO_LIST, VOTE_ACTION, CHECK_ID, IS_LIKE_ADDED,
         USER_ID, USER_PROFILE, PHOTOS_LIST, CHECK_DTO,
-        AVATAR_PATH, IS_PHOTOS_COUNT_INCLUDED
+        AVATAR_PATH, PHOTO_ID, COMMENTS_LIST, COMMENT_TEXT, COMMENT, IS_PHOTOS_COUNT_INCLUDED
     }
 
     public static final String ERROR_EXTRA = "error_extra";

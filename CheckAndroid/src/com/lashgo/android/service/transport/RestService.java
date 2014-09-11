@@ -70,4 +70,16 @@ public interface RestService {
 
     @POST(Path.Users.AVATAR)
     ResponseObject saveAvatar(@Part("avatar") TypedFile avatar);
+
+    @GET(Path.Checks.COMMENTS)
+    ResponseList<CommentDto> getCheckComments(@retrofit.http.Path("checkId") int checkId);
+
+    @GET(Path.Photos.COMMENTS)
+    ResponseList<CommentDto> getPhotoComments(@retrofit.http.Path("photoId") long photoId);
+
+    @POST(Path.Checks.COMMENTS)
+    ResponseObject<CommentDto> addCheckComment(@retrofit.http.Path("checkId") int checkId, @Body String commentText);
+
+    @POST(Path.Photos.COMMENTS)
+    ResponseObject<CommentDto> addPhotoComment(@retrofit.http.Path("photoId") long photoId, @Body String commentText);
 }
