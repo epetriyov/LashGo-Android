@@ -1,30 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.Styled" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+    <style name="Theme.LashGo" parent="Theme.LashGo.Parent">
         <!-- Setting values in the android namespace affects API levels 14+ -->
-        <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
-        <item name="android:editTextStyle">@style/EditText.Styled</item>
+        <item name="android:actionBarStyle">@style/Widget.LashGo.ActionBar</item>
     </style>
 
-    <style name="Widget.Styled.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:layout_height">56dp</item>
+    <style name="Theme.LashGo.TransparentActionBar" parent="Theme.LashGo.Parent">
+        <!-- Setting values in the android namespace affects API levels 14+ -->
+        <item name="android:actionBarStyle">@style/Widget.LashGo.ActionBar.Transparent</item>
+    </style>
+
+    <style name="Theme.LashGo.Parent" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+        <item name="android:actionButtonStyle">@style/Widget.LashGo.ActionButton</item>
+        <item name="android:actionBarItemBackground">@null</item>
+        <item name="android:editTextStyle">@style/Widget.LashGo.EditText</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_back</item>
+        <item name="android:actionOverflowButtonStyle">@style/Widget.Lashgo.ActionButton.Overflow</item>
+    </style>
+
+    <style name="Widget.Lashgo.ActionButton.Overflow" parent="@style/Widget.LashGo.ActionButton">
+        <item name="android:src">@drawable/btn_overflow</item>
+    </style>
+
+    <style name="Widget.LashGo.ActionBar" parent="Widget.LashGo.ActionBar.Parent">
         <item name="android:background">@color/splash_top_color</item>
-        <item name="android:titleTextStyle">@style/Widget.Styled.ActionBar.TitleText</item>
-        <item name="android:indeterminateProgressStyle">@style/LashgoProgressBar</item>
-        <!-- Setting values in the android namespace affects API levels 14+ -->
     </style>
 
-    <style name="EditText.Styled" parent="@android:style/Widget.EditText">
+    <style name="Widget.LashGo.ActionBar.Parent" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:height">@dimen/action_bar_height</item>
+        <item name="android:titleTextStyle">@style/Widget.LashGo.ActionBar.TitleText</item>
+        <item name="android:indeterminateProgressStyle">@style/Widget.LashGo.ProgressBar</item>
+    </style>
+
+    <style name="Widget.LashGo.EditText" parent="@android:style/Widget.EditText">
         <item name="android:inputType">textFilter|textNoSuggestions|textVisiblePassword</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/edit_text_color</item>
         <item name="android:textColorHint">@color/gray</item>
         <item name="android:background">@drawable/bg_edittext</item>
     </style>
-    <style name="Widget.Styled.ActionBar.TitleText" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+    <style name="Widget.LashGo.ActionBar.TitleText" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">@color/white</item>
     </style>
-    <style name="LashgoProgressBar"  parent="@android:style/Widget.ProgressBar.Large">
+    <style name="Widget.LashGo.ProgressBar" parent="@android:style/Widget.ProgressBar.Large">
         <item name="android:indeterminateDrawable">@drawable/custom_progress</item>
+    </style>
+
+    <style name="Widget.LashGo.ActionButton" parent="@android:style/Widget.Holo.ActionButton">
+        <item name="android:padding">0dp</item>
+        <item name="android:minWidth">0dp</item>
+    </style>
+    <style name="Widget.LashGo.ActionBar.Transparent" parent="Widget.LashGo.ActionBar.Parent">
+        <item name="android:background">@color/transparent</item>
     </style>
 </resources>

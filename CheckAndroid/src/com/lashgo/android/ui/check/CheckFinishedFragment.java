@@ -120,8 +120,7 @@ public class CheckFinishedFragment extends BaseFragment implements View.OnClickL
                     winnerName.setVisibility(View.GONE);
                     checkImage.setTag(TASK_PHOTO_TAG);
                     if (!TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
-                        Picasso.with(getActivity()).load(PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl())).centerCrop().
-                                resize(imageSize, imageSize).transform(new CircleTransformation()).into(checkImage);
+                        PhotoUtils.displayImage(getActivity(), checkImage, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), imageSize, R.drawable.ava, true);
                     }
                     break;
                 case 1:
@@ -129,8 +128,7 @@ public class CheckFinishedFragment extends BaseFragment implements View.OnClickL
                     winnerName.setVisibility(View.VISIBLE);
                     winnerName.setText(checkDto.getWinnerInfo().getLogin());
                     if (checkDto.getWinnerPhotoDto() != null && !TextUtils.isEmpty(checkDto.getWinnerPhotoDto().getUrl())) {
-                        Picasso.with(getActivity()).load(PhotoUtils.getFullPhotoUrl(checkDto.getWinnerPhotoDto().getUrl())).centerCrop().
-                                resize(imageSize, imageSize).transform(new CircleTransformation()).into(checkImage);
+                        PhotoUtils.displayImage(getActivity(), checkImage, PhotoUtils.getFullPhotoUrl(checkDto.getWinnerPhotoDto().getUrl()), imageSize, R.drawable.ava, true);
                     }
                     break;
                 default:

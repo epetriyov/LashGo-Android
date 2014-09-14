@@ -44,4 +44,5 @@
     <color name="transparent_white">#4DB1B1B1</color>
     <color name="profile_text_focused">#B3FFFFFF</color>
     <color name="check_finished_darkening">#80000000</color>
+    <color name="vote_stroke">#FF5E7C</color>
 </resources>

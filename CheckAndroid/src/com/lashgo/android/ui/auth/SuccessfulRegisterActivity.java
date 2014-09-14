@@ -3,34 +3,37 @@ package com.lashgo.android.ui.auth;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.lashgo.android.R;
-import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
-import com.lashgo.android.ui.images.CircleTransformation;
 import com.lashgo.android.ui.main.MainActivity;
 import com.lashgo.android.ui.profile.EditProfileActivity;
-import com.lashgo.android.ui.profile.ProfileActivity;
+import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.PhotoUtils;
-import com.lashgo.model.dto.RegisterResponse;
 import com.lashgo.model.dto.UserDto;
-import com.squareup.picasso.Picasso;
 
 /**
  * Created by Eugene on 06.08.2014.
  */
 public class SuccessfulRegisterActivity extends BaseActivity implements View.OnClickListener {
 
+    private static final int EDIT_PROFILE_REQUEST = 2;
     private UserDto userDto;
 
     private LoginActivity.OpenMode openMode;
+
+    private int imageSize;
+    private ImageView userAvatarView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_success_register);
+        getActionBar().hide();
+        imageSize = PhotoUtils.convertDpToPixels(64, this);
         initRegisterResponse(savedInstanceState);
         Intent intent = getIntent();
         if (intent != null) {
@@ -41,14 +44,13 @@ public class SuccessfulRegisterActivity extends BaseActivity implements View.OnC
         }
         findViewById(R.id.fill_profile).setOnClickListener(this);
         findViewById(R.id.continue_register).setOnClickListener(this);
-        findViewById(R.id.make_photo).setOnClickListener(this);
+        userAvatarView = (ImageView) findViewById(R.id.user_avatar);
         if (userDto != null) {
-            int imageSize = PhotoUtils.convertDpToPixels(64, this);
-            Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(userDto.getAvatar())).centerInside().
-                    resize(imageSize, imageSize).transform(new CircleTransformation()).error(R.drawable.ava).placeholder(R.drawable.ava).into((ImageView) findViewById(R.id.user_avatar));
-            ((TextView) findViewById(R.id.user_subscribes)).setText(String.valueOf(userDto.getUserSubscribes()));
-            ((TextView) findViewById(R.id.user_subscribers)).setText(String.valueOf(userDto.getUserSubscribers()));
-            ((TextView) findViewById(R.id.user_name)).setText(userDto.getLogin());
+            String avatarUrl = LashGoUtils.getUserAvatarUrl(userDto.getAvatar());
+            if (!TextUtils.isEmpty(avatarUrl)) {
+                PhotoUtils.displayImage(this, userAvatarView, avatarUrl, imageSize, R.drawable.ava, false);
+            }
+            ((TextView) findViewById(R.id.user_name)).setText("@" + userDto.getLogin());
         }
     }
 
@@ -76,12 +78,22 @@ public class SuccessfulRegisterActivity extends BaseActivity implements View.OnC
     }
 
     @Override
+    public void onUpClicked() {
+    }
+
+    @Override
     public void onClick(View view) {
         if (view.getId() == R.id.continue_register) {
-            startActivity(new Intent(this, MainActivity.class));
             finish();
+            startActivity(new Intent(this, MainActivity.class));
         } else if (view.getId() == R.id.fill_profile) {
-            startActivity(EditProfileActivity.buildIntent(this,userDto));
+            startActivityForResult(EditProfileActivity.buildIntent(this, userDto, EditProfileActivity.FROM.REGISTER), EDIT_PROFILE_REQUEST);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == EDIT_PROFILE_REQUEST && resultCode == RESULT_OK) {
             finish();
         }
     }

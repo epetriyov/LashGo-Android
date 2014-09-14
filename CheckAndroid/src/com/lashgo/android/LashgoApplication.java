@@ -21,6 +21,27 @@ public class LashgoApplication extends Application {
         return instance;
     }
 
+    public String getImgPath() {
+        return imgPath;
+    }
+
+    public void setImgPath(String imgPath) {
+        this.imgPath = imgPath;
+    }
+
+    public boolean isWasSent() {
+        return wasSent;
+    }
+
+    public void setWasSent(boolean wasSent) {
+        this.wasSent = wasSent;
+    }
+
+    //TODO hack
+    private String imgPath;
+
+    private boolean wasSent;
+
     protected List<Object> getModules() {
         return Arrays.<Object>asList(
                 new LashgoModule(this));
@@ -44,5 +65,10 @@ public class LashgoApplication extends Application {
 
     public ObjectGraph getApplicationGraph() {
         return graph;
+    }
+
+    public void clearHackData() {
+        imgPath = null;
+        wasSent = false;
     }
 }

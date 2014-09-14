@@ -1,6 +1,5 @@
 package com.lashgo.android.ui.start;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -9,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.lashgo.android.R;
+import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.auth.LoginActivity;
 import com.lashgo.android.ui.main.MainActivity;
 import com.squareup.picasso.Picasso;
@@ -16,9 +16,9 @@ import com.squareup.picasso.Picasso;
 /**
  * Created by Eugene on 02.03.14.
  */
-public class SplashActivity extends Activity implements View.OnClickListener {
+public class SplashActivity extends BaseActivity implements View.OnClickListener {
 
-    public static final int SPASH_REQUEST_CODE = 1;
+    private static final int SPASH_REQUEST_CODE = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,6 +64,11 @@ public class SplashActivity extends Activity implements View.OnClickListener {
     }
 
     @Override
+    public void onUpClicked() {
+
+    }
+
+    @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_skip) {
             startActivity(new Intent(this, MainActivity.class));
@@ -79,4 +84,5 @@ public class SplashActivity extends Activity implements View.OnClickListener {
             finish();
         }
     }
+
 }

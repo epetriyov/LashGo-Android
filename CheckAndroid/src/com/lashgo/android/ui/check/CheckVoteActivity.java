@@ -31,8 +31,7 @@ public class CheckVoteActivity extends CheckBaseActivity implements View.OnClick
             ImageView checkPhoto = (ImageView) findViewById(R.id.check_photo);
             checkPhoto.setOnClickListener(this);
             if (!TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
-                Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl())).centerCrop().
-                        resize(imageSize, imageSize).transform(new CircleTransformation()).into(checkPhoto);
+                PhotoUtils.displayImage(this, checkPhoto, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), imageSize, R.drawable.ava, true);
             }
             findViewById(R.id.btn_vote_start).setOnClickListener(this);
             ((TextView) findViewById(R.id.check_name)).setText(checkDto.getName());
@@ -53,10 +52,16 @@ public class CheckVoteActivity extends CheckBaseActivity implements View.OnClick
 
     @Override
     public void onClick(View view) {
+        super.onClick(view);
         if (view.getId() == R.id.btn_vote_start) {
             startActivity(VoteProcessActivity.buildIntent(this, checkDto, VoteProcessActivity.class));
         } else if (view.getId() == R.id.check_photo) {
             startActivity(PhotoActivity.newIntent(this, checkDto, PhotoActivity.PhotoType.TASK_PHOTO));
         }
+    }
+
+    @Override
+    public void onUpClicked() {
+        finish();
     }
 }

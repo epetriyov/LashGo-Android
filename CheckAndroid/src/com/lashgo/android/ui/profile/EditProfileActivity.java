@@ -1,5 +1,6 @@
 package com.lashgo.android.ui.profile;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
@@ -7,7 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.MenuItem;
+import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -17,6 +18,8 @@ import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.check.MakePhotoDialog;
 import com.lashgo.android.ui.images.CircleTransformation;
+import com.lashgo.android.ui.main.MainActivity;
+import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.Md5Util;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.model.dto.UserDto;
@@ -28,6 +31,10 @@ import java.io.File;
  * Created by Eugene on 10.09.2014.
  */
 public class EditProfileActivity extends BaseActivity implements View.OnClickListener, MakePhotoDialog.OnImageDoneListener {
+
+    private EditText editLogin;
+
+    public static enum FROM {REGISTER, PROFILE}
 
     private int avatarSize;
 
@@ -50,9 +57,12 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
     private EditText editPassword;
     private String imgPath;
 
-    public static Intent buildIntent(Context context, UserDto userDto) {
+    private FROM from;
+
+    public static Intent buildIntent(Context context, UserDto userDto, FROM from) {
         Intent intent = new Intent(context, EditProfileActivity.class);
         intent.putExtra(ExtraNames.USER_DTO.name(), userDto);
+        intent.putExtra(ExtraNames.FROM.name(), from);
         return intent;
     }
 
@@ -60,6 +70,7 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
     public void onSaveInstanceState(Bundle outState) {
         outState.putSerializable(ExtraNames.USER_DTO.name(), userDto);
         outState.putString(ExtraNames.PHOTO_URL.name(), imgPath);
+        outState.putSerializable(ExtraNames.FROM.name(), from);
         super.onSaveInstanceState(outState);
     }
 
@@ -67,9 +78,11 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
         Intent intent = getIntent();
         if (intent != null) {
             userDto = (UserDto) intent.getSerializableExtra(ExtraNames.USER_DTO.name());
+            from = (FROM) intent.getSerializableExtra(ExtraNames.FROM.name());
         }
         if (savedInstanceState != null && userDto == null) {
             userDto = (UserDto) savedInstanceState.getSerializable(ExtraNames.USER_DTO.name());
+            from = (FROM) savedInstanceState.getSerializable(ExtraNames.FROM.name());
             imgPath = savedInstanceState.getString(ExtraNames.PHOTO_URL.name());
         }
         if (userDto == null) {
@@ -80,7 +93,7 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        initCustomActionBar(ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_TITLE);
         initUserDto(savedInstanceState);
         setContentView(R.layout.act_edit_profile);
         initViews();
@@ -126,23 +139,27 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
                 serviceHelper.saveAvatar(imgPath);
             }
             boolean isProfileChanged = false;
-            if (!userDto.getFio().equals(editFio.getText().toString())) {
+            if (editLogin.getText().toString().equals(userDto.getLogin())) {
+                userDto.setLogin(editLogin.getText().toString());
+                isProfileChanged = true;
+            }
+            if (editFio.getText().toString().equals(userDto.getFio())) {
                 userDto.setFio(editFio.getText().toString());
                 isProfileChanged = true;
             }
-            if (!userDto.getCity().equals(editLocation.getText().toString())) {
+            if (editLocation.getText().toString().equals(userDto.getCity())) {
                 userDto.setCity(editLocation.getText().toString());
                 isProfileChanged = true;
             }
-            if (!userDto.getEmail().equals(editEmail.getText().toString())) {
+            if (editEmail.getText().toString().equals(userDto.getEmail())) {
                 userDto.setEmail(editEmail.getText().toString());
                 isProfileChanged = true;
             }
-            if (!userDto.getAbout().equals(editAbout.getText().toString())) {
+            if (editAbout.getText().toString().equals(userDto.getAbout())) {
                 userDto.setAbout(editAbout.getText().toString());
                 isProfileChanged = true;
             }
-            if (!userDto.getPasswordHash().equals(editPassword.getText().toString()) && !TextUtils.isEmpty(editPassword.getText().toString())) {
+            if (!TextUtils.isEmpty(editPassword.getText().toString())) {
                 userDto.setPasswordHash(Md5Util.md5(editPassword.getText().toString()));
                 isProfileChanged = true;
             }
@@ -153,8 +170,14 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void profileSaved() {
-        Toast.makeText(this, R.string.profile_saved, Toast.LENGTH_LONG).show();
-        finish();
+        if (from.name().equals(FROM.PROFILE.name())) {
+            Toast.makeText(this, R.string.profile_saved, Toast.LENGTH_LONG).show();
+            finish();
+        } else {
+            setResult(Activity.RESULT_OK);
+            finish();
+            startActivity(new Intent(this, MainActivity.class));
+        }
     }
 
     private void initViews() {
@@ -163,9 +186,9 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
         if (!TextUtils.isEmpty(imgPath)) {
             addMinePhoto();
         } else if (!TextUtils.isEmpty(userDto.getAvatar())) {
-            Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(userDto.getAvatar())).centerInside().
-                    resize(avatarSize, avatarSize).transform(new CircleTransformation()).error(R.drawable.ava).placeholder(R.drawable.ava).into(userAvatar);
+            PhotoUtils.displayImage(this, userAvatar, LashGoUtils.getUserAvatarUrl(userDto.getAvatar()), avatarSize, R.drawable.ava, false);
         }
+        editLogin = (EditText) findViewById(R.id.edit_login);
         editFio = (EditText) findViewById(R.id.edit_fio);
         editLocation = (EditText) findViewById(R.id.edit_location);
         editEmail = (EditText) findViewById(R.id.edit_email);
@@ -173,6 +196,9 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
         editPassword = (EditText) findViewById(R.id.edit_password);
         if (!TextUtils.isEmpty(userDto.getFio())) {
             editFio.setText(userDto.getFio());
+        }
+        if (!TextUtils.isEmpty(userDto.getLogin())) {
+            editLogin.setText(userDto.getLogin());
         }
         if (!TextUtils.isEmpty(userDto.getCity())) {
             editLocation.setText(userDto.getCity());
@@ -187,16 +213,27 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        super.onOptionsItemSelected(item);
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_recover_password, menu);
+        ImageView applyBtn = (ImageView) menu.findItem(R.id.action_check).getActionView();
+        applyBtn.setImageResource(R.drawable.ic_action_check);
+        applyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendProfile();
+            }
+        });
         return true;
     }
 
     @Override
+    public void onUpClicked() {
+        startActivity(ProfileActivity.buildIntent(this, ProfileActivity.ProfileOwner.ME));
+    }
+
+    @Override
     public void onClick(View view) {
+        super.onClick(view);
         if (view.getId() == R.id.make_photo) {
             DialogFragment makePhotoFragment = new MakePhotoDialog(this);
             makePhotoFragment.show(getFragmentManager(), MakePhotoDialog.TAG);
@@ -221,8 +258,7 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void addMinePhoto() {
-        Picasso.with(this).load(Uri.fromFile(new File(imgPath))).centerInside().
-                resize(avatarSize, avatarSize).transform(new CircleTransformation()).error(R.drawable.ava).placeholder(R.drawable.ava).into(userAvatar);
+        PhotoUtils.displayImage(this, userAvatar, Uri.fromFile(new File(imgPath)), avatarSize, R.drawable.ava, false);
     }
 
     @Override

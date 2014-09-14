@@ -14,13 +14,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.lashgo.android.LashgoApplication;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.auth.LoginActivity;
-import com.lashgo.android.ui.images.CircleTransformation;
 import com.lashgo.android.ui.views.PagerContainer;
 import com.lashgo.android.utils.PhotoUtils;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
@@ -100,6 +99,7 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
 
     @Override
     public void onClick(View view) {
+        super.onClick(view);
         if (view.getId() == R.id.btn_camera) {
             if (settingsHelper.isLoggedIn()) {
                 DialogFragment makePhotoFragment = new MakePhotoDialog(this);
@@ -108,7 +108,7 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
                 startActivity(new Intent(this, LoginActivity.class));
             }
         } else if (view.getId() == R.id.btn_send_photo) {
-            if (!TextUtils.isEmpty(imgPath)) {
+            if (!TextUtils.isEmpty(imgPath) && new File(imgPath).exists()) {
                 serviceHelper.sendPhoto(checkDto.getId(), imgPath);
             } else {
                 Toast.makeText(this, R.string.error_send_photo, Toast.LENGTH_LONG).show();
@@ -123,7 +123,6 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
     public void processServerResult(String action, int resultCode, Bundle data) {
         super.processServerResult(action, resultCode, data);
         if (BaseIntentHandler.ServiceActionNames.ACTION_SEND_PHOTO.name().equals(action) && resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
-            pagerAdapter.hideSendPhotoBtn();
             startActivity(PhotoSentActivity.buildIntent(this, new String(imgPath)));
             imgPath = null;
         }
@@ -161,7 +160,7 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
 
     @Override
     public void onPageSelected(int position) {
-        if (position == 1 && !TextUtils.isEmpty(imgPath)) {
+        if (position == 1&& imgPath != null) {
             pagerAdapter.showSendPhotoBtn();
         } else {
             pagerAdapter.hideSendPhotoBtn();
@@ -227,22 +226,23 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
                     checkImage.setTag(TASK_PHOTO_TAG);
                     btnSend.setVisibility(View.GONE);
                     if (!TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
-                        Picasso.with(CheckActiveActivity.this).load(PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl())).centerCrop().
-                                resize(imageSize, imageSize).transform(new CircleTransformation()).into(checkImage);
+                        PhotoUtils.displayImage(CheckActiveActivity.this, checkImage, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), imageSize, R.drawable.ava, true);
                     }
                     break;
                 case 1:
                     this.btnSend = btnSend;
                     if (!TextUtils.isEmpty(imgPath)) {
-                        btnSend.setVisibility(View.VISIBLE);
-                        Picasso.with(CheckActiveActivity.this).load(Uri.fromFile(new File(imgPath))).centerCrop().
-                                resize(imageSize, imageSize).transform(new CircleTransformation()).into(checkImage);
-                    } else {
-                        btnSend.setVisibility(View.GONE);
-                        if (checkDto.getUserPhotoDto() != null && !TextUtils.isEmpty(checkDto.getUserPhotoDto().getUrl())) {
-                            Picasso.with(CheckActiveActivity.this).load(PhotoUtils.getFullPhotoUrl(checkDto.getUserPhotoDto().getUrl())).centerCrop().
-                                    resize(imageSize, imageSize).transform(new CircleTransformation()).into(checkImage);
+                        PhotoUtils.displayImage(CheckActiveActivity.this, checkImage, Uri.fromFile(new File(imgPath)), imageSize, R.drawable.ava, true);
+                        if (imgPath != null) {
+                            btnSend.setVisibility(View.VISIBLE);
+                        } else {
+                            btnSend.setVisibility(View.GONE);
                         }
+                    } else {
+                        if (checkDto.getUserPhotoDto() != null && !TextUtils.isEmpty(checkDto.getUserPhotoDto().getUrl())) {
+                            PhotoUtils.displayImage(CheckActiveActivity.this, checkImage, PhotoUtils.getFullPhotoUrl(checkDto.getUserPhotoDto().getUrl()), imageSize, R.drawable.ava, true);
+                        }
+                        btnSend.setVisibility(View.GONE);
                     }
                     break;
                 default:
@@ -263,7 +263,6 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
         }
 
         public void hideSendPhotoBtn() {
-
             if (btnSend != null) {
                 btnSend.setVisibility(View.GONE);
             }

@@ -1,5 +1,6 @@
 package com.lashgo.android.ui.main;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
@@ -8,6 +9,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
@@ -19,6 +21,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.lashgo.android.LashgoConfig;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
+import com.lashgo.android.social.TwitterHelper;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.auth.AuthController;
 import com.lashgo.android.ui.check.CheckListFragment;
@@ -26,12 +29,11 @@ import com.lashgo.android.ui.news.NewsFragment;
 import com.lashgo.android.ui.profile.ProfileActivity;
 import com.lashgo.android.ui.subscribes.SubscribesFragment;
 import com.lashgo.android.utils.ContextUtils;
+import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.model.dto.GcmRegistrationDto;
 import com.lashgo.model.dto.MainScreenInfoDto;
-import com.squareup.picasso.Picasso;
 
-import javax.inject.Inject;
 import java.io.IOException;
 
 /**
@@ -43,8 +45,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private ActionBarDrawerToggle drawerToggle;
     private CharSequence drawerTitle;
     private CharSequence title;
-    @Inject
-    AuthController authController;
+    private AuthController authController;
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
@@ -63,24 +64,25 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private View newsCountRoot;
     private View subscribesCountRoot;
     private View drawerTopView;
+    private int avaSize;
 
     @Override
     protected void registerActionsListener() {
         addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_LOGIN.name());
         addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_REGISTER.name());
-        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_PASSWORD_RECOVER.name());
         addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_SOCIAL_SIGN_IN.name());
-        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_CONFIRM_SOCIAL_SIGN_UP.name());
         addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GCM_REGISTER_ID.name());
         addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_MAIN_SCREEN_INFO.name());
     }
 
 
     @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        if (intent != null && intent.getData() != null) {
-            twitterHelper.handleCallbackUrl(intent.getData());
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == TwitterHelper.TWITTER_AUTH) {
+            if (resultCode == Activity.RESULT_OK) {
+                twitterHelper.handleCallbackUrl(data.getData());
+            }
         }
     }
 
@@ -104,7 +106,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             userName.setText(mainScreenInfoDto.getUserName());
             String userAvatar = mainScreenInfoDto.getUserAvatar();
             if (!TextUtils.isEmpty(userAvatar)) {
-                Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(userAvatar)).error(R.drawable.ava).into(userAvatarView);
+                PhotoUtils.displayImage(this, userAvatarView, LashGoUtils.getUserAvatarUrl(userAvatar), avaSize, R.drawable.ava, false);
             }
             int tasksCount = mainScreenInfoDto.getTasksCount();
             tasksCountView.setText(String.valueOf(tasksCount));
@@ -142,9 +144,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void unregisterActionsListener() {
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_LOGIN.name());
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_REGISTER.name());
-        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_PASSWORD_RECOVER.name());
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_SOCIAL_SIGN_IN.name());
-        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_CONFIRM_SOCIAL_SIGN_UP.name());
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GCM_REGISTER_ID.name());
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_MAIN_SCREEN_INFO.name());
     }
@@ -153,13 +153,42 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onResume() {
         super.onResume();
         checkPlayServices();
+        if(settingsHelper.isLoggedIn()) {
+            serviceHelper.getMainScreenInfo(settingsHelper.getLastNewsView(), settingsHelper.getLastSubscriptionsView());
+        }
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_main);
+        authController = new AuthController(this, serviceHelper, facebookHelper, twitterHelper);
         settingsHelper.setFirstLaunch();
+        avaSize = PhotoUtils.convertDpToPixels(64, this);
+        initViews();
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+        registerGcm();
+    }
+
+    private void registerGcm() {
+        if (settingsHelper.isLoggedIn()) {
+            if (checkPlayServices()) {
+                gcm = GoogleCloudMessaging.getInstance(this);
+                String regid = settingsHelper.getRegistrationId();
+                if (TextUtils.isEmpty(regid)) {
+                    registerInBackground();
+                } else {
+                    sendRegistrationIdToBackend(regid);
+                }
+            } else {
+                ContextUtils.showToast(this, "No valid Google Play Services APK found.");
+            }
+        }
+    }
+
+    private void initViews() {
         title = drawerTitle = getTitle();
         menuItems = getResources().getStringArray(R.array.menus_array);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -171,6 +200,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }
         });
         drawerTopView = findViewById(R.id.drawer_top_view);
+        if (settingsHelper.isLoggedIn()) {
+            drawerTopView.setBackgroundResource(R.drawable.bg_navigation);
+        } else {
+            drawerTopView.setBackgroundColor(getResources().getColor(R.color.splash_top_color));
+        }
         userAvatarView = (ImageView) findViewById(R.id.drawer_ava);
         userName = (TextView) findViewById(R.id.drawer_text);
         userName.setOnClickListener(this);
@@ -201,21 +235,29 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         // Set the drawer toggle as the DrawerListener
         drawerLayout.setDrawerListener(drawerToggle);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-        if (settingsHelper.isLoggedIn()) {
-            if (checkPlayServices()) {
-                gcm = GoogleCloudMessaging.getInstance(this);
-                String regid = settingsHelper.getRegistrationId();
-                if (TextUtils.isEmpty(regid)) {
-                    registerInBackground();
-                } else {
-                    sendRegistrationIdToBackend(regid);
-                }
-            } else {
-                ContextUtils.showToast(this, "No valid Google Play Services APK found.");
-            }
-        }
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        ImageView searchView = (ImageView) menu.findItem(R.id.action_search).getActionView();
+//        searchView.setImageResource(R.drawable.ic_action_search);
+//        searchView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//            }
+//        });
+//        ImageView notificationsView = (ImageView) menu.findItem(R.id.action_notifications).getActionView();
+//        notificationsView.setImageResource(R.drawable.ic_action_notifications);
+//        notificationsView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//            }
+//        });
+        return true;
     }
 
     private void initNotAuthDrawerMenu() {
@@ -242,7 +284,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         subscribesCountRoot = drawerMenu.findViewById(R.id.subscribes_count);
         subscribesCountBg = (ImageView) drawerMenu.findViewById(R.id.subscribes_count_bg);
         subscribesCountView = (TextView) drawerMenu.findViewById(R.id.subscribes_count_value);
-        serviceHelper.getMainScreenInfo(settingsHelper.getLastNewsView(), settingsHelper.getLastSubscriptionsView());
         selectItem(itemTasks);
 
     }
@@ -308,6 +349,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      */
     private void sendRegistrationIdToBackend(final String registrationId) {
         serviceHelper.gcmRegisterId(new GcmRegistrationDto(registrationId));
+    }
+
+    @Override
+    public void onUpClicked() {
+
     }
 
     @Override

@@ -137,12 +137,6 @@ public class ServiceHelper {
         runRequest(BaseIntentHandler.ServiceActionNames.ACTION_SOCIAL_SIGN_IN.name(), extras);
     }
 
-    public void socialSignUp(ExtendedSocialInfo extendedSocialInfo) {
-        Bundle extras = new Bundle();
-        extras.putSerializable(BaseIntentHandler.ServiceExtraNames.EXTENDED_SOCIAL_DTO.name(), extendedSocialInfo);
-        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_CONFIRM_SOCIAL_SIGN_UP.name(), extras);
-    }
-
     public void gcmRegisterId(GcmRegistrationDto gcmRegistrationDto) {
         Bundle extras = new Bundle();
         extras.putSerializable(BaseIntentHandler.ServiceExtraNames.GCM_REGISTRATION.name(), gcmRegistrationDto);
@@ -254,5 +248,29 @@ public class ServiceHelper {
         bundle.putLong(BaseIntentHandler.ServiceExtraNames.PHOTO_ID.name(),photoId);
         bundle.putString(BaseIntentHandler.ServiceExtraNames.COMMENT_TEXT.name(),commentText);
         runRequest(BaseIntentHandler.ServiceActionNames.ACTION_ADD_PHOTO_COMMENT.name(),bundle);
+    }
+
+    public void recoverPassword(String email) {
+        Bundle bundle = new Bundle();
+        bundle.putString(BaseIntentHandler.ServiceExtraNames.EMAIL.name(),email);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_PASSWORD_RECOVER.name(),bundle);
+    }
+
+    public void getCheckCounters(int checkId) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(BaseIntentHandler.ServiceExtraNames.CHECK_ID.name(),checkId);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_COUNTERS.name(),bundle);
+    }
+
+    public void getPhotoCounters(long photoId) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(BaseIntentHandler.ServiceExtraNames.PHOTO_ID.name(),photoId);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_PHOTO_COUNTERS.name(),bundle);
+    }
+
+    public void likePhoto(long photoId) {
+        Bundle extras = new Bundle();
+        extras.putLong(BaseIntentHandler.ServiceExtraNames.PHOTO_ID.name(), photoId);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_LIKE_PHOTO.name(), extras);
     }
 }

@@ -6,6 +6,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@drawable/bg_check"
+              android:paddingTop="@dimen/action_bar_height"
         >
     <com.lashgo.android.ui.views.RobotoTextView
             android:id="@+id/check_name"
@@ -96,7 +97,7 @@
             android:textSize="18sp"
             android:textColor="@color/check_description_color_2"
             />
-    <View android:layout_width="1dp" android:layout_height="0dp"
+    <Space android:layout_width="1dp" android:layout_height="0dp"
           android:layout_weight="1"
             />
     <include layout="@layout/view_check_bottom_panel"/>

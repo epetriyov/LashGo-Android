@@ -4,16 +4,18 @@
               xmlns:app="http://schemas.android.com/apk/res/com.lashgo.android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    <FrameLayout android:layout_width="match_parent" android:layout_height="184dp"
-                 android:background="@color/splash_top_color"
+              android:layout_height="match_parent"
+        >
+    <FrameLayout android:layout_width="match_parent" android:layout_height="360dp"
+                 android:background="@drawable/bg_profile"
+                 android:paddingTop="@dimen/action_bar_height"
             >
         <ImageView
                 android:id="@+id/user_avatar"
                 android:layout_width="64dp" android:layout_height="64dp"
                 android:layout_gravity="top|left"
                 android:layout_marginLeft="32dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:src="@drawable/ava"
                 />
         <LinearLayout
@@ -21,6 +23,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_gravity="top|right"
+                android:gravity="right"
                 >
             <LinearLayout
                     android:layout_width="wrap_content"
@@ -109,9 +112,9 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_gravity="bottom|right"
-                android:paddingBottom="15dp"
-                android:paddingTop="11dp"
-                android:paddingRight="12dp"
+                android:paddingBottom="16dp"
+                android:paddingTop="12dp"
+                android:paddingRight="20dp"
                 >
             <com.lashgo.android.ui.views.RobotoTextView
                     android:layout_width="wrap_content"
@@ -123,8 +126,8 @@
                     />
             <View android:layout_width="2dp" android:layout_height="2dp"
                   android:background="@color/white"
-                  android:layout_marginLeft="3dp"
-                  android:layout_marginRight="3dp"
+                  android:layout_marginLeft="5dp"
+                  android:layout_marginRight="5dp"
                   android:layout_gravity="center_vertical"
                     />
             <com.lashgo.android.ui.views.RobotoTextView
@@ -137,8 +140,8 @@
                     />
             <View android:layout_width="2dp" android:layout_height="2dp"
                   android:background="@color/white"
-                  android:layout_marginLeft="3dp"
-                  android:layout_marginRight="3dp"
+                  android:layout_marginLeft="5dp"
+                  android:layout_marginRight="5dp"
                   android:layout_gravity="center_vertical"
                     />
             <com.lashgo.android.ui.views.RobotoTextView

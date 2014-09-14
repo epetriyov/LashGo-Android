@@ -6,18 +6,18 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@android:color/white"
+              android:paddingTop="@dimen/action_bar_height"
         >
     <FrameLayout
             android:id="@+id/drawer_top_view"
             android:layout_width="match_parent" android:layout_height="171dp"
-            android:background="@color/splash_top_color"
             >
         <ImageView
                 android:id="@+id/drawer_ava"
                 android:layout_width="64dp" android:layout_height="64dp"
                 android:layout_gravity="top|left"
-                android:paddingTop="16dp"
-                android:paddingLeft="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
                 android:src="@drawable/ava"
                 />
         <com.lashgo.android.ui.views.RobotoTextView

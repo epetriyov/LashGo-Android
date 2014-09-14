@@ -16,17 +16,20 @@ import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.model.dto.CheckDto;
 import com.lashgo.model.dto.ResponseList;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 
 /**
  * Created by Eugene on 19.06.2014.
  */
-public class CheckListFragment extends BaseFragment implements AdapterView.OnItemClickListener {
+public class CheckListFragment extends BaseFragment implements AdapterView.OnItemClickListener, CheckItemBinder.OnCheckStateChangeListener {
 
     private ListView checkListView;
 
     private MultyTypeAdapter multyTypeAdapter;
+
+    private Collection<CheckDto> resultCollection;
 
     public CheckListFragment() {
         // Empty constructor required for fragment subclasses
@@ -38,7 +41,7 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
         super.onCreateView(inflater, container, savedInstanceState);
         checkListView = (ListView) inflater.inflate(R.layout.frag_check_list, container, false);
         multyTypeAdapter = new MultyTypeAdapter();
-        multyTypeAdapter.addBinder(R.layout.adt_check_item, new CheckItemBinder(getActivity()));
+        multyTypeAdapter.addBinder(R.layout.adt_check_item, new CheckItemBinder(getActivity(), this));
         multyTypeAdapter.addBinder(R.layout.adt_check_state, new CheckStateBinder(getActivity()));
         checkListView.setAdapter(multyTypeAdapter);
         checkListView.setOnItemClickListener(this);
@@ -50,26 +53,52 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
     @Override
     protected void registerActionsListener() {
         addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_LIST.name());
+        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK.name());
     }
 
     @Override
     protected void unregisterActionsListener() {
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_LIST.name());
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK.name());
     }
 
     @Override
     public void processServerResult(String action, int resultCode, Bundle data) {
+        stopProgress();
         if (BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_LIST.name().equals(action)) {
             if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
                 ResponseList<CheckDto> checkDtoResponseList = (ResponseList<CheckDto>) data.getSerializable(BaseIntentHandler.ServiceExtraNames.KEY_CHECK_DTO_LIST.name());
                 if (checkDtoResponseList != null) {
-                    onCheckListLoaded(checkDtoResponseList.getResultCollection());
+                    if (checkDtoResponseList.getResultCollection() != null) {
+                        this.resultCollection = new ArrayList<>(checkDtoResponseList.getResultCollection());
+                        onCheckListLoaded();
+                    }
+                }
+            }
+        } else if (BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK.name().equals(action) && BaseIntentHandler.SUCCESS_RESPONSE == resultCode) {
+            {
+                if (data != null) {
+                    CheckDto selectedCheck = (CheckDto) data.getSerializable(BaseIntentHandler.ServiceExtraNames.CHECK_DTO.name());
+                    LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(selectedCheck);
+                    switch (checkState) {
+                        case ACTIVE:
+                            startActivity(CheckActiveActivity.buildIntent(getActivity(), selectedCheck, CheckActiveActivity.class));
+                            break;
+                        case VOTE:
+                            startActivity(CheckVoteActivity.buildIntent(getActivity(), selectedCheck, CheckVoteActivity.class));
+                            break;
+                        case FINISHED:
+                            startActivity(CheckFinishedActivity.buildIntent(getActivity(), selectedCheck, CheckFinishedActivity.class));
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
     }
 
-    private void onCheckListLoaded(Collection<CheckDto> resultCollection) {
+    private void onCheckListLoaded() {
         if (resultCollection != null) {
             multyTypeAdapter.clear();
             Calendar checkActiveCalendar = Calendar.getInstance();
@@ -124,22 +153,14 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
         Object selectedItem = multyTypeAdapter.getItem(position);
         if (selectedItem instanceof CheckDto) {
             CheckDto selectedCheck = (CheckDto) selectedItem;
-            LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(selectedCheck);
-            switch (checkState) {
-                case ACTIVE:
-                    startActivity(CheckActiveActivity.buildIntent(getActivity(), selectedCheck,CheckActiveActivity.class));
-                    break;
-                case VOTE:
-                    startActivity(CheckVoteActivity.buildIntent(getActivity(), selectedCheck,CheckVoteActivity.class));
-                    break;
-                case FINISHED:
-                    startActivity(CheckFinishedActivity.buildIntent(getActivity(), selectedCheck,CheckFinishedActivity.class));
-                    break;
-                default:
-                    break;
-            }
+            serviceHelper.getCheck(selectedCheck.getId());
         } else {
             throw new IllegalStateException("Selected item is not CheckDto object");
         }
+    }
+
+    @Override
+    public void onCheckStateChanged() {
+        onCheckListLoaded();
     }
 }

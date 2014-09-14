@@ -9,10 +9,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.lashgo.android.R;
-import com.lashgo.android.ui.images.CircleTransformation;
+import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.model.dto.CommentDto;
-import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 
@@ -53,11 +52,11 @@ public class CommentsAdapter extends ArrayAdapter<CommentDto> {
             viewHolder.userName.setText(commentDto.getUser().getLogin());
             if (!TextUtils.isEmpty(commentDto.getUser().getAvatar())) {
                 int imageSize = PhotoUtils.convertDpToPixels(40, getContext());
-                Picasso.with(getContext()).load(PhotoUtils.getFullPhotoUrl(commentDto.getUser().getAvatar())).resize(imageSize, imageSize).centerCrop().transform(new CircleTransformation()).into(viewHolder.userAvatar);
+                PhotoUtils.displayImage(getContext(), viewHolder.userAvatar, LashGoUtils.getUserAvatarUrl(commentDto.getUser().getAvatar()), imageSize, R.drawable.ava, false);
             }
         }
         viewHolder.commentText.setText(commentDto.getContent());
-        if(commentDto.getCreateDate() != null) {
+        if (commentDto.getCreateDate() != null) {
             viewHolder.commentDate.setText(dateFormat.format(commentDto.getCreateDate()));
         }
         return convertView;

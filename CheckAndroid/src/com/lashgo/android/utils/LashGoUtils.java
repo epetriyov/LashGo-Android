@@ -1,5 +1,6 @@
 package com.lashgo.android.utils;
 
+import android.text.TextUtils;
 import com.lashgo.android.LashgoConfig;
 import com.lashgo.model.dto.CheckDto;
 
@@ -28,5 +29,15 @@ public final class LashGoUtils {
         } else {
             return LashgoConfig.CheckState.FINISHED;
         }
+    }
+
+    public static String getUserAvatarUrl(String avatar) {
+        if(!TextUtils.isEmpty(avatar)) {
+            if (avatar.contains("http://") || avatar.contains("https://")) {
+                return avatar;
+            }
+            return PhotoUtils.getFullPhotoUrl(avatar);
+        }
+        return avatar;
     }
 }

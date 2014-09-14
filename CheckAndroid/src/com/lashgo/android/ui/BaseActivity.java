@@ -1,12 +1,17 @@
 package com.lashgo.android.ui;
 
+import android.app.ActionBar;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.View;
 import android.view.Window;
+import android.widget.TextView;
 import com.facebook.UiLifecycleHelper;
 import com.lashgo.android.ActivityModule;
 import com.lashgo.android.LashgoApplication;
@@ -19,7 +24,6 @@ import com.lashgo.android.settings.SettingsHelper;
 import com.lashgo.android.social.FacebookHelper;
 import com.lashgo.android.social.TwitterHelper;
 import com.lashgo.android.social.VkontakteListener;
-import com.lashgo.android.ui.check.CheckBottomPanelController;
 import com.lashgo.android.utils.ContextUtils;
 import com.lashgo.model.dto.ErrorDto;
 import com.lashgo.model.dto.SocialInfo;
@@ -34,49 +38,49 @@ import java.util.List;
 /**
  * Created by Eugene on 18.02.14.
  */
-public abstract class BaseActivity extends FragmentActivity implements ServiceReceiver {
+public abstract class BaseActivity extends FragmentActivity implements ServiceReceiver, View.OnClickListener {
 
     protected static final String PROGRESS_DIALOG = "progress";
-
-    public static enum ExtraNames {
-        CHECK_DTO, PHOTO_URL, PROFILE_OWNER, USER_ID, PHOTO_DTO, PHOTO_TYPE, USER_DTO, CHECK_ID, PHOTO_ID, OPEN_MODE
-    }
-
-    private ObjectGraph loginGraph;
-
+    private static final int DISPLAY_RELAYOUT_MASK =
+            ActionBar.DISPLAY_SHOW_HOME |
+                    ActionBar.DISPLAY_USE_LOGO |
+                    ActionBar.DISPLAY_HOME_AS_UP |
+                    ActionBar.DISPLAY_SHOW_CUSTOM |
+                    ActionBar.DISPLAY_SHOW_TITLE;
     @Inject
     protected ServiceHelper serviceHelper;
-
     @Inject
     protected SettingsHelper settingsHelper;
-
     @Inject
     protected UiLifecycleHelper facebookUiHelper;
-
     @Inject
     protected TwitterHelper twitterHelper;
-
     @Inject
     protected VkontakteListener vkSdkListener;
-
     @Inject
     protected FacebookHelper facebookHelper;
-
     @Inject
     protected Handler handler;
-
     @Inject
     ServiceBinder serviceBinder;
-
+    private View customActionBarView;
+    private View homeBtn;
+    private TextView actionBarTitle;
+    private ObjectGraph loginGraph;
     private DialogFragment dialogFragment;
-
     private boolean isDialogShowNeeded;
-
     private String tag;
-
     private boolean isDialogDismissNeeded;
-
     private boolean isActivityOnForeground;
+
+    public abstract void onUpClicked();
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.action_home) {
+            onUpClicked();
+        }
+    }
 
     public void showDialog(DialogFragment dialogFragment, String tag) {
         if (isActivityOnForeground) {
@@ -145,7 +149,6 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
 
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -211,6 +214,24 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
         }
     }
 
+
+    protected void initCustomActionBar(int displayOptions) {
+        getActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getActionBar().setDisplayShowCustomEnabled(true);
+        getActionBar().setDisplayShowTitleEnabled(false);
+        getActionBar().setDisplayShowHomeEnabled(false);
+        customActionBarView = getLayoutInflater().inflate(R.layout.view_action_bar, null);
+        homeBtn = customActionBarView.findViewById(R.id.action_home);
+        homeBtn.setOnClickListener(this);
+        actionBarTitle = ((TextView) customActionBarView.findViewById(R.id.action_title));
+        actionBarTitle.setText(getTitle());
+        getActionBar().setCustomView(customActionBarView, new ActionBar.LayoutParams(
+                ActionBar.LayoutParams.WRAP_CONTENT,
+                ActionBar.LayoutParams.WRAP_CONTENT,
+                Gravity.CENTER_VERTICAL | Gravity.LEFT));
+        applyDisplayOptions(displayOptions);
+    }
+
     public void startProgress() {
         setProgressBarIndeterminateVisibility(true);
     }
@@ -222,4 +243,24 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
     public void processServerResult(String action, int resultCode, Bundle data) {
 
     }
+
+    private void applyDisplayOptions(int options) {
+        if ((-1 & DISPLAY_RELAYOUT_MASK) != 0) {
+            if ((-1 & ActionBar.DISPLAY_HOME_AS_UP) != 0) {
+                final boolean setUp = (options & ActionBar.DISPLAY_HOME_AS_UP) != 0;
+                homeBtn.setVisibility(setUp ? View.VISIBLE : View.GONE);
+            }
+            if ((-1 & ActionBar.DISPLAY_SHOW_TITLE) != 0) {
+                final boolean setTitle = (options & ActionBar.DISPLAY_SHOW_TITLE) != 0;
+                actionBarTitle.setVisibility(setTitle ? View.VISIBLE : View.GONE);
+            }
+            customActionBarView.requestLayout();
+        }
+    }
+
+    public static enum ExtraNames {
+        CHECK_DTO, PHOTO_URL, PROFILE_OWNER, USER_ID, PHOTO_DTO, PHOTO_TYPE, USER_DTO, CHECK_ID, PHOTO_ID, FROM, REQUEST_TOKEN, TWITTER_URL, WAS_PHOTO_SENT, OPEN_MODE
+    }
+
+
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/action_edit"
+          android:showAsAction="always"
+          android:title="@string/search"
+          android:actionLayout="@layout/view_action_button"
+            />
+    <item android:id="@+id/action_exit"
+          android:title="@string/exit"
+          android:showAsAction="never"
+            />
+</menu>

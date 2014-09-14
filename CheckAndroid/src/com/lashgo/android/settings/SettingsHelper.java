@@ -103,6 +103,11 @@ public class SettingsHelper {
         this.sessionInfo = sessionInfo;
     }
 
+    public void saveLoginInfo(LoginInfo loginInfo)
+    {
+        saveSerializable(KEY_LOGIN_INFO, loginInfo);
+    }
+
     public void login(SessionInfo sessionInfo, LoginInfo loginInfo) {
         saveSessionInfo(sessionInfo);
         saveSerializable(KEY_LOGIN_INFO, loginInfo);

@@ -42,6 +42,7 @@ public class PhotoGalleryAdapter extends ArrayAdapter<PhotoDto> {
             viewHolder.photoView = (ImageView) convertView.findViewById(R.id.photo);
             viewHolder.winnerIcon = (ImageView) convertView.findViewById(R.id.winner_icon);
             viewHolder.bannedIcon = (ImageView) convertView.findViewById(R.id.banned_icon);
+            convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
@@ -57,7 +58,7 @@ public class PhotoGalleryAdapter extends ArrayAdapter<PhotoDto> {
             viewHolder.winnerIcon.setVisibility(View.GONE);
         }
         if (!TextUtils.isEmpty(photoItem.getUrl())) {
-            Picasso.with(getContext()).load(PhotoUtils.getFullPhotoUrl(PhotoUtils.getFullPhotoUrl(photoItem.getUrl()))).centerCrop().
+            Picasso.with(getContext()).load(PhotoUtils.getFullPhotoUrl(photoItem.getUrl())).centerCrop().
                     resize(imageSize, imageSize).into(viewHolder.photoView);
         }
         return convertView;

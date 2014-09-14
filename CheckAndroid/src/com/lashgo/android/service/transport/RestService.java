@@ -22,9 +22,6 @@ public interface RestService {
     @POST(Path.Users.SOCIAL_SIGN_IN)
     ResponseObject<RegisterResponse> socialSignIn(@Body SocialInfo socialInfo);
 
-    @POST(Path.Users.SOCIAL_SIGN_UP)
-    ResponseObject<RegisterResponse> confirmSocialSignUp(@Body ExtendedSocialInfo socialInfo);
-
     @POST(Path.Gcm.REGISTER)
     ResponseObject registerDevice(@Body GcmRegistrationDto gcmRegistrationDto);
 
@@ -65,7 +62,7 @@ public interface RestService {
     @GET(Path.Checks.CHECK)
     ResponseObject<CheckDto> getCheck(@retrofit.http.Path("checkId") int checkId);
 
-    @PUT(Path.Users.PROFILE)
+    @PUT(Path.Users.MY_PROFILE)
     ResponseObject saveProfile(@Body UserDto userDto);
 
     @POST(Path.Users.AVATAR)
@@ -82,4 +79,16 @@ public interface RestService {
 
     @POST(Path.Photos.COMMENTS)
     ResponseObject<CommentDto> addPhotoComment(@retrofit.http.Path("photoId") long photoId, @Body String commentText);
+
+    @PUT(Path.Users.RECOVER)
+    ResponseObject passwordRecover(@Body String email);
+
+    @GET(Path.Photos.COUNTERS)
+    ResponseObject<CheckCounters> getPhotoCounters(@retrofit.http.Path("photoId") long photoId);
+
+    @GET(Path.Checks.COUNTERS)
+    ResponseObject<CheckCounters> getCheckCounters(@retrofit.http.Path("checkId") int checkId);
+
+    @POST(Path.Photos.LIKE)
+    ResponseObject<Boolean> likePhoto(@Body Long photoId);
 }

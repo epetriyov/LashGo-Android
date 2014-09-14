@@ -6,7 +6,8 @@ package com.lashgo.android;
 public final class LashgoConfig {
 
     public static final String BASE_URL = "http://192.168.0.2:1977/lashgo-api";
-    public static final String DATE_FORMAT = "dd.MM.yyyy HH:mm:ss z";
+//public static final String BASE_URL = "http://78.47.39.245:8080/lashgo-api";
+    public static final String DATE_FORMAT = "dd.MM.yyyy HH:mm:ss Z";
     public static final String GCM_API_KEY = "701321427381";
     public static final String CLIENT_TYPE = "ANDROID";
     public static final String PHOTO_BASE_URI = "/photos/";

@@ -1,19 +1,24 @@
 package com.lashgo.android.ui.check;
 
+import android.app.ActionBar;
+import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import com.lashgo.android.LashgoApplication;
 import com.lashgo.android.LashgoConfig;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
-import com.lashgo.android.ui.images.CircleTransformation;
 import com.lashgo.android.ui.profile.ProfileActivity;
 import com.lashgo.android.ui.views.RobotoTextView;
 import com.lashgo.android.utils.LashGoUtils;
@@ -28,9 +33,11 @@ import java.io.File;
 /**
  * Created by Eugene on 18.08.2014.
  */
-public class PhotoActivity extends BaseActivity implements View.OnClickListener {
+public class PhotoActivity extends BaseActivity implements View.OnClickListener, MakePhotoDialog.OnImageDoneListener {
 
     private int imageSize;
+
+    private ImageView fullImage;
 
     private CheckDto checkDto;
 
@@ -49,6 +56,11 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
     private PhotoDto photoDto;
 
     private String imgPath;
+
+    @Override
+    public void imageDone(String imagePath) {
+        this.imgPath = imagePath;
+    }
 
     public static enum PhotoType {
         TASK_PHOTO, USER_PHOTO, FROM_PROFILE_GALLERY, FROM_CHECK_GALLERY, WINNER_PHOTO
@@ -110,7 +122,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        initCustomActionBar(ActionBar.DISPLAY_HOME_AS_UP);
         initExtras(savedInstanceState);
         setContentView(R.layout.act_photo);
         initViews();
@@ -125,15 +137,21 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_photo, menu);
+        return true;
+    }
+
     private void setUpTopCheck(CheckDto checkDto) {
         if (!TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
-            Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl())).resize(imageSize, imageSize).centerCrop().transform(new CircleTransformation()).into(taskPhoto);
+            PhotoUtils.displayImage(this, taskPhoto, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), imageSize, R.drawable.ava, false);
         }
         topText.setText(checkDto.getName());
     }
 
     private void initViews() {
-        ImageView fullImage = ((ImageView) findViewById(R.id.full_photo));
+        fullImage = ((ImageView) findViewById(R.id.full_photo));
         fullImage.setOnClickListener(this);
         topPhotoPanel = findViewById(R.id.top_check_panel);
         bottomBg = findViewById(R.id.bottom_photo_bg);
@@ -156,6 +174,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                 } else if (PhotoType.WINNER_PHOTO.name().equals(photoType.name()) && checkDto.getWinnerPhotoDto() != null && !TextUtils.isEmpty(checkDto.getWinnerPhotoDto().getUrl())) {
                     Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(checkDto.getWinnerPhotoDto().getUrl())).fit().centerCrop().into(fullImage);
                     setUpTopUser(checkDto.getWinnerInfo());
+                    findViewById(R.id.medal).setVisibility(View.VISIBLE);
                 }
             }
             topText.setText(checkDto.getName());
@@ -172,14 +191,20 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
     private void setUpTopUser(UserDto userDto) {
         if (userDto != null) {
             if (!TextUtils.isEmpty(userDto.getAvatar())) {
-                Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(userDto.getAvatar())).resize(imageSize, imageSize).centerCrop().transform(new CircleTransformation()).into(taskPhoto);
+                PhotoUtils.displayImage(this, taskPhoto, LashGoUtils.getUserAvatarUrl(userDto.getAvatar()), imageSize, R.drawable.ava, false);
             }
             topText.setText(userDto.getLogin());
         }
     }
 
     @Override
+    public void onUpClicked() {
+        finish();
+    }
+
+    @Override
     public void onClick(View view) {
+        super.onClick(view);
         if (view.getId() == R.id.full_photo) {
             if (topPhotoPanel.getVisibility() == View.VISIBLE) {
                 topPhotoPanel.setVisibility(View.GONE);
@@ -199,40 +224,47 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
         }
     }
 
-
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        super.onOptionsItemSelected(item);
-        if (item.getItemId() == android.R.id.home) {
-            finish();
+    protected void onResume() {
+        super.onResume();
+        if (photoDto != null) {
+            serviceHelper.getPhotoCounters(photoDto.getId());
+        } else {
+            serviceHelper.getCheckCounters(checkDto.getId());
         }
-        return true;
     }
+
 
     @Override
     protected void registerActionsListener() {
         super.registerActionsListener();
         addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_LIKE_CHECK.name());
+        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_LIKE_PHOTO.name());
         addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK.name());
+        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_PHOTO_COUNTERS.name());
+        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_COUNTERS.name());
     }
 
     @Override
     protected void unregisterActionsListener() {
         super.unregisterActionsListener();
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_LIKE_CHECK.name());
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_LIKE_PHOTO.name());
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK.name());
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_PHOTO_COUNTERS.name());
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_COUNTERS.name());
     }
 
     @Override
     public void processServerResult(String action, int resultCode, Bundle data) {
         super.processServerResult(action, resultCode, data);
         if (data != null && resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
-            if (BaseIntentHandler.ServiceActionNames.ACTION_LIKE_CHECK.name().equals(action)) {
+            if (BaseIntentHandler.ServiceActionNames.ACTION_LIKE_CHECK.name().equals(action) || BaseIntentHandler.ServiceActionNames.ACTION_LIKE_PHOTO.name().equals(action)) {
                 Boolean isLikeAdded = data.getBoolean(BaseIntentHandler.ServiceExtraNames.IS_LIKE_ADDED.name());
                 if (isLikeAdded != null) {
                     bottomPanelController.updateLikesCount(isLikeAdded.booleanValue());
                 }
-            } else {
+            } else if (BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK.name().equals(action)) {
                 CheckDto selectedCheck = (CheckDto) data.getSerializable(BaseIntentHandler.ServiceExtraNames.CHECK_DTO.name());
                 if (checkDto != null) {
                     LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(selectedCheck);
@@ -250,6 +282,8 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                             break;
                     }
                 }
+            }else {
+                bottomPanelController.udpateCounters((com.lashgo.model.dto.CheckCounters) data.getSerializable(BaseIntentHandler.ServiceExtraNames.COUNTERS.name()));
             }
         }
     }

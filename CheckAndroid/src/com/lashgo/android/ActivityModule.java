@@ -7,12 +7,14 @@ import com.lashgo.android.social.TwitterHelper;
 import com.lashgo.android.social.VkontakteListener;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.auth.LoginActivity;
+import com.lashgo.android.ui.auth.PasswordRecoverActivity;
 import com.lashgo.android.ui.auth.SuccessfulRegisterActivity;
 import com.lashgo.android.ui.check.*;
 import com.lashgo.android.ui.comments.CommentsActivity;
 import com.lashgo.android.ui.main.MainActivity;
 import com.lashgo.android.ui.profile.EditProfileActivity;
 import com.lashgo.android.ui.profile.ProfileActivity;
+import com.lashgo.android.ui.start.SplashActivity;
 import com.lashgo.android.ui.start.StartActivity;
 import dagger.Module;
 import dagger.Provides;
@@ -27,7 +29,6 @@ import org.w3c.dom.Comment;
  */
 @Module(
         injects = {
-                StartActivity.class,
                 MainActivity.class,
                 CheckBottomPanelController.class,
                 CheckActiveActivity.class,
@@ -40,6 +41,8 @@ import org.w3c.dom.Comment;
                 SuccessfulRegisterActivity.class,
                 CommentsActivity.class,
                 EditProfileActivity.class,
+                PasswordRecoverActivity.class,
+                SplashActivity.class,
                 FacebookHelper.class,
                 TwitterHelper.class,
                 VkontakteListener.class,

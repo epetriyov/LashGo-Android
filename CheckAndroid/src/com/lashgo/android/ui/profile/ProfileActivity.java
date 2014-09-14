@@ -1,9 +1,11 @@
 package com.lashgo.android.ui.profile;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -14,6 +16,7 @@ import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.check.PhotoActivity;
 import com.lashgo.android.ui.images.CircleTransformation;
+import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.model.dto.PhotoDto;
 import com.lashgo.model.dto.UserDto;
@@ -25,6 +28,10 @@ import java.util.ArrayList;
  * Created by Eugene on 10.08.2014.
  */
 public class ProfileActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+
+    private UserDto userDto;
+
+    private ImageView editView;
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -49,6 +56,12 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
         Intent intent = buildIntent(context, profileOwner);
         intent.putExtra(ExtraNames.USER_ID.name(), userId);
         return intent;
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        loadProfile();
     }
 
     @Override
@@ -78,10 +91,21 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
     }
 
     @Override
+    public void onUpClicked() {
+        finish();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initCustomActionBar(ActionBar.DISPLAY_HOME_AS_UP);
         initExtras(savedInstanceState);
         setContentView(R.layout.act_profile);
+        loadProfile();
+    }
+
+    private void loadProfile()
+    {
         if (ProfileOwner.ME.name().equals(profileOwner.name())) {
             serviceHelper.getMyUserProfile();
             serviceHelper.getMyPhotos();
@@ -92,11 +116,27 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_profile, menu);
+        editView = (ImageView) menu.findItem(R.id.action_edit).getActionView();
+        editView.setImageResource(R.drawable.ic_action_edit);
+        editView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(EditProfileActivity.buildIntent(ProfileActivity.this, userDto, EditProfileActivity.FROM.PROFILE));
+            }
+        });
+        editView.setVisibility(View.GONE);
+        return true;
+    }
+
+    @Override
     public void processServerResult(String action, int resultCode, Bundle data) {
         super.processServerResult(action, resultCode, data);
         if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE && data != null) {
             if (BaseIntentHandler.ServiceActionNames.ACTION_GET_USER_PROFILE.name().equals(action) || BaseIntentHandler.ServiceActionNames.ACTION_GET_MY_USER_PROFILE.name().equals(action)) {
                 initViews((UserDto) data.getSerializable(BaseIntentHandler.ServiceExtraNames.USER_PROFILE.name()));
+                editView.setVisibility(View.VISIBLE);
             } else if (BaseIntentHandler.ServiceActionNames.ACTION_GET_MY_PHOTOS.name().equals(action) || BaseIntentHandler.ServiceActionNames.ACTION_GET_USER_PHOTOS.name().equals(action)) {
                 initGallery((ArrayList<PhotoDto>) data.getSerializable(BaseIntentHandler.ServiceExtraNames.PHOTOS_LIST.name()));
             }
@@ -118,15 +158,15 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
     }
 
     private void initViews(UserDto userDto) {
+        this.userDto = userDto;
         if (userDto != null) {
             int imageSize = PhotoUtils.convertDpToPixels(64, this);
             if (!TextUtils.isEmpty(userDto.getAvatar())) {
-                Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(PhotoUtils.getFullPhotoUrl(userDto.getAvatar()))).centerCrop().
-                        resize(imageSize, imageSize).transform(new CircleTransformation()).into(((ImageView) findViewById(R.id.user_avatar)));
+                PhotoUtils.displayImage(this, ((ImageView) findViewById(R.id.user_avatar)), LashGoUtils.getUserAvatarUrl(userDto.getAvatar()), imageSize, R.drawable.ava, false);
             }
             ((TextView) findViewById(R.id.user_subscribes)).setText(String.valueOf(userDto.getUserSubscribes()));
             ((TextView) findViewById(R.id.user_subscribers)).setText(String.valueOf(userDto.getUserSubscribers()));
-            ((TextView) findViewById(R.id.user_name)).setText(userDto.getFio());
+            ((TextView) findViewById(R.id.user_name)).setText(!TextUtils.isEmpty(userDto.getFio()) ? userDto.getFio() : userDto.getLogin());
             ((TextView) findViewById(R.id.checks_count)).setText(String.format(getString(R.string.checks_count), userDto.getChecksCount()));
             ((TextView) findViewById(R.id.comments_count)).setText(String.format(getString(R.string.comments_count), userDto.getCommentsCount()));
             ((TextView) findViewById(R.id.likes_count)).setText(String.format(getString(R.string.likes_count), userDto.getLikesCount()));

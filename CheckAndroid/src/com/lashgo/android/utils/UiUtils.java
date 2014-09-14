@@ -1,7 +1,10 @@
 package com.lashgo.android.utils;
 
+import android.content.Context;
 import android.os.CountDownTimer;
 import android.text.format.DateUtils;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import com.lashgo.android.ui.check.TimerFinishedListener;
 
@@ -32,11 +35,11 @@ public final class UiUtils {
                 if (remainingHours > 0) {
                     remainingMinutes = (millisUntilFinished - remainingHours * DateUtils.HOUR_IN_MILLIS) / DateUtils.MINUTE_IN_MILLIS;
                     remainingSeconds = (millisUntilFinished - remainingHours * DateUtils.HOUR_IN_MILLIS - remainingMinutes * DateUtils.MINUTE_IN_MILLIS) / DateUtils.SECOND_IN_MILLIS;
-                    textView.setText(String.valueOf(remainingHours) + ":" + String.valueOf(remainingMinutes) + ":" + String.valueOf(remainingSeconds));
+                    textView.setText(String.valueOf(remainingHours) + ":" + (remainingMinutes < 10 ? "0" : "") + String.valueOf(remainingMinutes) + ":" + (remainingSeconds < 10 ? "0" : "") + String.valueOf(remainingSeconds));
                 } else {
                     remainingMinutes = TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished);
                     remainingSeconds = (millisUntilFinished - remainingMinutes * DateUtils.MINUTE_IN_MILLIS) / DateUtils.SECOND_IN_MILLIS;
-                    textView.setText(String.valueOf(remainingMinutes) + ":" + String.valueOf(remainingSeconds));
+                    textView.setText(String.valueOf(remainingMinutes) + ":" + (remainingSeconds < 10 ? "0" : "") + String.valueOf(remainingSeconds));
                 }
 
             }
@@ -48,5 +51,10 @@ public final class UiUtils {
                 }
             }
         }.start();
+    }
+
+    public static void hideSoftKeyboard(View view) {
+        InputMethodManager inputManager = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }

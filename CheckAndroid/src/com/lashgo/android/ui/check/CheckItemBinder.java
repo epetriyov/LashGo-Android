@@ -23,8 +23,17 @@ import java.util.Calendar;
  */
 public class CheckItemBinder extends AdapterBinder {
 
-    public CheckItemBinder(Context context) {
+    public  static interface OnCheckStateChangeListener
+    {
+        void onCheckStateChanged();
+    }
+
+    private OnCheckStateChangeListener onCheckStateChangeListener;
+
+    public CheckItemBinder(Context context,OnCheckStateChangeListener onCheckStateChangeListener) {
         super(context);
+        this.onCheckStateChangeListener = onCheckStateChangeListener;
+
     }
 
     private static class ViewHolder {
@@ -48,13 +57,12 @@ public class CheckItemBinder extends AdapterBinder {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        CheckDto checkDto = (CheckDto) itemData;
+        final CheckDto checkDto = (CheckDto) itemData;
         viewHolder.checkName.setText(checkDto.getName());
         viewHolder.checkDescription.setText(checkDto.getDescription());
         int imageSize = PhotoUtils.convertDpToPixels(48, getContext());
         if (!TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
-            Picasso.with(getContext()).load(PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl())).centerInside().
-                    resize(imageSize, imageSize).transform(new CircleTransformation()).into(viewHolder.checkIcon);
+            PhotoUtils.displayImage(getContext(), viewHolder.checkIcon, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), imageSize, R.drawable.ava, true);
         }
         LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
         switch (checkState) {
@@ -63,21 +71,36 @@ public class CheckItemBinder extends AdapterBinder {
                 checkActiveCalendar.setTime(checkDto.getStartDate());
                 checkActiveCalendar.add(Calendar.HOUR_OF_DAY, checkDto.getDuration());
                 viewHolder.checkRemainingTime.setVisibility(View.VISIBLE);
-                UiUtils.startTimer(checkActiveCalendar.getTimeInMillis(), viewHolder.checkRemainingTime, null);
+                UiUtils.startTimer(checkActiveCalendar.getTimeInMillis(), viewHolder.checkRemainingTime, new TimerFinishedListener() {
+                    @Override
+                    public void onTimerFinished() {
+                        if(onCheckStateChangeListener != null) {
+                            onCheckStateChangeListener.onCheckStateChanged();
+                        }
+                    }
+                });
                 break;
             case VOTE:
+                viewHolder.checkRemainingTime.setVisibility(View.VISIBLE);
                 Calendar checkVoteCalendar = Calendar.getInstance();
                 checkVoteCalendar.setTime(checkDto.getStartDate());
                 checkVoteCalendar.add(Calendar.HOUR_OF_DAY, checkDto.getDuration() + checkDto.getVoteDuration());
-                viewHolder.checkRemainingTime.setVisibility(View.VISIBLE);
-                UiUtils.startTimer(checkVoteCalendar.getTimeInMillis(), viewHolder.checkRemainingTime, null);
+                UiUtils.startTimer(checkVoteCalendar.getTimeInMillis(), viewHolder.checkRemainingTime, new TimerFinishedListener() {
+                    @Override
+                    public void onTimerFinished() {
+                        if(onCheckStateChangeListener != null) {
+                            onCheckStateChangeListener.onCheckStateChanged();
+                        }
+                    }
+                });
                 break;
             case FINISHED:
-                viewHolder.checkRemainingTime.setVisibility(View.INVISIBLE);
+                viewHolder.checkRemainingTime.setVisibility(View.GONE);
                 break;
             default:
                 break;
         }
         return convertView;
     }
+
 }

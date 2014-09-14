@@ -9,13 +9,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
-import com.lashgo.android.ui.images.CircleTransformation;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.android.utils.UiUtils;
 import com.lashgo.model.dto.PhotoDto;
 import com.lashgo.model.dto.VoteAction;
 import com.lashgo.model.dto.VotePhotosResult;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -147,8 +145,7 @@ public class VoteProcessActivity extends CheckBaseActivity implements View.OnCli
         } else {
             if (!TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
                 int taskImageSize = PhotoUtils.convertDpToPixels(48, this);
-                Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl())).centerInside().
-                        resize(taskImageSize, taskImageSize).transform(new CircleTransformation()).into((ImageView) findViewById(R.id.task_photo));
+                PhotoUtils.displayImage(this, (ImageView) findViewById(R.id.task_photo), PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), taskImageSize, R.drawable.ava, true);
             }
             final TextView voteTime = (TextView) findViewById(R.id.vote_time);
             Calendar checkVoteCalendar = Calendar.getInstance();
@@ -199,6 +196,7 @@ public class VoteProcessActivity extends CheckBaseActivity implements View.OnCli
 
     @Override
     public void onClick(View view) {
+        super.onClick(view);
         if (view.getId() == R.id.vote_button) {
             if (screenState.equals(ScreenState.CHOOSE_PHOTO)) {
                 int selectedPhoto = 0;

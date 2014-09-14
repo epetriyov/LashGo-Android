@@ -62,7 +62,7 @@ public class CheckPhotosFragment extends BaseFragment implements AdapterView.OnI
             TextView checkDescription = ((RobotoTextView) view.findViewById(R.id.check_description));
             checkDescription.setText(checkDto.getDescription());
             ImageView taskPhoto = (ImageView) view.findViewById(R.id.task_photo);
-            Picasso.with(getActivity()).load(PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl())).resize(imageSize, imageSize).centerCrop().transform(new CircleTransformation()).into(taskPhoto);
+            PhotoUtils.displayImage(getActivity(), taskPhoto, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), imageSize, R.drawable.ava, true);
             photosGallery = (GridView) view.findViewById(R.id.photos_galley);
             serviceHelper.getCheckPhotos(checkDto.getId());
         }

@@ -36,11 +36,13 @@ public class VkontakteListener extends VKSdkListener {
 
     @Override
     public void onAcceptUserToken(VKAccessToken token) {
+
         super.onAcceptUserToken(token);
     }
 
     @Override
     public void onRenewAccessToken(VKAccessToken token) {
+
         super.onRenewAccessToken(token);
     }
 
@@ -51,6 +53,7 @@ public class VkontakteListener extends VKSdkListener {
 
     @Override
     public void onTokenExpired(VKAccessToken expiredToken) {
+
         VKSdk.authorize("email");
     }
 

@@ -30,7 +30,7 @@
             android:icon="@drawable/ic_lashgo"
             android:logo="@drawable/ic_logo"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Styled"
+            android:theme="@style/Theme.LashGo"
             >
 
         <meta-data
@@ -39,46 +39,134 @@
 
         <activity android:name="com.facebook.LoginActivity"
                   android:label="@string/login"
+                  android:screenOrientation="portrait"
                 />
-        <activity android:name="com.vk.sdk.VKOpenAuthActivity"/>
+
+        <activity android:name="com.vk.sdk.VKOpenAuthActivity"
+                />
+
+        <activity android:name="com.lashgo.android.ui.auth.TwitterAuthActivity"
+                  android:screenOrientation="portrait"
+                />
+
         <activity android:name=".ui.auth.LoginActivity"
                   android:launchMode="singleTop"
+                  android:label="@string/login_enter"
+                  android:parentActivityName=".ui.start.SplashActivity"
+                  android:screenOrientation="portrait"
                 >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data
-                        android:host="twitter"
-                        android:scheme="check"/>
+            </intent-filter>
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".ui.start.SplashActivity"/>
+            >
+        </activity>
+
+        <activity android:name=".ui.main.MainActivity"
+                  android:launchMode="singleTop"
+                  android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.main.MainActivity"
+
+        <activity android:name=".ui.auth.PasswordRecoverActivity"
+                  android:parentActivityName=".ui.auth.LoginActivity"
+                  android:screenOrientation="portrait"
+                >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".ui.auth.LoginActivity"/>
+            >
+        </activity>
+
+        <activity android:name=".ui.auth.SuccessfulRegisterActivity"
+                  android:screenOrientation="portrait"
+                />
+
+        <activity android:name=".ui.check.PhotoSentActivity"
+                  android:screenOrientation="portrait"
+                />
+
+        <activity android:name=".ui.profile.ProfileActivity"
                   android:launchMode="singleTask"
+                  android:theme="@style/Theme.LashGo.TransparentActionBar"
+                  android:screenOrientation="portrait"
                 />
-        <activity android:name=".ui.auth.SuccessfulRegisterActivity"/>
-        <activity android:name=".ui.check.PhotoSentActivity"/>
-        <activity android:name=".ui.profile.ProfileActivity"/>
+
         <activity android:name=".ui.comments.CommentsActivity"
-                android:label="@string/comments"
+                  android:screenOrientation="portrait"
+                  android:label="@string/comments"
                 />
+
         <activity android:name=".ui.profile.EditProfileActivity"
+                  android:screenOrientation="portrait"
                   android:label="@string/edit"
                 />
-        <activity android:name=".ui.start.SplashActivity"/>
-        <activity android:name=".ui.check.PhotoActivity"/>
-        <activity android:name=".ui.check.CheckActiveActivity"
-                  android:label="@string/task"
+
+        <activity android:name=".ui.start.SplashActivity"
+                  android:screenOrientation="portrait"
                 />
+
+        <activity android:name=".ui.check.PhotoActivity"
+                  android:screenOrientation="portrait"
+                  android:theme="@style/Theme.LashGo.TransparentActionBar"
+                />
+
+        <activity android:name=".ui.check.CheckActiveActivity"
+                  android:screenOrientation="portrait"
+                  android:label="@string/task"
+                  android:parentActivityName=".ui.main.MainActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".ui.main.MainActivity"/>
+            >
+        </activity>
+
         <activity android:name=".ui.check.CheckFinishedActivity"
                   android:label="@string/task"
-                />
+                  android:parentActivityName=".ui.main.MainActivity"
+                  android:screenOrientation="portrait"
+                >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".ui.main.MainActivity"/>
+            >
+        </activity>
+
         <activity android:name=".ui.check.CheckVoteActivity"
                   android:label="@string/task"
-                />
+                  android:parentActivityName=".ui.main.MainActivity"
+                  android:screenOrientation="portrait"
+                >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".ui.main.MainActivity"/>
+            >
+        </activity>
+
         <activity android:name=".ui.check.VoteProcessActivity"
                   android:label="@string/task"
-                />
+                  android:parentActivityName=".ui.check.CheckVoteActivity"
+                  android:screenOrientation="portrait"
+                >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".ui.check.CheckVoteActivity"/>
+            >
+        </activity>
+
         <activity
                 android:name=".ui.start.StartActivity"
                 android:label="@string/app_name"

@@ -37,8 +37,6 @@ public abstract class BaseIntentHandler {
             return new SocialSignInHandler();
         } else if (ServiceActionNames.ACTION_GCM_REGISTER_ID.name().equals(action)) {
             return new GcmRegisterHandler();
-        } else if (ServiceActionNames.ACTION_CONFIRM_SOCIAL_SIGN_UP.name().equals(action)) {
-            return new SocialSignUpHandler();
         } else if (ServiceActionNames.ACTION_GET_MAIN_SCREEN_INFO.name().equals(action)) {
             return new GetMainScreenHandler();
         } else if (ServiceActionNames.ACTION_GET_CHECK_LIST.name().equals(action)) {
@@ -51,7 +49,10 @@ public abstract class BaseIntentHandler {
             return new VoteHandler();
         } else if (ServiceActionNames.ACTION_LIKE_CHECK.name().equals(action)) {
             return new CheckLikeHandler();
-        } else if (ServiceActionNames.ACTION_GET_USER_PROFILE.name().equals(action)) {
+        } else if (ServiceActionNames.ACTION_LIKE_PHOTO.name().equals(action)) {
+            return new PhotoLikeHandler();
+        }
+        else if (ServiceActionNames.ACTION_GET_USER_PROFILE.name().equals(action)) {
             return new GetUserProfileHandler();
         } else if (ServiceActionNames.ACTION_GET_MY_USER_PROFILE.name().equals(action)) {
             return new GetMyUserProfileHandler();
@@ -75,6 +76,12 @@ public abstract class BaseIntentHandler {
             return new AddCheckCommentHandler();
         } else if (ServiceActionNames.ACTION_ADD_PHOTO_COMMENT.name().equals(action)) {
             return new AddPhotoCommentHandler();
+        } else if (ServiceActionNames.ACTION_PASSWORD_RECOVER.name().equals(action)) {
+            return new PasswordRecoverHandler();
+        } else if (ServiceActionNames.ACTION_GET_CHECK_COUNTERS.name().equals(action)) {
+            return new GetCheckCountersHandler();
+        } else if (ServiceActionNames.ACTION_GET_PHOTO_COUNTERS.name().equals(action)) {
+            return new GetPhotoCountersHandler();
         } else {
             throw new IllegalArgumentException("illegal action - " + action);
         }
@@ -84,13 +91,16 @@ public abstract class BaseIntentHandler {
         ACTION_LOGIN,
         ACTION_REGISTER, ACTION_SOCIAL_SIGN_IN,
         ACTION_GCM_REGISTER_ID, ACTION_PASSWORD_RECOVER,
-        ACTION_CONFIRM_SOCIAL_SIGN_UP, ACTION_GET_MAIN_SCREEN_INFO,
+        ACTION_GET_MAIN_SCREEN_INFO,
         ACTION_SEND_PHOTO, ACTION_GET_VOTE_PHOTOS, ACTION_VOTE,
         ACTION_LIKE_CHECK, ACTION_GET_USER_PROFILE,
         ACTION_GET_MY_USER_PROFILE, ACTION_GET_CHECK_PHOTOS,
         ACTION_GET_USER_PHOTOS, ACTION_GET_MY_PHOTOS,
         ACTION_GET_CHECK, ACTION_SAVE_AVATAR,
-        ACTION_SAVE_PROFILE, ACTION_GET_CHECK_COMMENTS, ACTION_GET_PHOTO_COMMENTS, ACTION_ADD_PHOTO_COMMENT, ACTION_ADD_CHECK_COMMENT, ACTION_GET_CHECK_LIST
+        ACTION_SAVE_PROFILE, ACTION_GET_CHECK_COMMENTS,
+        ACTION_GET_PHOTO_COMMENTS, ACTION_ADD_PHOTO_COMMENT,
+        ACTION_ADD_CHECK_COMMENT, ACTION_GET_CHECK_COUNTERS,
+        ACTION_GET_PHOTO_COUNTERS, ACTION_LIKE_PHOTO, ACTION_GET_CHECK_LIST
     }
 
     public static enum ServiceExtraNames {
@@ -101,7 +111,8 @@ public abstract class BaseIntentHandler {
         EXTENDED_SOCIAL_DTO, PHOTO_PATH, REGISTER_RESPONSE_INFO,
         VOTE_PHOTO_LIST, VOTE_ACTION, CHECK_ID, IS_LIKE_ADDED,
         USER_ID, USER_PROFILE, PHOTOS_LIST, CHECK_DTO,
-        AVATAR_PATH, PHOTO_ID, COMMENTS_LIST, COMMENT_TEXT, COMMENT, IS_PHOTOS_COUNT_INCLUDED
+        AVATAR_PATH, PHOTO_ID, COMMENTS_LIST, COMMENT_TEXT,
+        COMMENT, EMAIL, COUNTERS, IS_PHOTOS_COUNT_INCLUDED
     }
 
     public static final String ERROR_EXTRA = "error_extra";

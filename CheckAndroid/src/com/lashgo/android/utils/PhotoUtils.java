@@ -8,8 +8,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.widget.ImageView;
 import com.lashgo.android.LashgoConfig;
+import com.lashgo.android.ui.images.CircleTransformation;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by Eugene on 20.07.2014.
@@ -21,6 +25,13 @@ public final class PhotoUtils {
 
     public static String getFullPhotoUrl(String photoName) {
         return new StringBuilder(LashgoConfig.BASE_URL).append(LashgoConfig.PHOTO_BASE_URI).append(photoName).toString();
+    }
+
+    public static void displayImage(Context context, ImageView imageView, String imageSource, int imageSize, int placeHolderId, boolean displayStroke) {
+        if (!TextUtils.isEmpty(imageSource)) {
+            Picasso.with(context).load(imageSource).centerCrop().
+                    resize(imageSize, imageSize).transform(new CircleTransformation(context, displayStroke)).placeholder(placeHolderId).into(imageView);
+        }
     }
 
     public static int convertDpToPixels(float dp, Context context) {
@@ -87,4 +98,10 @@ public final class PhotoUtils {
         }
     }
 
+    public static void displayImage(Context context, ImageView imageView, Uri uri, int imageSize, int placeHolderId, boolean displayStroke) {
+        if (uri != null) {
+            Picasso.with(context).load(uri).centerCrop().
+                    resize(imageSize, imageSize).transform(new CircleTransformation(context, displayStroke)).placeholder(placeHolderId).into(imageView);
+        }
+    }
 }

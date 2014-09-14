@@ -14,6 +14,7 @@ import com.lashgo.android.ui.auth.LoginActivity;
 import com.lashgo.android.ui.comments.CommentsActivity;
 import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.UiUtils;
+import com.lashgo.model.dto.CheckCounters;
 import com.lashgo.model.dto.CheckDto;
 import com.lashgo.model.dto.PhotoDto;
 
@@ -54,6 +55,17 @@ public class CheckBottomPanelController implements View.OnClickListener {
 
     private PhotoDto photoDto;
 
+
+    public void udpateCounters(CheckCounters checkCounters) {
+        if (checkCounters != null) {
+            localLikesCount = checkCounters.getLikesCount();
+            likesCountText.setText(String.valueOf(checkCounters.getLikesCount()));
+            peoplesCount.setText(String.valueOf(checkCounters.getPlayersCount()));
+            commentsCount.setText(String.valueOf(checkCounters.getCommentsCount()));
+        }
+    }
+
+
     public CheckBottomPanelController(final BaseActivity activity, final PhotoDto photoDto) {
         commonInit(activity);
         this.activity = activity;
@@ -61,11 +73,7 @@ public class CheckBottomPanelController implements View.OnClickListener {
         if (photoDto == null) {
             throw new IllegalArgumentException("Photo info can't be empty!");
         }
-        localLikesCount = photoDto.getLikesCount();
-        likesCountText.setText(String.valueOf(photoDto.getLikesCount()));
-        commentsCount.setText(String.valueOf(photoDto.getCommentsCount()));
         activity.findViewById(R.id.time_layout).setVisibility(View.GONE);
-        activity.findViewById(R.id.shares_layout).setVisibility(View.GONE);
         activity.findViewById(R.id.peoples_layout).setVisibility(View.GONE);
     }
 
@@ -73,6 +81,7 @@ public class CheckBottomPanelController implements View.OnClickListener {
 
     private void commonInit(final BaseActivity activity) {
         activity.inject(this);
+        peoplesCount = ((TextView) activity.findViewById(R.id.peoples_count));
         likesCountText = ((TextView) activity.findViewById(R.id.likes_count));
         btnLikes = (ImageView) activity.findViewById(R.id.btn_likes);
         btnLikes.setOnClickListener(this);
@@ -91,12 +100,7 @@ public class CheckBottomPanelController implements View.OnClickListener {
         btnShare = (ImageView) activity.findViewById(R.id.btn_share);
         btnShare.setOnClickListener(this);
         sharesCount = ((TextView) activity.findViewById(R.id.shares_count));
-        peoplesCount = ((TextView) activity.findViewById(R.id.peoples_count));
         btnPeoplesCount = (ImageView) activity.findViewById(R.id.btn_peoples_count);
-        localLikesCount = checkDto.getLikesCount();
-        sharesCount.setText(String.valueOf(checkDto.getSharesCount()));
-        peoplesCount.setText(String.valueOf(checkDto.getPlayersCount()));
-        likesCountText.setText(String.valueOf(checkDto.getLikesCount()));
         LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
 
         if (LashgoConfig.CheckState.ACTIVE.equals(checkState)) {
@@ -121,7 +125,6 @@ public class CheckBottomPanelController implements View.OnClickListener {
             }
         } else {
             activity.findViewById(R.id.time_layout).setVisibility(View.GONE);
-            commentsCount.setText(String.valueOf(checkDto.getCommentsCount()));
             activity.findViewById(R.id.check_time).setVisibility(View.GONE);
         }
     }
@@ -150,14 +153,18 @@ public class CheckBottomPanelController implements View.OnClickListener {
             //TODO not to implement
         } else if (view.getId() == R.id.btn_likes) {
             if (settingsHelper.isLoggedIn()) {
-                serviceHelper.likeCheck(checkDto.getId());
+                if (checkDto != null) {
+                    serviceHelper.likeCheck(checkDto.getId());
+                } else {
+                    serviceHelper.likePhoto(photoDto.getId());
+                }
             } else {
                 activity.startActivity(new Intent(activity, LoginActivity.class));
             }
         } else if (view.getId() == R.id.btn_comments) {
             if (checkDto != null) {
                 activity.startActivity(CommentsActivity.buildCheckIntent(activity, checkDto.getId()));
-            } else if (photoDto != null) {
+            } else {
                 activity.startActivity(CommentsActivity.buildPhotoIntent(activity, photoDto.getId()));
             }
         }

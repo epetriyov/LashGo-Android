@@ -1,7 +1,6 @@
 package com.lashgo.android.ui.auth;
 
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -14,38 +13,37 @@ import com.lashgo.android.social.FacebookHelper;
 import com.lashgo.android.social.TwitterHelper;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.main.MainActivity;
-import com.lashgo.android.utils.ContextUtils;
 import com.lashgo.android.utils.Md5Util;
-import com.lashgo.model.ErrorCodes;
-import com.lashgo.model.dto.*;
+import com.lashgo.model.dto.LoginInfo;
+import com.lashgo.model.dto.RegisterResponse;
+import com.lashgo.model.dto.UserDto;
 import com.vk.sdk.VKSdk;
-import twitter4j.User;
-
-import javax.inject.Inject;
 
 /**
  * Created by Eugene on 09.07.2014.
  */
-public class AuthController implements View.OnClickListener, EnterEmailDialog.EmailEnterListener {
-
-    private SocialInfo socialInfo;
+public class AuthController implements View.OnClickListener {
 
     private EditText login;
 
     private EditText password;
 
-    @Inject
-    BaseActivity baseActivity;
+    private BaseActivity baseActivity;
 
-    @Inject
-    ServiceHelper serviceHelper;
+    private ServiceHelper serviceHelper;
 
-    @Inject
-    FacebookHelper facebookHelper;
+    private FacebookHelper facebookHelper;
 
-    @Inject
-    TwitterHelper twitterHelper;
+    private TwitterHelper twitterHelper;
+
     private LoginActivity.OpenMode openMode;
+
+    public AuthController(BaseActivity baseActivity, ServiceHelper serviceHelper, FacebookHelper facebookHelper, TwitterHelper twitterHelper) {
+        this.baseActivity = baseActivity;
+        this.serviceHelper = serviceHelper;
+        this.facebookHelper = facebookHelper;
+        this.twitterHelper = twitterHelper;
+    }
 
     public void initViews(View rootView) {
         login = (EditText) rootView.findViewById(R.id.edit_email);
@@ -71,8 +69,8 @@ public class AuthController implements View.OnClickListener, EnterEmailDialog.Em
             if (loginInfo != null) {
                 serviceHelper.login(loginInfo);
             }
-        } else if (view.getId() == R.id.btn_password_recover) {
-            //TODO implement recover password
+        } else if (view.getId() == R.id.btn_recover_password) {
+            baseActivity.startActivity(new Intent(baseActivity, PasswordRecoverActivity.class));
         } else if (view.getId() == R.id.btn_register) {
             LoginInfo loginInfo = buildLoginInfo();
             if (loginInfo != null) {
@@ -109,34 +107,18 @@ public class AuthController implements View.OnClickListener, EnterEmailDialog.Em
             } else {
                 baseActivity.showErrorToast(data);
             }
-        } else if (BaseIntentHandler.ServiceActionNames.ACTION_PASSWORD_RECOVER.name().equals(action)) {
-            if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
-                ContextUtils.showToast(baseActivity, R.string.password_was_reset);
-            } else {
-                baseActivity.showErrorToast(data);
-            }
         } else if (BaseIntentHandler.ServiceActionNames.ACTION_SOCIAL_SIGN_IN.name().equals(action)) {
             if (resultCode == BaseIntentHandler.FAILURE_RESPONSE) {
-                ErrorDto errorDto = (ErrorDto) data.getSerializable(BaseIntentHandler.ERROR_EXTRA);
-                if (errorDto != null && ErrorCodes.EMAIL_NEEDED.equals(errorDto.getErrorCode())) {
-                    socialInfo = (SocialInfo) data.getSerializable(BaseIntentHandler.ServiceExtraNames.SOCIAL_DTO.name());
-                    DialogFragment dialogFragment = EnterEmailDialog.newInstance(this);
-                    dialogFragment.show(baseActivity.getFragmentManager(), EnterEmailDialog.DIALOG_TAG);
-                } else {
-                    baseActivity.showErrorToast(data);
-                }
-            } else {
-                if (data != null) {
-                    onRegisterSuccessFull(((RegisterResponse) data.getSerializable(BaseIntentHandler.ServiceExtraNames.REGISTER_RESPONSE_INFO.name())).getUserDto());
-                }
-            }
-        } else if (BaseIntentHandler.ServiceActionNames.ACTION_CONFIRM_SOCIAL_SIGN_UP.name().equals(action)) {
-            if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
-                if (data != null) {
-                    onRegisterSuccessFull(((RegisterResponse) data.getSerializable(BaseIntentHandler.ServiceExtraNames.REGISTER_RESPONSE_INFO.name())).getUserDto());
-                }
-            } else {
                 baseActivity.showErrorToast(data);
+            } else {
+                if (data != null) {
+                    UserDto userDto = ((RegisterResponse) data.getSerializable(BaseIntentHandler.ServiceExtraNames.REGISTER_RESPONSE_INFO.name())).getUserDto();
+                    if (userDto != null) {
+                        onRegisterSuccessFull(userDto);
+                    } else {
+                        onLoginSuccessFull();
+                    }
+                }
             }
         }
 
@@ -145,9 +127,9 @@ public class AuthController implements View.OnClickListener, EnterEmailDialog.Em
     private void onRegisterSuccessFull(UserDto registerResponse) {
         if (registerResponse != null) {
             if (registerResponse.getLogin() != null) {
-                baseActivity.startActivity(SuccessfulRegisterActivity.buildIntent(baseActivity, registerResponse,openMode));
                 baseActivity.setResult(Activity.RESULT_OK);
                 baseActivity.finish();
+                baseActivity.startActivity(SuccessfulRegisterActivity.buildIntent(baseActivity, registerResponse, openMode));
             } else {
                 onLoginSuccessFull();
             }
@@ -160,11 +142,6 @@ public class AuthController implements View.OnClickListener, EnterEmailDialog.Em
         if (openMode == null || !openMode.equals(LoginActivity.OpenMode.FROM_CHECK)) {
             baseActivity.startActivity(new Intent(baseActivity, MainActivity.class));
         }
-    }
-
-    @Override
-    public void sendSocialEmail(String email) {
-        serviceHelper.socialSignUp(new ExtendedSocialInfo(socialInfo, email));
     }
 
     public void setOpenMode(LoginActivity.OpenMode openMode) {

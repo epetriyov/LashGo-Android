@@ -1,16 +1,20 @@
 package com.lashgo.android.ui.comments;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
+import com.lashgo.android.utils.UiUtils;
 import com.lashgo.model.dto.CommentDto;
 
 import java.util.ArrayList;
@@ -55,7 +59,7 @@ public class CommentsActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        initCustomActionBar(ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_TITLE);
         setContentView(R.layout.act_comments);
         initExtras(savedInstanceState);
         initViews();
@@ -64,6 +68,14 @@ public class CommentsActivity extends BaseActivity implements View.OnClickListen
         } else {
             serviceHelper.getPhotoComments(photoId);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        menu.findItem(R.id.action_search).setVisible(false);
+//        menu.findItem(R.id.action_notifications).setVisible(false);
+        return true;
     }
 
     private void initViews() {
@@ -130,8 +142,15 @@ public class CommentsActivity extends BaseActivity implements View.OnClickListen
     }
 
     @Override
+    public void onUpClicked() {
+        finish();
+    }
+
+    @Override
     public void onClick(View view) {
+        super.onClick(view);
         if (view.getId() == R.id.btn_add_comment) {
+            UiUtils.hideSoftKeyboard(editComment);
             String commentText = editComment.getText().toString().trim();
             if (!TextUtils.isEmpty(commentText)) {
                 if (checkId > 0) {
@@ -143,14 +162,5 @@ public class CommentsActivity extends BaseActivity implements View.OnClickListen
                 editComment.setError(getString(R.string.error_empty_comment));
             }
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        super.onOptionsItemSelected(item);
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return true;
     }
 }

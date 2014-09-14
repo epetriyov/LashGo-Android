@@ -1,11 +1,11 @@
 package com.lashgo.android.social;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import com.lashgo.android.R;
 import com.lashgo.android.ui.BaseActivity;
+import com.lashgo.android.ui.auth.TwitterAuthActivity;
 import com.lashgo.model.dto.SocialInfo;
 import com.lashgo.model.dto.SocialNames;
 import twitter4j.Twitter;
@@ -26,6 +26,7 @@ import javax.inject.Inject;
 public class TwitterHelper {
 
     public static final String KEY_REQUEST_TOKEN = "key_request_token";
+    public static final int TWITTER_AUTH = 3;
 
     private RequestToken requestToken;
 
@@ -62,7 +63,9 @@ public class TwitterHelper {
             @Override
             protected void onPostExecute(Void v) {
                 if (requestToken != null) {
-                    loginActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(requestToken.getAuthenticationURL())));
+                    loginActivity.startActivityForResult(
+                            TwitterAuthActivity.buildIntent(loginActivity, requestToken.getAuthenticationURL()), TWITTER_AUTH
+                    );
                 }
             }
         }.execute();
@@ -93,6 +96,7 @@ public class TwitterHelper {
 
                 @Override
                 protected void onPostExecute(Void v) {
+
                     loginActivity.onSocialLogin(socialInfo);
                 }
             }.execute();

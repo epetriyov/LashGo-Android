@@ -5,14 +5,13 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:paddingTop="32dp"
               android:paddingBottom="11dp"
+              android:paddingTop="@dimen/action_bar_height"
         >
     <ListView
             android:id="@+id/comments_list"
             android:layout_width="match_parent" android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_marginBottom="56dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:background="@null"
@@ -24,12 +23,14 @@
             android:scrollingCache="false"
             android:fadingEdgeLength="0dp"
             android:scrollbars="none"
+            android:layout_marginTop="32dp"
             />
     <LinearLayout
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:id="@+id/add_comment_layout"
+            android:layout_marginTop="56dp"
             >
         <com.lashgo.android.ui.views.RobotoEditText
                 android:layout_width="0dp" android:layout_height="wrap_content"

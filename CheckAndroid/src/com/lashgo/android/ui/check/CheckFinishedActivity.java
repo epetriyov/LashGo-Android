@@ -48,14 +48,12 @@ public class CheckFinishedActivity extends CheckBaseActivity {
     @Override
     protected void registerActionsListener() {
         super.registerActionsListener();
-        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_LIKE_CHECK.name());
         addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_PHOTOS.name());
     }
 
     @Override
     protected void unregisterActionsListener() {
         super.unregisterActionsListener();
-        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_LIKE_CHECK.name());
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_PHOTOS.name());
     }
 
@@ -63,12 +61,7 @@ public class CheckFinishedActivity extends CheckBaseActivity {
     public void processServerResult(String action, int resultCode, Bundle data) {
         super.processServerResult(action, resultCode, data);
         if (data != null && resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
-            if (BaseIntentHandler.ServiceActionNames.ACTION_LIKE_CHECK.name().equals(action)) {
-                Boolean isLikeAdded = data.getBoolean(BaseIntentHandler.ServiceExtraNames.IS_LIKE_ADDED.name());
-                if (isLikeAdded != null) {
-                    bottomPanelController.updateLikesCount(isLikeAdded.booleanValue());
-                }
-            } else {
+            if (BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_PHOTOS.name().equals(action)) {
                 ((CheckPhotosFragment)fragmentsList.get(1)).initGallery((ArrayList<com.lashgo.model.dto.PhotoDto>) data.getSerializable(BaseIntentHandler.ServiceExtraNames.PHOTOS_LIST.name()));
             }
         }
