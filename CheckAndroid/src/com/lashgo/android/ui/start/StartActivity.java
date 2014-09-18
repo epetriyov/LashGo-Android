@@ -11,12 +11,12 @@ import com.lashgo.android.ui.main.MainActivity;
 /**
  * Created by Eugene on 24.06.2014.
  */
-public class StartActivity extends Activity {
+public class StartActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!new SettingsHelper(this).isLoggedIn()) {
+        if (!settingsHelper.isLoggedIn()) {
             startActivity(new Intent(this, SplashActivity.class));
         } else {
             startActivity(new Intent(this, MainActivity.class));

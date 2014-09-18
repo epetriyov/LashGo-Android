@@ -53,6 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="32dp"
                 android:layout_centerVertical="true"
+                android:inputType="textPassword"
                 android:hint="@string/hint_password"
                 app:fontName="@string/regular"
                 />

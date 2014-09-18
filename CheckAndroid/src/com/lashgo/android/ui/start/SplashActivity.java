@@ -64,11 +64,6 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
     }
 
     @Override
-    public void onUpClicked() {
-
-    }
-
-    @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_skip) {
             startActivity(new Intent(this, MainActivity.class));

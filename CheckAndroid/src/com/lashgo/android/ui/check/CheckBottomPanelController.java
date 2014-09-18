@@ -66,47 +66,51 @@ public class CheckBottomPanelController implements View.OnClickListener {
     }
 
 
-    public CheckBottomPanelController(final BaseActivity activity, final PhotoDto photoDto) {
-        commonInit(activity);
+    public CheckBottomPanelController(final BaseActivity activity, View view, final PhotoDto photoDto) {
+        commonInit(activity, view);
         this.activity = activity;
         this.photoDto = photoDto;
         if (photoDto == null) {
             throw new IllegalArgumentException("Photo info can't be empty!");
         }
-        activity.findViewById(R.id.time_layout).setVisibility(View.GONE);
-        activity.findViewById(R.id.peoples_layout).setVisibility(View.GONE);
+        view.findViewById(R.id.time_layout).setVisibility(View.GONE);
+        view.findViewById(R.id.peoples_layout).setVisibility(View.GONE);
+    }
+
+    public CheckBottomPanelController(final BaseActivity activity, final PhotoDto photoDto) {
+        this(activity, activity.getWindow().getDecorView(), photoDto);
     }
 
     public static enum ButtonColors {WHITE, GRAY}
 
-    private void commonInit(final BaseActivity activity) {
+    private void commonInit(final BaseActivity activity, final View view) {
         activity.inject(this);
-        peoplesCount = ((TextView) activity.findViewById(R.id.peoples_count));
-        likesCountText = ((TextView) activity.findViewById(R.id.likes_count));
-        btnLikes = (ImageView) activity.findViewById(R.id.btn_likes);
+        peoplesCount = ((TextView) view.findViewById(R.id.peoples_count));
+        likesCountText = ((TextView) view.findViewById(R.id.likes_count));
+        btnLikes = (ImageView) view.findViewById(R.id.btn_likes);
         btnLikes.setOnClickListener(this);
-        commentsCount = ((TextView) activity.findViewById(R.id.comments_count));
-        btnComments = (ImageView) activity.findViewById(R.id.btn_comments);
+        commentsCount = ((TextView) view.findViewById(R.id.comments_count));
+        btnComments = (ImageView) view.findViewById(R.id.btn_comments);
         btnComments.setOnClickListener(this);
     }
 
-    public CheckBottomPanelController(final BaseActivity activity, final CheckDto checkDto) {
-        commonInit(activity);
+    public CheckBottomPanelController(final BaseActivity activity, final View view, final CheckDto checkDto) {
+        commonInit(activity, view);
         this.activity = activity;
         this.checkDto = checkDto;
         if (checkDto == null) {
             throw new IllegalArgumentException("Check can't be empty!");
         }
-        btnShare = (ImageView) activity.findViewById(R.id.btn_share);
+        btnShare = (ImageView) view.findViewById(R.id.btn_share);
         btnShare.setOnClickListener(this);
-        sharesCount = ((TextView) activity.findViewById(R.id.shares_count));
-        btnPeoplesCount = (ImageView) activity.findViewById(R.id.btn_peoples_count);
+        sharesCount = ((TextView) view.findViewById(R.id.shares_count));
+        btnPeoplesCount = (ImageView) view.findViewById(R.id.btn_peoples_count);
         LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
 
         if (LashgoConfig.CheckState.ACTIVE.equals(checkState)) {
-            activity.findViewById(R.id.likes_layout).setVisibility(View.GONE);
-            activity.findViewById(R.id.comments_layout).setVisibility(View.GONE);
-            final TextView checkTimeText = (TextView) activity.findViewById(R.id.check_time);
+            view.findViewById(R.id.likes_layout).setVisibility(View.GONE);
+            view.findViewById(R.id.comments_layout).setVisibility(View.GONE);
+            final TextView checkTimeText = (TextView) view.findViewById(R.id.check_time);
             if (checkDto.getStartDate() != null) {
                 long finishMillis = checkDto.getStartDate().getTime() + checkDto.getDuration() * DateUtils.HOUR_IN_MILLIS;
                 if (finishMillis > System.currentTimeMillis()) {
@@ -124,14 +128,18 @@ public class CheckBottomPanelController implements View.OnClickListener {
                 }
             }
         } else {
-            activity.findViewById(R.id.time_layout).setVisibility(View.GONE);
-            activity.findViewById(R.id.check_time).setVisibility(View.GONE);
+            view.findViewById(R.id.time_layout).setVisibility(View.GONE);
+            view.findViewById(R.id.check_time).setVisibility(View.GONE);
         }
     }
 
     public CheckBottomPanelController(final BaseActivity activity, final CheckDto checkDto, ButtonColors buttonColors) {
-        this(activity, checkDto);
+        this(activity, activity.getWindow().getDecorView(), checkDto);
         updateColorsSheme(buttonColors);
+    }
+
+    public CheckBottomPanelController(final BaseActivity activity, final CheckDto checkDto) {
+        this(activity, activity.getWindow().getDecorView(), checkDto);
     }
 
     private void updateColorsSheme(ButtonColors buttonColors) {

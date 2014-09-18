@@ -62,8 +62,12 @@ public class CheckPhotosFragment extends BaseFragment implements AdapterView.OnI
             TextView checkDescription = ((RobotoTextView) view.findViewById(R.id.check_description));
             checkDescription.setText(checkDto.getDescription());
             ImageView taskPhoto = (ImageView) view.findViewById(R.id.task_photo);
-            PhotoUtils.displayImage(getActivity(), taskPhoto, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), imageSize, R.drawable.ava, true);
+            PhotoUtils.displayImage(getActivity(), taskPhoto, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), imageSize, R.drawable.ava, false);
             photosGallery = (GridView) view.findViewById(R.id.photos_galley);
+            int galImageSize = (PhotoUtils.getScreenWidth(getActivity()) - 24) / 3;
+            photosGallery.setOnItemClickListener(this);
+            photoGalleryAdapter = new PhotoGalleryAdapter(getActivity(), galImageSize);
+            photosGallery.setAdapter(photoGalleryAdapter);
             serviceHelper.getCheckPhotos(checkDto.getId());
         }
         return view;
@@ -75,18 +79,9 @@ public class CheckPhotosFragment extends BaseFragment implements AdapterView.OnI
         super.onSaveInstanceState(outState);
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        ((CheckBaseActivity) getActivity()).initBottomPanel();
-    }
-
     public void initGallery(ArrayList<PhotoDto> photoDtos) {
         if (photoDtos != null) {
-            int imageSize = (PhotoUtils.getScreenWidth(getActivity()) - 24) / 3;
-            photosGallery.setOnItemClickListener(this);
-            photoGalleryAdapter = new PhotoGalleryAdapter(getActivity(), imageSize);
-            photosGallery.setAdapter(photoGalleryAdapter);
+            photoGalleryAdapter.clear();
             for (PhotoDto photoDto : photoDtos) {
                 photoGalleryAdapter.add(photoDto);
             }

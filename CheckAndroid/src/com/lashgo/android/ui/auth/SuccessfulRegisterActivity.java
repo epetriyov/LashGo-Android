@@ -78,10 +78,6 @@ public class SuccessfulRegisterActivity extends BaseActivity implements View.OnC
     }
 
     @Override
-    public void onUpClicked() {
-    }
-
-    @Override
     public void onClick(View view) {
         if (view.getId() == R.id.continue_register) {
             finish();

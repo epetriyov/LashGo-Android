@@ -15,13 +15,16 @@ import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.facebook.UiLifecycleHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.lashgo.android.LashgoConfig;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
+import com.lashgo.android.social.FacebookHelper;
 import com.lashgo.android.social.TwitterHelper;
+import com.lashgo.android.social.VkontakteListener;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.auth.AuthController;
 import com.lashgo.android.ui.check.CheckListFragment;
@@ -33,13 +36,31 @@ import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.model.dto.GcmRegistrationDto;
 import com.lashgo.model.dto.MainScreenInfoDto;
+import com.lashgo.model.dto.UserDto;
+import com.vk.sdk.VKSdk;
+import com.vk.sdk.VKUIHelper;
 
+import javax.inject.Inject;
 import java.io.IOException;
 
 /**
  * Created by Eugene on 17.06.2014.
  */
-public class MainActivity extends BaseActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener, AuthController.AuthListener {
+
+    @Inject
+    protected UiLifecycleHelper facebookUiHelper;
+    @Inject
+    protected TwitterHelper twitterHelper;
+    @Inject
+    protected VkontakteListener vkSdkListener;
+    @Inject
+    protected FacebookHelper facebookHelper;
+
+    private View drawerLoginMenu;
+
+    private View drawerAuthMenu;
+
     private String[] menuItems;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
@@ -65,6 +86,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private View subscribesCountRoot;
     private View drawerTopView;
     private int avaSize;
+    private MenuItem exitMenu;
 
     @Override
     protected void registerActionsListener() {
@@ -79,6 +101,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        facebookUiHelper.onActivityResult(requestCode, resultCode, data);
+        VKUIHelper.onActivityResult(requestCode, resultCode, data);
         if (requestCode == TwitterHelper.TWITTER_AUTH) {
             if (resultCode == Activity.RESULT_OK) {
                 twitterHelper.handleCallbackUrl(data.getData());
@@ -152,18 +176,29 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
+        facebookUiHelper.onResume();
+        VKUIHelper.onResume(this);
         checkPlayServices();
-        if(settingsHelper.isLoggedIn()) {
+        if (settingsHelper.isLoggedIn()) {
             serviceHelper.getMainScreenInfo(settingsHelper.getLastNewsView(), settingsHelper.getLastSubscriptionsView());
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        facebookUiHelper.onDestroy();
+        VKUIHelper.onDestroy(this);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_main);
-        authController = new AuthController(this, serviceHelper, facebookHelper, twitterHelper);
+        facebookUiHelper.onCreate(savedInstanceState);
+        VKSdk.initialize(vkSdkListener, getString(R.string.vkontakte_app_id), null);
+        twitterHelper.onCreate(savedInstanceState);
+        authController = new AuthController(this, serviceHelper, facebookHelper, twitterHelper, this);
         settingsHelper.setFirstLaunch();
         avaSize = PhotoUtils.convertDpToPixels(64, this);
         initViews();
@@ -200,19 +235,28 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }
         });
         drawerTopView = findViewById(R.id.drawer_top_view);
-        if (settingsHelper.isLoggedIn()) {
-            drawerTopView.setBackgroundResource(R.drawable.bg_navigation);
-        } else {
-            drawerTopView.setBackgroundColor(getResources().getColor(R.color.splash_top_color));
-        }
         userAvatarView = (ImageView) findViewById(R.id.drawer_ava);
         userName = (TextView) findViewById(R.id.drawer_text);
         userName.setOnClickListener(this);
-        if (settingsHelper.isLoggedIn()) {
-            initAuthDrawerMenu();
-        } else {
-            initNotAuthDrawerMenu();
-        }
+        ViewStub drawerMenuStub = (ViewStub) findViewById(R.id.view_login_stub);
+        drawerLoginMenu = drawerMenuStub.inflate();
+        authController.initViews(drawerLoginMenu);
+        ViewStub drawerAuthMenuStub = (ViewStub) findViewById(R.id.view_auth_stub);
+        drawerAuthMenu = drawerAuthMenuStub.inflate();
+        itemTasks = drawerAuthMenu.findViewById(R.id.item_tasks);
+        itemTasks.setOnClickListener(this);
+        taskCountBg = (ImageView) drawerAuthMenu.findViewById(R.id.tasks_count_bg);
+        tasksCountRoot = drawerAuthMenu.findViewById(R.id.tasks_count);
+        tasksCountView = (TextView) drawerAuthMenu.findViewById(R.id.tasks_count_value);
+        drawerAuthMenu.findViewById(R.id.item_news).setOnClickListener(this);
+        newsCountRoot = drawerAuthMenu.findViewById(R.id.news_count);
+        newsCountView = (TextView) drawerAuthMenu.findViewById(R.id.news_count_value);
+        newsCountBg = (ImageView) drawerAuthMenu.findViewById(R.id.news_count_bg);
+        drawerAuthMenu.findViewById(R.id.item_subscribes).setOnClickListener(this);
+        subscribesCountRoot = drawerAuthMenu.findViewById(R.id.subscribes_count);
+        subscribesCountBg = (ImageView) drawerAuthMenu.findViewById(R.id.subscribes_count_bg);
+        subscribesCountView = (TextView) drawerAuthMenu.findViewById(R.id.subscribes_count_value);
+        updateDrawer();
 
         // Set the adapter for the list view
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
@@ -239,8 +283,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        facebookUiHelper.onSaveInstanceState(outState);
+        outState.putSerializable(TwitterHelper.KEY_REQUEST_TOKEN, twitterHelper.getRequestToken());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        exitMenu = menu.findItem(R.id.action_exit);
+        exitMenu.setVisible(settingsHelper.isLoggedIn());
 //        ImageView searchView = (ImageView) menu.findItem(R.id.action_search).getActionView();
 //        searchView.setImageResource(R.drawable.ic_action_search);
 //        searchView.setOnClickListener(new View.OnClickListener() {
@@ -261,29 +314,30 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void initNotAuthDrawerMenu() {
+        if (exitMenu != null) {
+            exitMenu.setVisible(false);
+        }
+        drawerTopView.setBackgroundColor(getResources().getColor(R.color.splash_top_color));
         userName.setText(R.string.login_or_register);
-        ViewStub drawerMenuStub = (ViewStub) findViewById(R.id.view_login_stub);
-        View drawerMenu = drawerMenuStub.inflate();
-        authController.initViews(drawerMenu);
+        userAvatarView.setImageResource(R.drawable.ava);
+        drawerLoginMenu.setVisibility(View.VISIBLE);
+        if (drawerAuthMenu != null) {
+            drawerAuthMenu.setVisibility(View.GONE);
+        }
         showFragment(CheckListFragment.newInstance());
+        setTitle(menuItems[0]);
+        drawerLayout.closeDrawer(drawerMenu);
     }
 
     private void initAuthDrawerMenu() {
-        ViewStub drawerMenuStub = (ViewStub) findViewById(R.id.view_auth_stub);
-        View drawerMenu = drawerMenuStub.inflate();
-        itemTasks = drawerMenu.findViewById(R.id.item_tasks);
-        itemTasks.setOnClickListener(this);
-        taskCountBg = (ImageView) drawerMenu.findViewById(R.id.tasks_count_bg);
-        tasksCountRoot = drawerMenu.findViewById(R.id.tasks_count);
-        tasksCountView = (TextView) drawerMenu.findViewById(R.id.tasks_count_value);
-        drawerMenu.findViewById(R.id.item_news).setOnClickListener(this);
-        newsCountRoot = drawerMenu.findViewById(R.id.news_count);
-        newsCountView = (TextView) drawerMenu.findViewById(R.id.news_count_value);
-        newsCountBg = (ImageView) drawerMenu.findViewById(R.id.news_count_bg);
-        drawerMenu.findViewById(R.id.item_subscribes).setOnClickListener(this);
-        subscribesCountRoot = drawerMenu.findViewById(R.id.subscribes_count);
-        subscribesCountBg = (ImageView) drawerMenu.findViewById(R.id.subscribes_count_bg);
-        subscribesCountView = (TextView) drawerMenu.findViewById(R.id.subscribes_count_value);
+        if (exitMenu != null) {
+            exitMenu.setVisible(true);
+        }
+        drawerTopView.setBackgroundResource(R.drawable.bg_navigation);
+        drawerAuthMenu.setVisibility(View.VISIBLE);
+        if (drawerLoginMenu != null) {
+            drawerLoginMenu.setVisibility(View.GONE);
+        }
         selectItem(itemTasks);
 
     }
@@ -352,11 +406,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     @Override
-    public void onUpClicked() {
-
-    }
-
-    @Override
     public void onClick(View v) {
         if (v.getId() == R.id.item_tasks || v.getId() == R.id.item_news || v.getId() == R.id.item_subscribes) {
             selectItem(v);
@@ -364,6 +413,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             startActivity(ProfileActivity.buildIntent(this, ProfileActivity.ProfileOwner.ME));
         }
     }
+
 
     /**
      * Swaps fragments in the main content view
@@ -423,7 +473,39 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             return true;
         }
         // Handle your other action bar items...
-
+        if (item.getItemId() == R.id.action_exit) {
+            logout();
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        facebookUiHelper.onPause();
+    }
+
+    @Override
+    public void onLoginSuccessFull() {
+        updateDrawer();
+    }
+
+    @Override
+    public void onRegisterSuccessFull(UserDto userDto) {
+        updateDrawer();
+    }
+
+    private void updateDrawer() {
+        if (settingsHelper.isLoggedIn()) {
+            initAuthDrawerMenu();
+            serviceHelper.getMainScreenInfo(settingsHelper.getLastNewsView(), settingsHelper.getLastSubscriptionsView());
+        } else {
+            initNotAuthDrawerMenu();
+        }
+    }
+
+    private void logout() {
+        settingsHelper.logout();
+        updateDrawer();
     }
 }

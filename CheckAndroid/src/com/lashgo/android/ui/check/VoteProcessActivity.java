@@ -25,6 +25,7 @@ import java.util.List;
 public class VoteProcessActivity extends CheckBaseActivity implements View.OnClickListener, VotePhotoController.VotePhotoListener {
 
     private static final int VOTE_PHOTOS_LIMIT = 4;
+    private int returnedPhotosCount;
     private ScreenState screenState;
     private List<PhotoDto> votePhotos;
     private ImageView voteButton;
@@ -70,6 +71,27 @@ public class VoteProcessActivity extends CheckBaseActivity implements View.OnCli
     }
 
     @Override
+    public void showOtherShadows(VotePhotoController votePhotoController) {
+        if (firstPhotoController != votePhotoController) {
+            firstPhotoController.showShadow();
+        }
+        if (secondPhotoController != votePhotoController) {
+            secondPhotoController.showShadow();
+        }
+        if (thirdPhotoController != votePhotoController) {
+            thirdPhotoController.showShadow();
+        }
+        if (fourthPhotoController != votePhotoController) {
+            fourthPhotoController.showShadow();
+        }
+    }
+
+    @Override
+    public void setFirstHint() {
+        voteHint.setText(R.string.choose_photo);
+    }
+
+    @Override
     protected void registerActionsListener() {
         super.registerActionsListener();
         addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_VOTE_PHOTOS.name());
@@ -100,7 +122,15 @@ public class VoteProcessActivity extends CheckBaseActivity implements View.OnCli
                 screenState = ScreenState.CHOOSE_PHOTO;
                 voteButton.setImageResource(R.drawable.btn_like);
                 voteHint.setText(R.string.choose_photo);
-                updatePhotos((VotePhotosResult) data.getSerializable(BaseIntentHandler.ServiceExtraNames.VOTE_PHOTO_LIST.name()));
+                firstPhotoController.newVote();
+                secondPhotoController.newVote();
+                thirdPhotoController.newVote();
+                fourthPhotoController.newVote();
+                VotePhotosResult votePhotosResult = (VotePhotosResult) data.getSerializable(BaseIntentHandler.ServiceExtraNames.VOTE_PHOTO_LIST.name());
+                if (votePhotosResult != null && votePhotosResult.getVotePhotoList() != null) {
+                    returnedPhotosCount = votePhotosResult.getVotePhotoList().size();
+                }
+                updatePhotos(votePhotosResult);
             } else if (BaseIntentHandler.ServiceActionNames.ACTION_VOTE.name().equals(action)) {
                 firstPhotoController.voteDone();
                 secondPhotoController.voteDone();
@@ -116,20 +146,22 @@ public class VoteProcessActivity extends CheckBaseActivity implements View.OnCli
     private void updatePhotos(VotePhotosResult votePhotos) {
         if (votePhotos != null) {
             List<PhotoDto> votePhotoList = votePhotos.getVotePhotoList();
-            if (votePhotoList != null) {
+            if (votePhotoList != null && votePhotoList.size() > 0) {
                 this.votePhotos = new ArrayList<>(votePhotoList);
-                if (votePhotoList.size() > 0) {
-                    firstPhotoController.setImage(this, votePhotoList.get(0).getUrl());
-                }
-                if (votePhotoList.size() > 1) {
-                    secondPhotoController.setImage(this, votePhotoList.get(1).getUrl());
+                if (votePhotoList.size() > 3) {
+                    fourthPhotoController.setImage(this, votePhotoList.get(3).getUrl());
                 }
                 if (votePhotoList.size() > 2) {
                     thirdPhotoController.setImage(this, votePhotoList.get(2).getUrl());
                 }
-                if (votePhotoList.size() > 3) {
-                    fourthPhotoController.setImage(this, votePhotoList.get(3).getUrl());
+                if (votePhotoList.size() > 1) {
+                    secondPhotoController.setImage(this, votePhotoList.get(1).getUrl());
                 }
+                if (votePhotoList.size() > 0) {
+                    firstPhotoController.setImage(this, votePhotoList.get(0).getUrl());
+                }
+            } else {
+                Toast.makeText(this, R.string.all_photos_seen, Toast.LENGTH_LONG).show();
             }
             if (votePhotos.getPhotosCount() != null) {
                 photosCount = votePhotos.getPhotosCount();
@@ -145,7 +177,7 @@ public class VoteProcessActivity extends CheckBaseActivity implements View.OnCli
         } else {
             if (!TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
                 int taskImageSize = PhotoUtils.convertDpToPixels(48, this);
-                PhotoUtils.displayImage(this, (ImageView) findViewById(R.id.task_photo), PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), taskImageSize, R.drawable.ava, true);
+                PhotoUtils.displayImage(this, (ImageView) findViewById(R.id.task_photo), PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), taskImageSize, R.drawable.ava, false);
             }
             final TextView voteTime = (TextView) findViewById(R.id.vote_time);
             Calendar checkVoteCalendar = Calendar.getInstance();
@@ -191,7 +223,7 @@ public class VoteProcessActivity extends CheckBaseActivity implements View.OnCli
     }
 
     private void updateCounter() {
-        photosCounter.setText(String.format("%d-%d/%d", votedPhotosCount, votedPhotosCount + VOTE_PHOTOS_LIMIT - 1, photosCount));
+        photosCounter.setText(String.format("%d-%d/%d", votedPhotosCount, votedPhotosCount + returnedPhotosCount - 1, photosCount));
     }
 
     @Override
@@ -213,7 +245,7 @@ public class VoteProcessActivity extends CheckBaseActivity implements View.OnCli
                     serviceHelper.votePhoto(buildVoteAction(selectedPhoto));
                 }
             } else {
-                votedPhotosCount += VOTE_PHOTOS_LIMIT;
+                votedPhotosCount += returnedPhotosCount;
                 serviceHelper.getVotePhotos(checkDto.getId(), false);
             }
         }

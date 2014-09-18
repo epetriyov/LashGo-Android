@@ -1,7 +1,10 @@
 package com.lashgo.android.ui.images;
 
 import android.content.Context;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import com.lashgo.android.R;
 import com.squareup.picasso.Transformation;
 
@@ -12,11 +15,15 @@ public class CircleTransformation implements Transformation {
 
     private Context context;
 
-    private boolean displayStroke;
+    private boolean useDarkening;
 
-    public CircleTransformation(Context context, boolean displayStroke) {
+
+    public CircleTransformation(Context context, boolean useDarkening) {
         this.context = context;
-        this.displayStroke = displayStroke;
+        this.useDarkening = useDarkening;
+        if (context == null) {
+            throw new IllegalStateException("Context can't be null");
+        }
     }
 
     @Override
@@ -43,15 +50,11 @@ public class CircleTransformation implements Transformation {
         float r = size / 2f;
         canvas.drawCircle(r, r, r, paint);
 
-//        if (displayStroke) {
-//            Paint circlePaint = new Paint();
-//            circlePaint.setAntiAlias(true);
-//            circlePaint.setFilterBitmap(true);
-//            circlePaint.setDither(true);
-//            circlePaint.setStrokeWidth(11);
-//            circlePaint.setColor(context.getResources().getColor(R.color.vote_stroke));
-//            canvas.drawCircle(r, r, r + 10, circlePaint);
-//        }
+        if (useDarkening) {
+            Paint shadow = new Paint();
+            shadow.setColor(context.getResources().getColor(R.color.darkening));
+            canvas.drawCircle(r, r, r, shadow);
+        }
         squaredBitmap.recycle();
         return bitmap;
     }

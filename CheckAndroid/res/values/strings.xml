@@ -103,6 +103,8 @@
     <string name="notifications">Уведомления</string>
     <string name="avatar_saved">Аватар сохранён</string>
     <string name="hint_user_name">Имя пользователя</string>
+    <string name="no_news">У вас пока нет новостей</string>
+    <string name="all_photos_seen">Вы просмотрели все фото чека</string>
     <string-array name="make_photo_items">
         <item>Камера</item>
         <item>Галерея</item>

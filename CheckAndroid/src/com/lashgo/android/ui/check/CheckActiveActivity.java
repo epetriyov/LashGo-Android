@@ -35,10 +35,12 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
     private int imageSize;
     private ViewPager viewPager;
     private ImageView cameraBtn;
+    private boolean wasSent;
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(ExtraNames.PHOTO_URL.name(), imgPath);
+        outState.putBoolean(ExtraNames.WAS_PHOTO_SENT.name(),wasSent);
         super.onSaveInstanceState(outState);
     }
 
@@ -67,9 +69,11 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
         Intent intent = getIntent();
         if (intent != null) {
             imgPath = intent.getStringExtra(ExtraNames.PHOTO_URL.name());
+            wasSent = intent.getBooleanExtra(ExtraNames.WAS_PHOTO_SENT.name(),false);
         }
         if (imgPath == null && savedInstanceState != null) {
             imgPath = savedInstanceState.getString(ExtraNames.PHOTO_URL.name());
+            wasSent = savedInstanceState.getBoolean(ExtraNames.WAS_PHOTO_SENT.name(),false);
         }
     }
 
@@ -124,7 +128,9 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
         super.processServerResult(action, resultCode, data);
         if (BaseIntentHandler.ServiceActionNames.ACTION_SEND_PHOTO.name().equals(action) && resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
             startActivity(PhotoSentActivity.buildIntent(this, new String(imgPath)));
-            imgPath = null;
+            wasSent = true;
+            cameraBtn.setVisibility(View.GONE);
+            pagerAdapter.hideSendPhotoBtn();
         }
     }
 
@@ -160,7 +166,7 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
 
     @Override
     public void onPageSelected(int position) {
-        if (position == 1&& imgPath != null) {
+        if (position == 1&& imgPath != null && !wasSent) {
             pagerAdapter.showSendPhotoBtn();
         } else {
             pagerAdapter.hideSendPhotoBtn();
@@ -226,23 +232,22 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
                     checkImage.setTag(TASK_PHOTO_TAG);
                     btnSend.setVisibility(View.GONE);
                     if (!TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
-                        PhotoUtils.displayImage(CheckActiveActivity.this, checkImage, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), imageSize, R.drawable.ava, true);
+                        PhotoUtils.displayImage(CheckActiveActivity.this, checkImage, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), imageSize, R.drawable.ava, false);
                     }
                     break;
                 case 1:
                     this.btnSend = btnSend;
+                    if (imgPath != null && !wasSent) {
+                        btnSend.setVisibility(View.VISIBLE);
+                    } else {
+                        btnSend.setVisibility(View.GONE);
+                    }
                     if (!TextUtils.isEmpty(imgPath)) {
-                        PhotoUtils.displayImage(CheckActiveActivity.this, checkImage, Uri.fromFile(new File(imgPath)), imageSize, R.drawable.ava, true);
-                        if (imgPath != null) {
-                            btnSend.setVisibility(View.VISIBLE);
-                        } else {
-                            btnSend.setVisibility(View.GONE);
-                        }
+                        PhotoUtils.displayImage(CheckActiveActivity.this, checkImage, Uri.fromFile(new File(imgPath)), imageSize, R.drawable.ava, false);
                     } else {
                         if (checkDto.getUserPhotoDto() != null && !TextUtils.isEmpty(checkDto.getUserPhotoDto().getUrl())) {
-                            PhotoUtils.displayImage(CheckActiveActivity.this, checkImage, PhotoUtils.getFullPhotoUrl(checkDto.getUserPhotoDto().getUrl()), imageSize, R.drawable.ava, true);
+                            PhotoUtils.displayImage(CheckActiveActivity.this, checkImage, PhotoUtils.getFullPhotoUrl(checkDto.getUserPhotoDto().getUrl()), imageSize, R.drawable.ava, false);
                         }
-                        btnSend.setVisibility(View.GONE);
                     }
                     break;
                 default:

@@ -42,7 +42,6 @@ public class VkontakteListener extends VKSdkListener {
 
     @Override
     public void onRenewAccessToken(VKAccessToken token) {
-
         super.onRenewAccessToken(token);
     }
 

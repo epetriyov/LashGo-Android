@@ -70,14 +70,6 @@ public class CommentsActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        menu.findItem(R.id.action_search).setVisible(false);
-//        menu.findItem(R.id.action_notifications).setVisible(false);
-        return true;
-    }
-
     private void initViews() {
         ListView commentsListView = (ListView) findViewById(R.id.comments_list);
         commentsAdapter = new CommentsAdapter(this);
@@ -139,11 +131,6 @@ public class CommentsActivity extends BaseActivity implements View.OnClickListen
             }
             commentsAdapter.notifyDataSetChanged();
         }
-    }
-
-    @Override
-    public void onUpClicked() {
-        finish();
     }
 
     @Override

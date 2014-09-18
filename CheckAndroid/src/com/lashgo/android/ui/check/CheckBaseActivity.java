@@ -71,11 +71,10 @@ public class CheckBaseActivity extends BaseActivity {
         if (checkDto == null && savedInstanceState != null) {
             checkDto = (CheckDto) savedInstanceState.getSerializable(ExtraNames.CHECK_DTO.name());
         }
-    }
-
-    @Override
-    public void onUpClicked() {
-        NavUtils.navigateUpFromSameTask(this);
+        if(checkDto == null)
+        {
+            throw new IllegalStateException("Check can't be null");
+        }
     }
 
     @Override
@@ -90,26 +89,9 @@ public class CheckBaseActivity extends BaseActivity {
         bottomPanelController = new CheckBottomPanelController(this, checkDto);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        ImageView searchView = (ImageView) menu.findItem(R.id.action_search).getActionView();
-//        searchView.setImageResource(R.drawable.ic_action_search);
-//        searchView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
-//        ImageView notificationsView = (ImageView) menu.findItem(R.id.action_notifications).getActionView();
-//        notificationsView.setImageResource(R.drawable.ic_action_notifications);
-//        notificationsView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
-        return true;
+    public void setBottomPanel(CheckBottomPanelController checkBottomPanelController)
+    {
+        this.bottomPanelController = checkBottomPanelController;
     }
 
     @Override

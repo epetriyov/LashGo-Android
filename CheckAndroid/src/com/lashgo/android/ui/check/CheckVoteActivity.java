@@ -1,5 +1,6 @@
 package com.lashgo.android.ui.check;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -7,10 +8,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.lashgo.android.R;
-import com.lashgo.android.ui.images.CircleTransformation;
+import com.lashgo.android.ui.auth.LoginActivity;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.android.utils.UiUtils;
-import com.squareup.picasso.Picasso;
 
 /**
  * Created by Eugene on 13.08.2014.
@@ -54,14 +54,13 @@ public class CheckVoteActivity extends CheckBaseActivity implements View.OnClick
     public void onClick(View view) {
         super.onClick(view);
         if (view.getId() == R.id.btn_vote_start) {
-            startActivity(VoteProcessActivity.buildIntent(this, checkDto, VoteProcessActivity.class));
+            if (settingsHelper.isLoggedIn()) {
+                startActivity(VoteProcessActivity.buildIntent(this, checkDto, VoteProcessActivity.class));
+            } else {
+                startActivity(new Intent(this, LoginActivity.class));
+            }
         } else if (view.getId() == R.id.check_photo) {
             startActivity(PhotoActivity.newIntent(this, checkDto, PhotoActivity.PhotoType.TASK_PHOTO));
         }
-    }
-
-    @Override
-    public void onUpClicked() {
-        finish();
     }
 }

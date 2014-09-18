@@ -9,6 +9,7 @@ import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.auth.LoginActivity;
 import com.lashgo.android.ui.auth.PasswordRecoverActivity;
 import com.lashgo.android.ui.auth.SuccessfulRegisterActivity;
+import com.lashgo.android.ui.auth.TwitterAuthActivity;
 import com.lashgo.android.ui.check.*;
 import com.lashgo.android.ui.comments.CommentsActivity;
 import com.lashgo.android.ui.main.MainActivity;
@@ -39,12 +40,15 @@ import org.w3c.dom.Comment;
                 ProfileActivity.class,
                 LoginActivity.class,
                 SuccessfulRegisterActivity.class,
+                TwitterAuthActivity.class,
+                PhotoSentActivity.class,
                 CommentsActivity.class,
                 EditProfileActivity.class,
                 PasswordRecoverActivity.class,
                 SplashActivity.class,
                 FacebookHelper.class,
                 TwitterHelper.class,
+                StartActivity.class,
                 VkontakteListener.class,
                 ServiceBinder.class
         },

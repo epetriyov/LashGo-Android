@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -15,12 +16,10 @@ import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.check.PhotoActivity;
-import com.lashgo.android.ui.images.CircleTransformation;
 import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.model.dto.PhotoDto;
 import com.lashgo.model.dto.UserDto;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -32,6 +31,7 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
     private UserDto userDto;
 
     private ImageView editView;
+    private MenuItem editMenu;
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -91,21 +91,20 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
     }
 
     @Override
-    public void onUpClicked() {
-        finish();
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initCustomActionBar(ActionBar.DISPLAY_HOME_AS_UP);
         initExtras(savedInstanceState);
         setContentView(R.layout.act_profile);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         loadProfile();
     }
 
-    private void loadProfile()
-    {
+    private void loadProfile() {
         if (ProfileOwner.ME.name().equals(profileOwner.name())) {
             serviceHelper.getMyUserProfile();
             serviceHelper.getMyPhotos();
@@ -118,7 +117,8 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_profile, menu);
-        editView = (ImageView) menu.findItem(R.id.action_edit).getActionView();
+        editMenu = menu.findItem(R.id.action_edit);
+        editView = (ImageView) editMenu.getActionView();
         editView.setImageResource(R.drawable.ic_action_edit);
         editView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,7 +126,7 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
                 startActivity(EditProfileActivity.buildIntent(ProfileActivity.this, userDto, EditProfileActivity.FROM.PROFILE));
             }
         });
-        editView.setVisibility(View.GONE);
+        editMenu.setVisible(false);
         return true;
     }
 
@@ -136,7 +136,9 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
         if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE && data != null) {
             if (BaseIntentHandler.ServiceActionNames.ACTION_GET_USER_PROFILE.name().equals(action) || BaseIntentHandler.ServiceActionNames.ACTION_GET_MY_USER_PROFILE.name().equals(action)) {
                 initViews((UserDto) data.getSerializable(BaseIntentHandler.ServiceExtraNames.USER_PROFILE.name()));
-                editView.setVisibility(View.VISIBLE);
+                if (BaseIntentHandler.ServiceActionNames.ACTION_GET_MY_USER_PROFILE.name().equals(action)) {
+                    editMenu.setVisible(true);
+                }
             } else if (BaseIntentHandler.ServiceActionNames.ACTION_GET_MY_PHOTOS.name().equals(action) || BaseIntentHandler.ServiceActionNames.ACTION_GET_USER_PHOTOS.name().equals(action)) {
                 initGallery((ArrayList<PhotoDto>) data.getSerializable(BaseIntentHandler.ServiceExtraNames.PHOTOS_LIST.name()));
             }
@@ -145,11 +147,7 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
 
     private void initGallery(ArrayList<PhotoDto> photoDtos) {
         if (photoDtos != null) {
-            GridView photosGallery = (GridView) findViewById(R.id.photos_galley);
-            int imageSize = (PhotoUtils.getScreenWidth(this) - 20) / 2;
-            photosGallery.setOnItemClickListener(this);
-            photoGalleryAdapter = new PhotoGalleryAdapter(this, imageSize);
-            photosGallery.setAdapter(photoGalleryAdapter);
+            photoGalleryAdapter.clear();
             for (PhotoDto photoDto : photoDtos) {
                 photoGalleryAdapter.add(photoDto);
             }
@@ -171,6 +169,11 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
             ((TextView) findViewById(R.id.comments_count)).setText(String.format(getString(R.string.comments_count), userDto.getCommentsCount()));
             ((TextView) findViewById(R.id.likes_count)).setText(String.format(getString(R.string.likes_count), userDto.getLikesCount()));
         }
+        GridView photosGallery = (GridView) findViewById(R.id.photos_galley);
+        int imageSize = (PhotoUtils.getScreenWidth(this) - 20) / 2;
+        photosGallery.setOnItemClickListener(this);
+        photoGalleryAdapter = new PhotoGalleryAdapter(this, imageSize);
+        photosGallery.setAdapter(photoGalleryAdapter);
     }
 
     @Override

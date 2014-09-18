@@ -65,6 +65,7 @@ public interface RestService {
     @PUT(Path.Users.MY_PROFILE)
     ResponseObject saveProfile(@Body UserDto userDto);
 
+    @Multipart
     @POST(Path.Users.AVATAR)
     ResponseObject saveAvatar(@Part("avatar") TypedFile avatar);
 

@@ -46,7 +46,6 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
         checkListView.setAdapter(multyTypeAdapter);
         checkListView.setOnItemClickListener(this);
         getActivity().setTitle(R.string.check_list);
-        serviceHelper.getChecks();
         return checkListView;
     }
 
@@ -161,6 +160,14 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
 
     @Override
     public void onCheckStateChanged() {
-        onCheckListLoaded();
+        if (getActivity() != null && !isDetached()) {
+            onCheckListLoaded();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        serviceHelper.getChecks();
     }
 }

@@ -42,8 +42,8 @@
                                 android:id="@+id/first_photo_check"
                                 android:layout_width="24dp" android:layout_height="24dp"
                                 android:layout_gravity="top|left"
-                                android:layout_marginTop="8dp"
-                                android:layout_marginLeft="8dp"
+                                android:paddingTop="8dp"
+                                android:paddingLeft="8dp"
                                 android:src="@drawable/ic_check_nornal"
                                 />
                         <View
@@ -57,24 +57,24 @@
                     <FrameLayout
                             android:layout_width="match_parent" android:layout_height="0dp"
                             android:layout_weight="1"
-                            android:id="@+id/second_vote_photo_layout"
+                            android:id="@+id/third_vote_photo_layout"
                             >
                         <ImageView
-                                android:id="@+id/second_vote_photo"
+                                android:id="@+id/third_vote_photo"
                                 android:layout_height="match_parent"
                                 android:layout_width="match_parent"
                                 android:adjustViewBounds="true"
                                 />
                         <ImageView
-                                android:id="@+id/second_photo_check"
+                                android:id="@+id/third_photo_check"
                                 android:layout_width="24dp" android:layout_height="24dp"
                                 android:layout_gravity="bottom|left"
-                                android:layout_marginBottom="8dp"
-                                android:layout_marginLeft="8dp"
+                                android:paddingBottom="8dp"
+                                android:paddingLeft="8dp"
                                 android:src="@drawable/ic_check_nornal"
                                 />
                         <View
-                                android:id="@+id/second_photo_shadow"
+                                android:id="@+id/third_photo_shadow"
                                 android:layout_width="match_parent" android:layout_height="match_parent"
                                 android:background="@color/photo_not_selected"
                                 android:visibility="gone"
@@ -90,24 +90,24 @@
                     <FrameLayout
                             android:layout_width="match_parent" android:layout_height="0dp"
                             android:layout_weight="1"
-                            android:id="@+id/third_vote_photo_layout"
+                            android:id="@+id/second_vote_photo_layout"
                             >
                         <ImageView
-                                android:id="@+id/third_vote_photo"
+                                android:id="@+id/second_vote_photo"
                                 android:layout_height="match_parent"
                                 android:layout_width="match_parent"
                                 android:adjustViewBounds="true"
                                 />
                         <ImageView
-                                android:id="@+id/third_photo_check"
+                                android:id="@+id/second_photo_check"
                                 android:layout_width="24dp" android:layout_height="24dp"
                                 android:layout_gravity="top|right"
-                                android:layout_marginTop="8dp"
-                                android:layout_marginRight="8dp"
+                                android:paddingTop="8dp"
+                                android:paddingRight="8dp"
                                 android:src="@drawable/ic_check_nornal"
                                 />
                         <View
-                                android:id="@+id/third_photo_shadow"
+                                android:id="@+id/second_photo_shadow"
                                 android:layout_width="match_parent" android:layout_height="match_parent"
                                 android:background="@color/photo_not_selected"
                                 android:visibility="gone"
@@ -129,8 +129,8 @@
                                 android:id="@+id/fourth_photo_check"
                                 android:layout_width="24dp" android:layout_height="24dp"
                                 android:layout_gravity="bottom|right"
-                                android:layout_marginBottom="8dp"
-                                android:layout_marginRight="8dp"
+                                android:paddingBottom="8dp"
+                                android:paddingRight="8dp"
                                 android:src="@drawable/ic_check_nornal"
                                 />
                         <View

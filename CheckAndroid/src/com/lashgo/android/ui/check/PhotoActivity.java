@@ -1,20 +1,14 @@
 package com.lashgo.android.ui.check;
 
 import android.app.ActionBar;
-import android.app.Activity;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-import com.lashgo.android.LashgoApplication;
 import com.lashgo.android.LashgoConfig;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
@@ -137,12 +131,6 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_photo, menu);
-        return true;
-    }
-
     private void setUpTopCheck(CheckDto checkDto) {
         if (!TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
             PhotoUtils.displayImage(this, taskPhoto, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), imageSize, R.drawable.ava, false);
@@ -177,7 +165,6 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
                     findViewById(R.id.medal).setVisibility(View.VISIBLE);
                 }
             }
-            topText.setText(checkDto.getName());
         } else if (photoDto != null && !TextUtils.isEmpty(photoDto.getUrl())) {
             Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(photoDto.getUrl())).fit().centerCrop().into(fullImage);
             if (PhotoType.FROM_PROFILE_GALLERY.name().equals(photoType.name())) {
@@ -195,11 +182,6 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
             }
             topText.setText(userDto.getLogin());
         }
-    }
-
-    @Override
-    public void onUpClicked() {
-        finish();
     }
 
     @Override
@@ -227,8 +209,12 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void onResume() {
         super.onResume();
-        if (photoDto != null) {
-            serviceHelper.getPhotoCounters(photoDto.getId());
+        if (photoDto != null || PhotoType.WINNER_PHOTO.name().equals(photoType.name())) {
+            if (photoDto != null) {
+                serviceHelper.getPhotoCounters(photoDto.getId());
+            } else {
+                serviceHelper.getPhotoCounters(checkDto.getWinnerPhotoDto().getId());
+            }
         } else {
             serviceHelper.getCheckCounters(checkDto.getId());
         }
@@ -266,7 +252,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
                 }
             } else if (BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK.name().equals(action)) {
                 CheckDto selectedCheck = (CheckDto) data.getSerializable(BaseIntentHandler.ServiceExtraNames.CHECK_DTO.name());
-                if (checkDto != null) {
+                if (selectedCheck != null) {
                     LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(selectedCheck);
                     switch (checkState) {
                         case ACTIVE:
@@ -282,7 +268,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
                             break;
                     }
                 }
-            }else {
+            } else {
                 bottomPanelController.udpateCounters((com.lashgo.model.dto.CheckCounters) data.getSerializable(BaseIntentHandler.ServiceExtraNames.COUNTERS.name()));
             }
         }

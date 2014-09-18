@@ -3,6 +3,7 @@ package com.lashgo.android.service;
 import android.os.Bundle;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -23,17 +24,13 @@ public class ServiceBinder implements ServiceCallbackListener {
 
     private void deliverServiceResults() {
         synchronized (this) {
-            for (ServiceResult serviceResult : serviceResultList) {
-                onCommandFinished(serviceResult);
+            for (Iterator<ServiceResult> iter = serviceResultList.iterator(); iter.hasNext(); ) {
+                ServiceResult serviceResult = iter.next();
+                serviceReceiver.processServerResult(serviceResult.getAction(), serviceResult.getResultCode(), serviceResult.getData());
+                iter.remove();
             }
         }
     }
-
-    private void onCommandFinished(ServiceResult serviceResult) {
-        serviceReceiver.processServerResult(serviceResult.getAction(), serviceResult.getResultCode(), serviceResult.getData());
-        serviceResultList.remove(serviceResult);
-    }
-
 
     private void saveServiceResult(String action, int resultCode, Bundle data) {
         serviceResultList.add(new ServiceResult(action, resultCode, data));

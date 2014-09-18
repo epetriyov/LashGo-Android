@@ -52,7 +52,6 @@
         <activity android:name=".ui.auth.LoginActivity"
                   android:launchMode="singleTop"
                   android:label="@string/login_enter"
-                  android:parentActivityName=".ui.start.SplashActivity"
                   android:screenOrientation="portrait"
                 >
             <intent-filter>
@@ -60,10 +59,6 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
             </intent-filter>
-            <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".ui.start.SplashActivity"/>
-            >
         </activity>
 
         <activity android:name=".ui.main.MainActivity"
@@ -77,14 +72,9 @@
         </activity>
 
         <activity android:name=".ui.auth.PasswordRecoverActivity"
-                  android:parentActivityName=".ui.auth.LoginActivity"
                   android:screenOrientation="portrait"
                 >
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".ui.auth.LoginActivity"/>
-            >
+
         </activity>
 
         <activity android:name=".ui.auth.SuccessfulRegisterActivity"
@@ -122,49 +112,25 @@
 
         <activity android:name=".ui.check.CheckActiveActivity"
                   android:screenOrientation="portrait"
-                  android:label="@string/task"
-                  android:parentActivityName=".ui.main.MainActivity">
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".ui.main.MainActivity"/>
-            >
+                  android:label="@string/task">
         </activity>
 
         <activity android:name=".ui.check.CheckFinishedActivity"
                   android:label="@string/task"
-                  android:parentActivityName=".ui.main.MainActivity"
                   android:screenOrientation="portrait"
                 >
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".ui.main.MainActivity"/>
-            >
         </activity>
 
         <activity android:name=".ui.check.CheckVoteActivity"
                   android:label="@string/task"
-                  android:parentActivityName=".ui.main.MainActivity"
                   android:screenOrientation="portrait"
                 >
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".ui.main.MainActivity"/>
-            >
         </activity>
 
         <activity android:name=".ui.check.VoteProcessActivity"
                   android:label="@string/task"
-                  android:parentActivityName=".ui.check.CheckVoteActivity"
                   android:screenOrientation="portrait"
                 >
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".ui.check.CheckVoteActivity"/>
-            >
         </activity>
 
         <activity

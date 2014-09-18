@@ -13,6 +13,6 @@ public class PasswordRecoverHandler extends BaseIntentHandler {
     @Override
     protected Bundle doExecute(Intent intent) throws IOException, RetrofitError {
         service.passwordRecover(intent.getStringExtra(ServiceExtraNames.EMAIL.name()));
-        return null;
+        return intent.getExtras();
     }
 }

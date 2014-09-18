@@ -6,8 +6,4 @@
           android:title="@string/search"
           android:actionLayout="@layout/view_action_button"
             />
-    <item android:id="@+id/action_exit"
-          android:title="@string/exit"
-          android:showAsAction="never"
-            />
 </menu>

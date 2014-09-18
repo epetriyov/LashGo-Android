@@ -27,6 +27,9 @@ public final class UiUtils {
             throw new IllegalArgumentException("Empty textView for startTimer method");
         }
         new CountDownTimer(finishMillis - System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS) {
+
+            private boolean isFinished;
+
             @Override
             public void onTick(long millisUntilFinished) {
                 long remainingHours = TimeUnit.MILLISECONDS.toHours(millisUntilFinished);
@@ -46,7 +49,8 @@ public final class UiUtils {
 
             @Override
             public void onFinish() {
-                if (timerFinishedListener != null) {
+                if (!isFinished && timerFinishedListener != null) {
+                    isFinished = true;
                     timerFinishedListener.onTimerFinished();
                 }
             }

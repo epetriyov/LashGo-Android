@@ -3,7 +3,6 @@ package com.lashgo.android.ui;
 import android.app.ActionBar;
 import android.app.DialogFragment;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
@@ -12,23 +11,17 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
-import com.facebook.UiLifecycleHelper;
-import com.lashgo.android.ActivityModule;
-import com.lashgo.android.LashgoApplication;
-import com.lashgo.android.R;
+import com.crittercism.app.Crittercism;
+import com.lashgo.android.*;
 import com.lashgo.android.service.ServiceBinder;
 import com.lashgo.android.service.ServiceHelper;
 import com.lashgo.android.service.ServiceReceiver;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.settings.SettingsHelper;
-import com.lashgo.android.social.FacebookHelper;
-import com.lashgo.android.social.TwitterHelper;
-import com.lashgo.android.social.VkontakteListener;
+import com.lashgo.android.ui.start.SplashActivity;
 import com.lashgo.android.utils.ContextUtils;
 import com.lashgo.model.dto.ErrorDto;
 import com.lashgo.model.dto.SocialInfo;
-import com.vk.sdk.VKSdk;
-import com.vk.sdk.VKUIHelper;
 import dagger.ObjectGraph;
 
 import javax.inject.Inject;
@@ -52,14 +45,6 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
     @Inject
     protected SettingsHelper settingsHelper;
     @Inject
-    protected UiLifecycleHelper facebookUiHelper;
-    @Inject
-    protected TwitterHelper twitterHelper;
-    @Inject
-    protected VkontakteListener vkSdkListener;
-    @Inject
-    protected FacebookHelper facebookHelper;
-    @Inject
     protected Handler handler;
     @Inject
     ServiceBinder serviceBinder;
@@ -73,12 +58,10 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
     private boolean isDialogDismissNeeded;
     private boolean isActivityOnForeground;
 
-    public abstract void onUpClicked();
-
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.action_home) {
-            onUpClicked();
+            finish();
         }
     }
 
@@ -108,13 +91,13 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        if (!BuildConfig.DEBUG) {
+            Crittercism.initialize(getApplicationContext(), LashgoConfig.CRITTERCISM_APP_ID);
+        }
         loginGraph = LashgoApplication.getInstance().getApplicationGraph().plus(getModules().toArray());
         loginGraph.inject(this);
         super.onCreate(savedInstanceState);
         registerActionsListener();
-        facebookUiHelper.onCreate(savedInstanceState);
-        VKSdk.initialize(vkSdkListener, getString(R.string.vkontakte_app_id), null);
-        twitterHelper.onCreate(savedInstanceState);
     }
 
     protected void registerActionsListener() {
@@ -131,18 +114,9 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
 
     @Override
     protected void onDestroy() {
-        facebookUiHelper.onDestroy();
-        VKUIHelper.onDestroy(this);
         loginGraph = null;
         super.onDestroy();
         unregisterActionsListener();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        facebookUiHelper.onSaveInstanceState(outState);
-        outState.putSerializable(TwitterHelper.KEY_REQUEST_TOKEN, twitterHelper.getRequestToken());
-        super.onSaveInstanceState(outState);
     }
 
     protected void unregisterActionsListener() {
@@ -152,6 +126,7 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
     @Override
     protected void onResume() {
         super.onResume();
+        registerActionsListener();
         isActivityOnForeground = true;
         if (isDialogShowNeeded) {
             showDialog(dialogFragment, tag);
@@ -162,8 +137,6 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
             isDialogDismissNeeded = false;
         }
         serviceBinder.onResume();
-        facebookUiHelper.onResume();
-        VKUIHelper.onResume(this);
     }
 
     @Override
@@ -171,14 +144,6 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
         super.onPause();
         isActivityOnForeground = false;
         serviceBinder.onPause();
-        facebookUiHelper.onPause();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        facebookUiHelper.onActivityResult(requestCode, resultCode, data);
-        VKUIHelper.onActivityResult(requestCode, resultCode, data);
     }
 
     public void onDisplayError(final String errorMessage) {
@@ -261,6 +226,5 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
     public static enum ExtraNames {
         CHECK_DTO, PHOTO_URL, PROFILE_OWNER, USER_ID, PHOTO_DTO, PHOTO_TYPE, USER_DTO, CHECK_ID, PHOTO_ID, FROM, REQUEST_TOKEN, TWITTER_URL, WAS_PHOTO_SENT, OPEN_MODE
     }
-
 
 }

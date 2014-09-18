@@ -20,9 +20,4 @@
             android:drawSelectorOnTop="true"
             android:stretchMode="columnWidth">
     </GridView>
-    <include layout="@layout/view_check_bottom_panel"
-             android:layout_width="match_parent"
-             android:layout_height="48dp"
-             android:background="@color/check_description_color_2"
-            />
 </LinearLayout>

@@ -17,13 +17,11 @@ import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.check.MakePhotoDialog;
-import com.lashgo.android.ui.images.CircleTransformation;
 import com.lashgo.android.ui.main.MainActivity;
 import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.Md5Util;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.model.dto.UserDto;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
@@ -33,6 +31,8 @@ import java.io.File;
 public class EditProfileActivity extends BaseActivity implements View.OnClickListener, MakePhotoDialog.OnImageDoneListener {
 
     private EditText editLogin;
+    private boolean avatarWontSave;
+    private boolean profileWontSave;
 
     public static enum FROM {REGISTER, PROFILE}
 
@@ -119,12 +119,12 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
         if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
             if (BaseIntentHandler.ServiceActionNames.ACTION_SAVE_PROFILE.name().equals(action)) {
                 profileSaved = true;
-                if (avatarSaved || imgPath == null) {
+                if (avatarWontSave || avatarSaved || imgPath == null) {
                     profileSaved();
                 }
             } else {
                 avatarSaved = true;
-                if (profileSaved) {
+                if (profileWontSave || profileSaved) {
                     profileSaved();
                 }
             }
@@ -132,40 +132,42 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void sendProfile() {
-        if (TextUtils.isEmpty(editEmail.getText().toString())) {
-            editEmail.setError(getString(R.string.error_empty_email));
+        if (imgPath != null) {
+            serviceHelper.saveAvatar(imgPath);
+            avatarWontSave = false;
         } else {
-            if (imgPath != null) {
-                serviceHelper.saveAvatar(imgPath);
-            }
-            boolean isProfileChanged = false;
-            if (editLogin.getText().toString().equals(userDto.getLogin())) {
-                userDto.setLogin(editLogin.getText().toString());
-                isProfileChanged = true;
-            }
-            if (editFio.getText().toString().equals(userDto.getFio())) {
-                userDto.setFio(editFio.getText().toString());
-                isProfileChanged = true;
-            }
-            if (editLocation.getText().toString().equals(userDto.getCity())) {
-                userDto.setCity(editLocation.getText().toString());
-                isProfileChanged = true;
-            }
-            if (editEmail.getText().toString().equals(userDto.getEmail())) {
-                userDto.setEmail(editEmail.getText().toString());
-                isProfileChanged = true;
-            }
-            if (editAbout.getText().toString().equals(userDto.getAbout())) {
-                userDto.setAbout(editAbout.getText().toString());
-                isProfileChanged = true;
-            }
-            if (!TextUtils.isEmpty(editPassword.getText().toString())) {
-                userDto.setPasswordHash(Md5Util.md5(editPassword.getText().toString()));
-                isProfileChanged = true;
-            }
-            if (isProfileChanged) {
-                serviceHelper.saveProfile(userDto);
-            }
+            avatarWontSave = true;
+        }
+        boolean isProfileChanged = false;
+        if (!TextUtils.isEmpty(editLogin.getText().toString()) && !editLogin.getText().toString().equals(userDto.getLogin())) {
+            userDto.setLogin(editLogin.getText().toString());
+            isProfileChanged = true;
+        }
+        if (!TextUtils.isEmpty(editFio.getText().toString()) && !editFio.getText().toString().equals(userDto.getFio())) {
+            userDto.setFio(editFio.getText().toString());
+            isProfileChanged = true;
+        }
+        if (!TextUtils.isEmpty(editLocation.getText().toString()) && !editLocation.getText().toString().equals(userDto.getCity())) {
+            userDto.setCity(editLocation.getText().toString());
+            isProfileChanged = true;
+        }
+        if (!TextUtils.isEmpty(editEmail.getText().toString()) && !editEmail.getText().toString().equals(userDto.getEmail())) {
+            userDto.setEmail(editEmail.getText().toString());
+            isProfileChanged = true;
+        }
+        if (!TextUtils.isEmpty(editAbout.getText().toString()) && !editAbout.getText().toString().equals(userDto.getAbout())) {
+            userDto.setAbout(editAbout.getText().toString());
+            isProfileChanged = true;
+        }
+        if (!TextUtils.isEmpty(editPassword.getText().toString())) {
+            userDto.setPasswordHash(Md5Util.md5(editPassword.getText().toString()));
+            isProfileChanged = true;
+        }
+        if (isProfileChanged) {
+            profileWontSave = false;
+            serviceHelper.saveProfile(userDto);
+        } else {
+            profileWontSave = true;
         }
     }
 
@@ -224,11 +226,6 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
             }
         });
         return true;
-    }
-
-    @Override
-    public void onUpClicked() {
-        startActivity(ProfileActivity.buildIntent(this, ProfileActivity.ProfileOwner.ME));
     }
 
     @Override

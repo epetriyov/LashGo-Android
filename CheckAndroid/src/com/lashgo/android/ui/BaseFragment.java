@@ -10,6 +10,7 @@ import com.lashgo.android.LashgoApplication;
 import com.lashgo.android.service.ServiceBinder;
 import com.lashgo.android.service.ServiceHelper;
 import com.lashgo.android.service.ServiceReceiver;
+import com.lashgo.android.service.handlers.BaseIntentHandler;
 import dagger.ObjectGraph;
 
 import javax.inject.Inject;
@@ -38,6 +39,8 @@ public class BaseFragment extends Fragment implements ServiceReceiver {
 
     }
 
+
+
     protected void registerActionsListener() {
 
     }
@@ -64,6 +67,7 @@ public class BaseFragment extends Fragment implements ServiceReceiver {
     @Override
     public void onResume() {
         super.onResume();
+        registerActionsListener();
         serviceBinder.onResume();
     }
 

@@ -21,11 +21,6 @@ public class PasswordRecoverActivity extends BaseActivity {
     private EditText emailEdit;
 
     @Override
-    public void onUpClicked() {
-        finish();
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initCustomActionBar(ActionBar.DISPLAY_HOME_AS_UP);

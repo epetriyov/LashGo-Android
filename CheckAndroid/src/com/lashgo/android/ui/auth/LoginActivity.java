@@ -6,17 +6,34 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
+import com.facebook.UiLifecycleHelper;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
+import com.lashgo.android.social.FacebookHelper;
 import com.lashgo.android.social.TwitterHelper;
+import com.lashgo.android.social.VkontakteListener;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.dialogs.CustomProgressDialog;
+import com.lashgo.android.ui.main.MainActivity;
+import com.lashgo.model.dto.UserDto;
+import com.vk.sdk.VKSdk;
+import com.vk.sdk.VKUIHelper;
+
+import javax.inject.Inject;
 
 /**
  * Created by Eugene on 18.02.14.
  */
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity implements AuthController.AuthListener {
+
+    @Inject
+    protected UiLifecycleHelper facebookUiHelper;
+    @Inject
+    protected TwitterHelper twitterHelper;
+    @Inject
+    protected VkontakteListener vkSdkListener;
+    @Inject
+    protected FacebookHelper facebookHelper;
 
     private AuthController authController;
     private DialogFragment progressDialog;
@@ -26,24 +43,31 @@ public class LoginActivity extends BaseActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putSerializable(ExtraNames.OPEN_MODE.name(), openMode);
+        facebookUiHelper.onSaveInstanceState(outState);
+        outState.putSerializable(TwitterHelper.KEY_REQUEST_TOKEN, twitterHelper.getRequestToken());
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onUpClicked() {
-        NavUtils.navigateUpFromSameTask(this);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_login);
+        facebookUiHelper.onCreate(savedInstanceState);
+        VKSdk.initialize(vkSdkListener, getString(R.string.vkontakte_app_id), null);
+        twitterHelper.onCreate(savedInstanceState);
         initCustomActionBar(ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_TITLE);
         initExtras(savedInstanceState);
-        authController = new AuthController(this, serviceHelper, facebookHelper, twitterHelper);
+        authController = new AuthController(this, serviceHelper, facebookHelper, twitterHelper, this);
         authController.setOpenMode(openMode);
         authController.initViews(getWindow().getDecorView().getRootView());
         progressDialog = new CustomProgressDialog();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        facebookUiHelper.onDestroy();
+        VKUIHelper.onDestroy(this);
     }
 
     private void initExtras(Bundle savedInstanceState) {
@@ -66,7 +90,9 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode,resultCode,data);
+        super.onActivityResult(requestCode, resultCode, data);
+        facebookUiHelper.onActivityResult(requestCode, resultCode, data);
+        VKUIHelper.onActivityResult(requestCode, resultCode, data);
         if (requestCode == TwitterHelper.TWITTER_AUTH) {
 
             if (resultCode == Activity.RESULT_OK) {
@@ -104,8 +130,38 @@ public class LoginActivity extends BaseActivity {
         return intent;
     }
 
+    @Override
+    public void onLoginSuccessFull() {
+        setResult(Activity.RESULT_OK);
+        finish();
+        if (openMode == null || !openMode.equals(LoginActivity.OpenMode.FROM_CHECK)) {
+            startActivity(new Intent(this, MainActivity.class));
+        }
+
+    }
+
+    @Override
+    public void onRegisterSuccessFull(UserDto registerResponse) {
+        setResult(Activity.RESULT_OK);
+        finish();
+        startActivity(SuccessfulRegisterActivity.buildIntent(this, registerResponse, openMode));
+    }
+
     public static enum OpenMode {
         FROM_SPLASH, FROM_CHECK
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        facebookUiHelper.onResume();
+        VKUIHelper.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        facebookUiHelper.onPause();
+    }
 }

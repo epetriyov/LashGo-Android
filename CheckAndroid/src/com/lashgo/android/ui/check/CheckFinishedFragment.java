@@ -73,14 +73,9 @@ public class CheckFinishedFragment extends BaseFragment implements View.OnClickL
             if (pagerAdapter.getCount() > 1) {
                 viewPager.setCurrentItem(1);
             }
+            ((CheckBaseActivity) getActivity()).setBottomPanel(new CheckBottomPanelController((BaseActivity)getActivity(),view, checkDto));
         }
         return view;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        ((CheckBaseActivity) getActivity()).initBottomPanel();
     }
 
     @Override
@@ -120,7 +115,7 @@ public class CheckFinishedFragment extends BaseFragment implements View.OnClickL
                     winnerName.setVisibility(View.GONE);
                     checkImage.setTag(TASK_PHOTO_TAG);
                     if (!TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
-                        PhotoUtils.displayImage(getActivity(), checkImage, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), imageSize, R.drawable.ava, true);
+                        PhotoUtils.displayImage(getActivity(), checkImage, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), imageSize, R.drawable.ava, false);
                     }
                     break;
                 case 1:

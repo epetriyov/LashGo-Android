@@ -38,11 +38,14 @@ public class AuthController implements View.OnClickListener {
 
     private LoginActivity.OpenMode openMode;
 
-    public AuthController(BaseActivity baseActivity, ServiceHelper serviceHelper, FacebookHelper facebookHelper, TwitterHelper twitterHelper) {
+    private AuthListener authListener;
+
+    public AuthController(BaseActivity baseActivity, ServiceHelper serviceHelper, FacebookHelper facebookHelper, TwitterHelper twitterHelper, AuthListener authListener) {
         this.baseActivity = baseActivity;
         this.serviceHelper = serviceHelper;
         this.facebookHelper = facebookHelper;
         this.twitterHelper = twitterHelper;
+        this.authListener = authListener;
     }
 
     public void initViews(View rootView) {
@@ -127,9 +130,9 @@ public class AuthController implements View.OnClickListener {
     private void onRegisterSuccessFull(UserDto registerResponse) {
         if (registerResponse != null) {
             if (registerResponse.getLogin() != null) {
-                baseActivity.setResult(Activity.RESULT_OK);
-                baseActivity.finish();
-                baseActivity.startActivity(SuccessfulRegisterActivity.buildIntent(baseActivity, registerResponse, openMode));
+                if(authListener != null) {
+                    authListener.onRegisterSuccessFull(registerResponse);
+                }
             } else {
                 onLoginSuccessFull();
             }
@@ -137,10 +140,8 @@ public class AuthController implements View.OnClickListener {
     }
 
     private void onLoginSuccessFull() {
-        baseActivity.setResult(Activity.RESULT_OK);
-        baseActivity.finish();
-        if (openMode == null || !openMode.equals(LoginActivity.OpenMode.FROM_CHECK)) {
-            baseActivity.startActivity(new Intent(baseActivity, MainActivity.class));
+        if(authListener != null) {
+            authListener.onLoginSuccessFull();
         }
     }
 
@@ -150,5 +151,10 @@ public class AuthController implements View.OnClickListener {
 
     public LoginActivity.OpenMode getOpenMode() {
         return openMode;
+    }
+
+    public static interface AuthListener {
+        void onLoginSuccessFull();
+        void onRegisterSuccessFull(UserDto userDto);
     }
 }

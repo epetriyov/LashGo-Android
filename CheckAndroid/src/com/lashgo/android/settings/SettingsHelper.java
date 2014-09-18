@@ -38,6 +38,7 @@ public class SettingsHelper {
         initSessionInfo();
     }
 
+
     private float getFloat(String key, float defaultValue) {
         return preferences.getFloat(key, defaultValue);
     }
@@ -116,8 +117,11 @@ public class SettingsHelper {
     public void logout() {
         sessionInfo = null;
         remove(KEY_SESSION);
+        remove(KEY_SOCIAL_INFO);
         remove(KEY_LOGIN_INFO);
         remove(KEY_SOCIAL_INFO);
+        remove(KEY_LAST_NEWS_VIEW);
+        remove(KEY_LAST_SUBSCRIPTIONS_VIEW);
     }
 
     private void remove(String key) {
@@ -142,10 +146,6 @@ public class SettingsHelper {
 
     public void setFirstLaunch() {
         setBoolean(KEY_IS_FIRST_LAUNCH, false);
-    }
-
-    public boolean isFirstLaunch() {
-        return getBoolean(KEY_IS_FIRST_LAUNCH, true);
     }
 
     public SocialInfo getSocialInfo() {
@@ -193,19 +193,11 @@ public class SettingsHelper {
         return sessionInfo;
     }
 
-    public void setSessionInfo(SessionInfo sessionInfo) {
-        this.sessionInfo = sessionInfo;
-    }
-
     public String getLastNewsView() {
         return getString(KEY_LAST_NEWS_VIEW, new SimpleDateFormat(LashgoConfig.DATE_FORMAT).format(new Date()));
     }
 
     public String getLastSubscriptionsView() {
         return getString(KEY_LAST_SUBSCRIPTIONS_VIEW, new SimpleDateFormat(LashgoConfig.DATE_FORMAT).format(new Date()));
-    }
-
-    public void clearFirstLaunch() {
-        remove(KEY_IS_FIRST_LAUNCH);
     }
 }

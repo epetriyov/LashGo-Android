@@ -14,7 +14,7 @@ import com.lashgo.android.ui.BaseActivity;
 /**
  * Created by Eugene on 14.09.2014.
  */
-public class TwitterAuthActivity extends Activity {
+public class TwitterAuthActivity extends BaseActivity {
 
     private String twitterUrl;
 

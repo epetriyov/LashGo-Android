@@ -16,7 +16,7 @@ import java.io.File;
 /**
  * Created by Eugene on 10.09.2014.
  */
-public class PhotoSentActivity extends Activity implements View.OnClickListener {
+public class PhotoSentActivity extends BaseActivity implements View.OnClickListener {
 
     private String imgPath;
 

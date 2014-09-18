@@ -41,7 +41,7 @@ public class VotePhotoController implements View.OnClickListener {
         this.imageHeight= imageHeight;
         photoLayout = rootLayout.findViewById(photoLayoutId);
         photoLayout.setOnClickListener(this);
-        photoLayout.setVisibility(View.GONE);
+        photoLayout.setVisibility(View.INVISIBLE);
         photoImg = (ImageView) rootLayout.findViewById(photoImageId);
         photoCheck = (ImageView) rootLayout.findViewById(photoCheckId);
         photoCheck.setOnClickListener(this);
@@ -64,6 +64,7 @@ public class VotePhotoController implements View.OnClickListener {
         voteDone = true;
         if (isChecked) {
             photoCheck.setImageResource(R.drawable.ic_green_check_pressed);
+            votePhotoListener.showOtherShadows(this);
         }
     }
 
@@ -72,11 +73,15 @@ public class VotePhotoController implements View.OnClickListener {
         isChecked = false;
         photoCheck.setImageResource(R.drawable.ic_check_nornal);
         photoShadow.setVisibility(View.GONE);
-        photoLayout.setVisibility(View.GONE);
+        photoLayout.setVisibility(View.INVISIBLE);
     }
 
     public void clearCheck() {
         updateCheckState(false);
+    }
+
+    public void showShadow()
+    {
         photoShadow.setVisibility(View.VISIBLE);
     }
 
@@ -93,6 +98,10 @@ public class VotePhotoController implements View.OnClickListener {
                 photoShadow.setVisibility(View.GONE);
                 votePhotoListener.clearOtherChecks(this);
             }
+            else
+            {
+                votePhotoListener.setFirstHint();
+            }
         }
         else if (view.equals(photoLayout))
         {
@@ -104,5 +113,9 @@ public class VotePhotoController implements View.OnClickListener {
         void clearOtherChecks(VotePhotoController votePhotoController);
 
         void openPhotoActivity(VotePhotoController votePhotoController);
+
+        void showOtherShadows(VotePhotoController votePhotoController);
+
+        void setFirstHint();
     }
 }
