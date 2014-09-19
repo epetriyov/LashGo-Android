@@ -122,12 +122,12 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         initViews();
         if (checkDto != null) {
             if (PhotoType.WINNER_PHOTO.name().equals(photoType.name())) {
-                bottomPanelController = new CheckBottomPanelController(this, checkDto.getWinnerPhotoDto());
+                bottomPanelController = new CheckBottomPanelController(CheckBottomPanelController.FROM.PHOTO,this, checkDto.getWinnerPhotoDto());
             } else {
-                bottomPanelController = new CheckBottomPanelController(this, checkDto);
+                bottomPanelController = new CheckBottomPanelController(CheckBottomPanelController.FROM.PHOTO,this, checkDto);
             }
         } else {
-            bottomPanelController = new CheckBottomPanelController(this, photoDto);
+            bottomPanelController = new CheckBottomPanelController(CheckBottomPanelController.FROM.PHOTO,this, photoDto);
         }
     }
 

@@ -105,6 +105,12 @@
     <string name="hint_user_name">Имя пользователя</string>
     <string name="no_news">У вас пока нет новостей</string>
     <string name="all_photos_seen">Вы просмотрели все фото чека</string>
+    <string name="user_not_found">Пользователь с таким логином не существует</string>
+    <string name="user_already_exist">Пользователь с таким логином уже существует</string>
+    <string name="send_invalid_data">Переданы некорректные данные</string>
+    <string name="photo_alredy_exist">Вы уже отправили фото для данного чека</string>
+    <string name="server_error">Ошибка сервера</string>
+    <string name="email_already_exist">Пользователь с таким email уже существует</string>
     <string-array name="make_photo_items">
         <item>Камера</item>
         <item>Галерея</item>

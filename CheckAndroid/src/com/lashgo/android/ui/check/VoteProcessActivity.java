@@ -219,7 +219,7 @@ public class VoteProcessActivity extends CheckBaseActivity implements View.OnCli
     }
 
     public void initBottomPanel() {
-        bottomPanelController = new CheckBottomPanelController(this, checkDto, CheckBottomPanelController.ButtonColors.GRAY);
+        bottomPanelController = new CheckBottomPanelController(CheckBottomPanelController.FROM.CHECK,this, checkDto, CheckBottomPanelController.ButtonColors.GRAY);
     }
 
     private void updateCounter() {

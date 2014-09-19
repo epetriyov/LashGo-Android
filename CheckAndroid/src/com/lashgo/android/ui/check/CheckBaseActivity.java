@@ -4,11 +4,6 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.view.Menu;
-import android.view.View;
-import android.widget.ImageView;
-import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.model.dto.CheckDto;
@@ -18,9 +13,16 @@ import com.lashgo.model.dto.CheckDto;
  */
 public class CheckBaseActivity extends BaseActivity {
 
+    private TO to;
+
+    public static enum TO {VOTE, to, FINISHED}
+
     protected CheckDto checkDto;
 
+    private boolean isResumed;
+
     protected CheckBottomPanelController bottomPanelController;
+    private boolean timerFinished;
 
     public static Intent buildIntent(Context context, CheckDto checkDto, Class<? extends CheckBaseActivity> clazz) {
         Intent intent = new Intent(context, clazz);
@@ -71,8 +73,7 @@ public class CheckBaseActivity extends BaseActivity {
         if (checkDto == null && savedInstanceState != null) {
             checkDto = (CheckDto) savedInstanceState.getSerializable(ExtraNames.CHECK_DTO.name());
         }
-        if(checkDto == null)
-        {
+        if (checkDto == null) {
             throw new IllegalStateException("Check can't be null");
         }
     }
@@ -86,11 +87,10 @@ public class CheckBaseActivity extends BaseActivity {
 
 
     public void initBottomPanel() {
-        bottomPanelController = new CheckBottomPanelController(this, checkDto);
+        bottomPanelController = new CheckBottomPanelController(CheckBottomPanelController.FROM.CHECK, this, checkDto);
     }
 
-    public void setBottomPanel(CheckBottomPanelController checkBottomPanelController)
-    {
+    public void setBottomPanel(CheckBottomPanelController checkBottomPanelController) {
         this.bottomPanelController = checkBottomPanelController;
     }
 
@@ -98,5 +98,33 @@ public class CheckBaseActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         serviceHelper.getCheckCounters(checkDto.getId());
+        isResumed = true;
+        if (timerFinished) {
+            onTimerFinished(to);
+            timerFinished = false;
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isResumed = false;
+    }
+
+    public void onTimerFinished(TO to) {
+        this.to = to;
+        if (isResumed) {
+            finish();
+            if (to.equals(TO.VOTE)) {
+                startActivity(CheckVoteActivity.buildIntent(this,
+                        checkDto, CheckVoteActivity.class));
+            } else {
+                startActivity(CheckFinishedActivity.buildIntent(this,
+                        checkDto, CheckFinishedActivity.class));
+            }
+
+        } else {
+            timerFinished = true;
+        }
     }
 }

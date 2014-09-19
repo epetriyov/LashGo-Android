@@ -1,5 +1,6 @@
 package com.lashgo.android.ui.check;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.text.format.DateUtils;
 import android.view.View;
@@ -19,11 +20,16 @@ import com.lashgo.model.dto.CheckDto;
 import com.lashgo.model.dto.PhotoDto;
 
 import javax.inject.Inject;
+import java.lang.ref.WeakReference;
 
 /**
  * Created by Eugene on 20.08.2014.
  */
 public class CheckBottomPanelController implements View.OnClickListener {
+
+    private FROM from;
+
+    public static enum FROM {PHOTO, from, CHECK}
 
     @Inject
     SettingsHelper settingsHelper;
@@ -33,7 +39,7 @@ public class CheckBottomPanelController implements View.OnClickListener {
 
     private CheckDto checkDto;
 
-    private final BaseActivity activity;
+    private final WeakReference<BaseActivity> activity;
 
     private TextView likesCountText;
 
@@ -66,9 +72,9 @@ public class CheckBottomPanelController implements View.OnClickListener {
     }
 
 
-    public CheckBottomPanelController(final BaseActivity activity, View view, final PhotoDto photoDto) {
-        commonInit(activity, view);
-        this.activity = activity;
+    public CheckBottomPanelController(final FROM from,final BaseActivity activity, View view, final PhotoDto photoDto) {
+        commonInit(from,activity, view);
+        this.activity = new WeakReference<BaseActivity>(activity);
         this.photoDto = photoDto;
         if (photoDto == null) {
             throw new IllegalArgumentException("Photo info can't be empty!");
@@ -77,14 +83,15 @@ public class CheckBottomPanelController implements View.OnClickListener {
         view.findViewById(R.id.peoples_layout).setVisibility(View.GONE);
     }
 
-    public CheckBottomPanelController(final BaseActivity activity, final PhotoDto photoDto) {
-        this(activity, activity.getWindow().getDecorView(), photoDto);
+    public CheckBottomPanelController(final FROM from,final BaseActivity activity, final PhotoDto photoDto) {
+        this(from,activity, activity.getWindow().getDecorView(), photoDto);
     }
 
     public static enum ButtonColors {WHITE, GRAY}
 
-    private void commonInit(final BaseActivity activity, final View view) {
+    private void commonInit(final FROM from,final BaseActivity activity, final View view) {
         activity.inject(this);
+        this.from = from;
         peoplesCount = ((TextView) view.findViewById(R.id.peoples_count));
         likesCountText = ((TextView) view.findViewById(R.id.likes_count));
         btnLikes = (ImageView) view.findViewById(R.id.btn_likes);
@@ -94,9 +101,9 @@ public class CheckBottomPanelController implements View.OnClickListener {
         btnComments.setOnClickListener(this);
     }
 
-    public CheckBottomPanelController(final BaseActivity activity, final View view, final CheckDto checkDto) {
-        commonInit(activity, view);
-        this.activity = activity;
+    public CheckBottomPanelController(final FROM from,final BaseActivity activity, final View view, final CheckDto checkDto) {
+        commonInit(from,activity, view);
+        this.activity = new WeakReference<BaseActivity>(activity);
         this.checkDto = checkDto;
         if (checkDto == null) {
             throw new IllegalArgumentException("Check can't be empty!");
@@ -107,7 +114,7 @@ public class CheckBottomPanelController implements View.OnClickListener {
         btnPeoplesCount = (ImageView) view.findViewById(R.id.btn_peoples_count);
         LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
 
-        if (LashgoConfig.CheckState.ACTIVE.equals(checkState)) {
+        if (from.equals(FROM.CHECK) && LashgoConfig.CheckState.ACTIVE.equals(checkState)) {
             view.findViewById(R.id.likes_layout).setVisibility(View.GONE);
             view.findViewById(R.id.comments_layout).setVisibility(View.GONE);
             final TextView checkTimeText = (TextView) view.findViewById(R.id.check_time);
@@ -120,9 +127,10 @@ public class CheckBottomPanelController implements View.OnClickListener {
                     UiUtils.startTimer(finishMillis, checkTimeText, new TimerFinishedListener() {
                         @Override
                         public void onTimerFinished() {
-                            activity.startActivity(CheckVoteActivity.buildIntent(activity,
-                                    checkDto, CheckVoteActivity.class));
-                            activity.finish();
+                            if (CheckBottomPanelController.this.activity.get() != null && CheckBottomPanelController.this.activity.get() instanceof CheckBaseActivity) {
+                                ((CheckBaseActivity)CheckBottomPanelController.this.activity.get()).onTimerFinished(CheckBaseActivity.TO.VOTE);
+                            }
+
                         }
                     });
                 }
@@ -133,24 +141,24 @@ public class CheckBottomPanelController implements View.OnClickListener {
         }
     }
 
-    public CheckBottomPanelController(final BaseActivity activity, final CheckDto checkDto, ButtonColors buttonColors) {
-        this(activity, activity.getWindow().getDecorView(), checkDto);
+    public CheckBottomPanelController(final FROM from,final BaseActivity activity, final CheckDto checkDto, ButtonColors buttonColors) {
+        this(from,activity, activity.getWindow().getDecorView(), checkDto);
         updateColorsSheme(buttonColors);
     }
 
-    public CheckBottomPanelController(final BaseActivity activity, final CheckDto checkDto) {
-        this(activity, activity.getWindow().getDecorView(), checkDto);
+    public CheckBottomPanelController(final FROM from,final BaseActivity activity, final CheckDto checkDto) {
+        this(from,activity, activity.getWindow().getDecorView(), checkDto);
     }
 
     private void updateColorsSheme(ButtonColors buttonColors) {
-        if (buttonColors != null && ButtonColors.GRAY.name().equals(buttonColors.name())) {
+        if (activity.get() != null && buttonColors != null && ButtonColors.GRAY.name().equals(buttonColors.name())) {
             btnLikes.setImageResource(R.drawable.ic_like_gray);
-            likesCountText.setTextColor(activity.getResources().getColor(R.color.vote_check_description_color));
-            sharesCount.setTextColor(activity.getResources().getColor(R.color.vote_check_description_color));
+            likesCountText.setTextColor(activity.get().getResources().getColor(R.color.vote_check_description_color));
+            sharesCount.setTextColor(activity.get().getResources().getColor(R.color.vote_check_description_color));
             btnShare.setImageResource(R.drawable.btn_share_gray);
-            commentsCount.setTextColor(activity.getResources().getColor(R.color.vote_check_description_color));
+            commentsCount.setTextColor(activity.get().getResources().getColor(R.color.vote_check_description_color));
             btnComments.setImageResource(R.drawable.ic_g_comments);
-            peoplesCount.setTextColor(activity.getResources().getColor(R.color.vote_check_description_color));
+            peoplesCount.setTextColor(activity.get().getResources().getColor(R.color.vote_check_description_color));
             btnPeoplesCount.setImageResource(R.drawable.ic_g_mob_normal);
         }
     }
@@ -167,13 +175,13 @@ public class CheckBottomPanelController implements View.OnClickListener {
                     serviceHelper.likePhoto(photoDto.getId());
                 }
             } else {
-                activity.startActivity(new Intent(activity, LoginActivity.class));
+                activity.get().startActivity(new Intent(activity.get(), LoginActivity.class));
             }
         } else if (view.getId() == R.id.btn_comments) {
             if (checkDto != null) {
-                activity.startActivity(CommentsActivity.buildCheckIntent(activity, checkDto.getId()));
+                activity.get().startActivity(CommentsActivity.buildCheckIntent(activity.get(), checkDto.getId()));
             } else {
-                activity.startActivity(CommentsActivity.buildPhotoIntent(activity, photoDto.getId()));
+                activity.get().startActivity(CommentsActivity.buildPhotoIntent(activity.get(), photoDto.getId()));
             }
         }
     }

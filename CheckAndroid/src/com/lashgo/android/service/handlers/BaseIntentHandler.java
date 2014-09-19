@@ -5,17 +5,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.text.TextUtils;
 import com.lashgo.android.LashgoApplication;
 import com.lashgo.android.R;
 import com.lashgo.android.service.transport.RestService;
 import com.lashgo.android.settings.SettingsHelper;
 import com.lashgo.android.utils.NetworkUtils;
+import com.lashgo.model.ErrorCodes;
 import com.lashgo.model.dto.ErrorDto;
 import com.lashgo.model.dto.ResponseObject;
 import retrofit.RetrofitError;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * User: eugene.petriyov
@@ -27,6 +31,8 @@ import java.io.IOException;
  * base intent executer
  */
 public abstract class BaseIntentHandler {
+
+    private Map<String, String> messagesMap;
 
     public static BaseIntentHandler getIntentHandler(String action) {
         if (ServiceActionNames.ACTION_LOGIN.name().equals(action)) {
@@ -51,8 +57,7 @@ public abstract class BaseIntentHandler {
             return new CheckLikeHandler();
         } else if (ServiceActionNames.ACTION_LIKE_PHOTO.name().equals(action)) {
             return new PhotoLikeHandler();
-        }
-        else if (ServiceActionNames.ACTION_GET_USER_PROFILE.name().equals(action)) {
+        } else if (ServiceActionNames.ACTION_GET_USER_PROFILE.name().equals(action)) {
             return new GetUserProfileHandler();
         } else if (ServiceActionNames.ACTION_GET_MY_USER_PROFILE.name().equals(action)) {
             return new GetMyUserProfileHandler();
@@ -129,6 +134,8 @@ public abstract class BaseIntentHandler {
 
     public BaseIntentHandler() {
         LashgoApplication.getInstance().inject(this);
+        initMessagesMap();
+
     }
 
     public BaseIntentHandler(Context context, Handler handler, SettingsHelper settingsHelper, RestService service) {
@@ -155,6 +162,7 @@ public abstract class BaseIntentHandler {
             if (!e.isNetworkError()) {
                 try {
                     errorDto = ((ResponseObject) e.getBodyAs(ResponseObject.class)).getError();
+                    bindMessage(errorDto);
                 } catch (Exception e1) {
                     errorDto = new ErrorDto("", context.getString(R.string.server_is_unavailable));
                 }
@@ -170,6 +178,38 @@ public abstract class BaseIntentHandler {
             callback.send(FAILURE_RESPONSE, bundle);
         }
     }
+
+    private void bindMessage(ErrorDto errorDto) {
+        if (errorDto != null && !TextUtils.isEmpty(errorDto.getErrorCode())) {
+            errorDto.setErrorMessage(messagesMap.get(errorDto.getErrorCode()));
+        }
+    }
+
+    private void initMessagesMap() {
+        messagesMap = new HashMap<>();
+        messagesMap.put(ErrorCodes.USER_NOT_EXISTS, context.getString(R.string.user_not_found));
+        messagesMap.put(ErrorCodes.USER_ALREADY_EXISTS, context.getString(R.string.user_already_exist));
+        messagesMap.put(ErrorCodes.UUID_IS_EMPTY, context.getString(R.string.send_invalid_data));
+        messagesMap.put(ErrorCodes.INVALID_CLIENT_TYPE, context.getString(R.string.send_invalid_data));
+        messagesMap.put(ErrorCodes.REGISTRATION_ID_IS_EMPTY, context.getString(R.string.send_invalid_data));
+        messagesMap.put(ErrorCodes.SESSION_IS_EMPTY, context.getString(R.string.send_invalid_data));
+        messagesMap.put(ErrorCodes.SESSION_EXPIRED, context.getString(R.string.send_invalid_data));
+        messagesMap.put(ErrorCodes.WRONG_SESSION, context.getString(R.string.send_invalid_data));
+
+        messagesMap.put(ErrorCodes.PHOTO_ALREADY_EXISTS, context.getString(R.string.photo_alredy_exist));
+        messagesMap.put(ErrorCodes.PHOTO_READ_ERROR, context.getString(R.string.server_error));
+        messagesMap.put(ErrorCodes.PHOTO_WRITE_ERROR, context.getString(R.string.server_error));
+        messagesMap.put(ErrorCodes.UNSUPPORTED_SOCIAL, context.getString(R.string.send_invalid_data));
+        messagesMap.put(ErrorCodes.INTERNAL_SERVER_ERROR, context.getString(R.string.server_error));
+        messagesMap.put(ErrorCodes.CHECK_ID_NULL, context.getString(R.string.send_invalid_data));
+        messagesMap.put(ErrorCodes.USERS_DOESNT_MATCHES, context.getString(R.string.send_invalid_data));
+        messagesMap.put(ErrorCodes.EMPTY_EMAIL, context.getString(R.string.send_invalid_data));
+        messagesMap.put(ErrorCodes.SOCIAL_WRONG_DATA, context.getString(R.string.send_invalid_data));
+        messagesMap.put(ErrorCodes.USER_WITH_LOGIN_ALREADY_EXISTS, context.getString(R.string.user_already_exist));
+        messagesMap.put(ErrorCodes.USER_WITH_EMAIL_ALREADY_EXISTS, context.getString(R.string.email_already_exist));
+        messagesMap.put(ErrorCodes.PHOTO_ID_NULL, context.getString(R.string.send_invalid_data));
+    }
+
 
     protected abstract Bundle doExecute(Intent intent) throws IOException, RetrofitError;
 

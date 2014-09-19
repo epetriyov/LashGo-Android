@@ -41,9 +41,7 @@ public class CheckVoteActivity extends CheckBaseActivity implements View.OnClick
             UiUtils.startTimer(finishMillis, voteCheckTime, new TimerFinishedListener() {
                 @Override
                 public void onTimerFinished() {
-                    startActivity(CheckFinishedActivity.buildIntent(CheckVoteActivity.this,
-                            checkDto, CheckFinishedActivity.class));
-                    finish();
+                    CheckVoteActivity.this.onTimerFinished(TO.FINISHED);
                 }
             });
             initBottomPanel();
