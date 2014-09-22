@@ -140,7 +140,7 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
         if (resultCode != Activity.RESULT_CANCELED) {
             if (requestCode == MakePhotoDialog.PICK_IMAGE) {
                 if (data != null) {
-                    imgPath = PhotoUtils.getAbsolutePath(this, data.getData());
+                    imgPath = PhotoUtils.getPath(this, data.getData());
                     addMinePhoto();
                 } else {
                     Toast.makeText(this, R.string.empty_image_was_chosen, Toast.LENGTH_LONG).show();

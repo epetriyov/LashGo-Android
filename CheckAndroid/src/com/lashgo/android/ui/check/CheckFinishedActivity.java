@@ -27,6 +27,7 @@ public class CheckFinishedActivity extends CheckBaseActivity {
         fragmentsList.add(CheckPhotosFragment.newInstance(checkDto));
         ViewPager viewPager = (ViewPager) findViewById(R.id.finished_check_pager);
         viewPager.setAdapter(new CheckFinishedPagerAdapter(getSupportFragmentManager()));
+        serviceHelper.getCheckPhotos(checkDto.getId());
     }
 
     private class CheckFinishedPagerAdapter extends FragmentPagerAdapter {
@@ -62,7 +63,9 @@ public class CheckFinishedActivity extends CheckBaseActivity {
         super.processServerResult(action, resultCode, data);
         if (data != null && resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
             if (BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_PHOTOS.name().equals(action)) {
-                ((CheckPhotosFragment)fragmentsList.get(1)).initGallery((ArrayList<com.lashgo.model.dto.PhotoDto>) data.getSerializable(BaseIntentHandler.ServiceExtraNames.PHOTOS_LIST.name()));
+                if(fragmentsList != null) {
+                    ((CheckPhotosFragment) fragmentsList.get(1)).initGallery((ArrayList<com.lashgo.model.dto.PhotoDto>) data.getSerializable(BaseIntentHandler.ServiceExtraNames.PHOTOS_LIST.name()));
+                }
             }
         }
     }

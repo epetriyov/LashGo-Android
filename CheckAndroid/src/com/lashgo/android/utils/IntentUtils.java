@@ -22,9 +22,9 @@ public final class IntentUtils {
     }
 
     public static Intent makeOpenGalleryIntent() {
-        Intent intent = new Intent();
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
+//        intent.setAction(Intent.ACTION_GET_CONTENT);
         return intent;
     }
 }

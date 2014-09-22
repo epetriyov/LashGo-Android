@@ -13,13 +13,11 @@ import android.widget.TextView;
 import com.lashgo.android.R;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.BaseFragment;
-import com.lashgo.android.ui.images.CircleTransformation;
 import com.lashgo.android.ui.profile.PhotoGalleryAdapter;
 import com.lashgo.android.ui.views.RobotoTextView;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.model.dto.CheckDto;
 import com.lashgo.model.dto.PhotoDto;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -29,6 +27,8 @@ import java.util.ArrayList;
 public class CheckPhotosFragment extends BaseFragment implements AdapterView.OnItemClickListener {
 
     private CheckDto checkDto;
+
+    private ArrayList<PhotoDto> photoDtos;
 
     private GridView photosGallery;
     private PhotoGalleryAdapter photoGalleryAdapter;
@@ -68,7 +68,9 @@ public class CheckPhotosFragment extends BaseFragment implements AdapterView.OnI
             photosGallery.setOnItemClickListener(this);
             photoGalleryAdapter = new PhotoGalleryAdapter(getActivity(), galImageSize);
             photosGallery.setAdapter(photoGalleryAdapter);
-            serviceHelper.getCheckPhotos(checkDto.getId());
+            if (photoDtos != null) {
+                updateList();
+            }
         }
         return view;
     }
@@ -79,14 +81,19 @@ public class CheckPhotosFragment extends BaseFragment implements AdapterView.OnI
         super.onSaveInstanceState(outState);
     }
 
-    public void initGallery(ArrayList<PhotoDto> photoDtos) {
-        if (photoDtos != null) {
-            photoGalleryAdapter.clear();
-            for (PhotoDto photoDto : photoDtos) {
-                photoGalleryAdapter.add(photoDto);
-            }
-            photoGalleryAdapter.notifyDataSetChanged();
+    public void initGallery(final ArrayList<PhotoDto> photoDtos) {
+        this.photoDtos = photoDtos;
+        if (photoDtos != null && photoGalleryAdapter != null) {
+            updateList();
         }
+    }
+
+    private void updateList() {
+        photoGalleryAdapter.clear();
+        for (PhotoDto photoDto : photoDtos) {
+            photoGalleryAdapter.add(photoDto);
+        }
+        photoGalleryAdapter.notifyDataSetChanged();
     }
 
     @Override

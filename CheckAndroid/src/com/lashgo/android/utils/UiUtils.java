@@ -21,7 +21,9 @@ public final class UiUtils {
 
     public static void startTimer(long finishMillis, final TextView textView, final TimerFinishedListener timerFinishedListener) {
         if (finishMillis < System.currentTimeMillis()) {
-            throw new IllegalArgumentException("Timer finish time can't be less than current time");
+            if (timerFinishedListener != null) {
+                timerFinishedListener.onTimerFinished();
+            }
         }
         if (textView == null) {
             throw new IllegalArgumentException("Empty textView for startTimer method");

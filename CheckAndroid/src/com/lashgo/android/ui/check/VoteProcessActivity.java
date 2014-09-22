@@ -24,7 +24,6 @@ import java.util.List;
  */
 public class VoteProcessActivity extends CheckBaseActivity implements View.OnClickListener, VotePhotoController.VotePhotoListener {
 
-    private static final int VOTE_PHOTOS_LIMIT = 4;
     private int returnedPhotosCount;
     private ScreenState screenState;
     private List<PhotoDto> votePhotos;
@@ -197,9 +196,7 @@ public class VoteProcessActivity extends CheckBaseActivity implements View.OnCli
 
                         @Override
                         public void onGlobalLayout() {
-                            // gets called after layout has been done but before display
-                            // so we can get the height then hide the view
-                            int imageHeight = voteGallery.getHeight() / 2;  // Ahaha!  Gotcha
+                            int imageHeight = voteGallery.getHeight() / 2;
                             int imageWidth = (PhotoUtils.getScreenWidth(VoteProcessActivity.this) - 20) / 2;
                             firstPhotoController = new VotePhotoController(VoteProcessActivity.this, getWindow().getDecorView().getRootView(), R.id.first_vote_photo_layout, R.id.first_vote_photo, R.id.first_photo_check, R.id.first_photo_shadow, imageWidth, imageHeight);
                             secondPhotoController = new VotePhotoController(VoteProcessActivity.this, getWindow().getDecorView().getRootView(), R.id.second_vote_photo_layout, R.id.second_vote_photo, R.id.second_photo_check, R.id.second_photo_shadow, imageWidth, imageHeight);

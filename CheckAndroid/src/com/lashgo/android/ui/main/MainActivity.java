@@ -380,8 +380,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     regId = gcm.register(LashgoConfig.GCM_API_KEY);
                     // Persist the regID - no need to register again.
                     settingsHelper.saveRegistrationId(regId);
-                } catch (IOException ex) {
-                    ContextUtils.showToast(MainActivity.this, ex.getMessage());
+                } catch (final IOException ex) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ContextUtils.showToast(MainActivity.this, ex.getMessage());
+                        }
+                    });
                     // If there is an error, don't just keep trying to register.
                     // Require the user to click a button again, or perform
                     // exponential back-off.
