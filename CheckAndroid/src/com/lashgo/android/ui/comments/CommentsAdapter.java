@@ -49,7 +49,7 @@ public class CommentsAdapter extends ArrayAdapter<CommentDto> {
         }
         CommentDto commentDto = getItem(position);
         if (commentDto.getUser() != null) {
-            viewHolder.userName.setText(commentDto.getUser().getLogin());
+            viewHolder.userName.setText(TextUtils.isEmpty(commentDto.getUser().getFio()) ? commentDto.getUser().getLogin() : commentDto.getUser().getFio());
             if (!TextUtils.isEmpty(commentDto.getUser().getAvatar())) {
                 int imageSize = PhotoUtils.convertDpToPixels(40, getContext());
                 PhotoUtils.displayImage(getContext(), viewHolder.userAvatar, LashGoUtils.getUserAvatarUrl(commentDto.getUser().getAvatar()), imageSize, R.drawable.ava, false);

@@ -121,7 +121,7 @@ public class CheckFinishedFragment extends BaseFragment implements View.OnClickL
                 case 1:
                     winnerMedal.setVisibility(View.VISIBLE);
                     winnerName.setVisibility(View.VISIBLE);
-                    winnerName.setText(checkDto.getWinnerInfo().getLogin());
+                    winnerName.setText(TextUtils.isEmpty(checkDto.getWinnerInfo().getFio()) ? checkDto.getWinnerInfo().getLogin(): checkDto.getWinnerInfo().getFio());
                     if (checkDto.getWinnerPhotoDto() != null && !TextUtils.isEmpty(checkDto.getWinnerPhotoDto().getUrl())) {
                         PhotoUtils.displayImage(getActivity(), checkImage, PhotoUtils.getFullPhotoUrl(checkDto.getWinnerPhotoDto().getUrl()), imageSize, R.drawable.ava, true);
                     }

@@ -50,7 +50,7 @@ public class SuccessfulRegisterActivity extends BaseActivity implements View.OnC
             if (!TextUtils.isEmpty(avatarUrl)) {
                 PhotoUtils.displayImage(this, userAvatarView, avatarUrl, imageSize, R.drawable.ava, false);
             }
-            ((TextView) findViewById(R.id.user_name)).setText("@" + userDto.getLogin());
+            ((TextView) findViewById(R.id.user_name)).setText("@" + (TextUtils.isEmpty(userDto.getFio()) ? userDto.getLogin() : userDto.getFio()));
         }
     }
 

@@ -8,7 +8,6 @@ import android.os.ResultReceiver;
 import com.lashgo.android.LashgoApplication;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.settings.SettingsHelper;
-import com.lashgo.model.ErrorCodes;
 import com.lashgo.model.dto.*;
 
 import javax.inject.Inject;
@@ -57,41 +56,41 @@ public class ServiceHelper {
         i.putExtra(CheckService.EXTRA_STATUS_RECEIVER, new ResultReceiver(new Handler()) {
                     @Override
                     protected void onReceiveResult(int resultCode, Bundle resultData) {
-                        ErrorDto errorDto = (ErrorDto) resultData.getSerializable(BaseIntentHandler.ERROR_EXTRA);
-                        if (errorDto != null && (ErrorCodes.WRONG_SESSION.equals(errorDto.getErrorCode()) || ErrorCodes.SESSION_EXPIRED.equals(errorDto.getErrorCode()) || ErrorCodes.SESSION_IS_EMPTY.equals(errorDto.getErrorCode()))) {
-                            /**
-                             * handle session expiration
-                             */
-                            expiredActionName = actionName;
-                            Intent expiredIntent = pendingActivities.get(expiredActionName);
-                            if (expiredIntent != null) {
-                                expiredExtras = expiredIntent.getExtras();
-                            }
-                            if (isPending(actionName)) {
-                                pendingActivities.remove(actionName);
-                            }
-                            LoginInfo loginInfo = settingsHelper.getLoginInfo();
-                            if (loginInfo != null) {
-                                login(loginInfo);
-                            } else {
-                                socialSignIn(settingsHelper.getSocialInfo());
-                            }
+//                        ErrorDto errorDto = (ErrorDto) resultData.getSerializable(BaseIntentHandler.ERROR_EXTRA);
+//                        if (errorDto != null && (ErrorCodes.WRONG_SESSION.equals(errorDto.getErrorCode()) || ErrorCodes.SESSION_EXPIRED.equals(errorDto.getErrorCode()) || ErrorCodes.SESSION_IS_EMPTY.equals(errorDto.getErrorCode()))) {
+//                            /**
+//                             * handle session expiration
+//                             */
+//                            expiredActionName = actionName;
+//                            Intent expiredIntent = pendingActivities.get(expiredActionName);
+//                            if (expiredIntent != null) {
+//                                expiredExtras = expiredIntent.getExtras();
+//                            }
+//                            if (isPending(actionName)) {
+//                                pendingActivities.remove(actionName);
+//                            }
+//                            LoginInfo loginInfo = settingsHelper.getLoginInfo();
+//                            if (loginInfo != null) {
+//                                login(loginInfo);
+//                            } else {
+//                                socialSignIn(settingsHelper.getSocialInfo());
+//                            }
+//                        } else {
+//                            if (expiredActionName != null) {
+//                                runRequest(expiredActionName, expiredExtras);
+//                                expiredActionName = null;
+//                            }
+                        if (isPending(actionName)) {
+                            pendingActivities.remove(actionName);
+                        }
+                        WeakReference<ServiceCallbackListener> serviceCallbackListener = serviceCallbackListenerMap.get(actionName);
+                        if (serviceCallbackListener != null && serviceCallbackListener.get() != null) {
+                            serviceCallbackListener.get().onCommandFinished(actionName, resultCode, resultData);
                         } else {
-                            if (expiredActionName != null) {
-                                runRequest(expiredActionName, expiredExtras);
-                                expiredActionName = null;
-                            }
-                            if (isPending(actionName)) {
-                                pendingActivities.remove(actionName);
-                            }
-                            WeakReference<ServiceCallbackListener> serviceCallbackListener = serviceCallbackListenerMap.get(actionName);
-                            if (serviceCallbackListener != null && serviceCallbackListener.get() != null) {
-                                serviceCallbackListener.get().onCommandFinished(actionName, resultCode, resultData);
-                            } else {
-                                serviceCallbackListenerMap.remove(actionName);
-                            }
+                            serviceCallbackListenerMap.remove(actionName);
                         }
                     }
+//                    }
                 }
 
         );
@@ -238,34 +237,34 @@ public class ServiceHelper {
 
     public void addCheckComment(int checkId, String commentText) {
         Bundle bundle = new Bundle();
-        bundle.putInt(BaseIntentHandler.ServiceExtraNames.CHECK_ID.name(),checkId);
-        bundle.putString(BaseIntentHandler.ServiceExtraNames.COMMENT_TEXT.name(),commentText);
-        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_ADD_CHECK_COMMENT.name(),bundle);
+        bundle.putInt(BaseIntentHandler.ServiceExtraNames.CHECK_ID.name(), checkId);
+        bundle.putString(BaseIntentHandler.ServiceExtraNames.COMMENT_TEXT.name(), commentText);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_ADD_CHECK_COMMENT.name(), bundle);
     }
 
     public void addPhotoComment(long photoId, String commentText) {
         Bundle bundle = new Bundle();
-        bundle.putLong(BaseIntentHandler.ServiceExtraNames.PHOTO_ID.name(),photoId);
-        bundle.putString(BaseIntentHandler.ServiceExtraNames.COMMENT_TEXT.name(),commentText);
-        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_ADD_PHOTO_COMMENT.name(),bundle);
+        bundle.putLong(BaseIntentHandler.ServiceExtraNames.PHOTO_ID.name(), photoId);
+        bundle.putString(BaseIntentHandler.ServiceExtraNames.COMMENT_TEXT.name(), commentText);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_ADD_PHOTO_COMMENT.name(), bundle);
     }
 
     public void recoverPassword(String email) {
         Bundle bundle = new Bundle();
-        bundle.putString(BaseIntentHandler.ServiceExtraNames.EMAIL.name(),email);
-        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_PASSWORD_RECOVER.name(),bundle);
+        bundle.putString(BaseIntentHandler.ServiceExtraNames.EMAIL.name(), email);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_PASSWORD_RECOVER.name(), bundle);
     }
 
     public void getCheckCounters(int checkId) {
         Bundle bundle = new Bundle();
-        bundle.putInt(BaseIntentHandler.ServiceExtraNames.CHECK_ID.name(),checkId);
-        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_COUNTERS.name(),bundle);
+        bundle.putInt(BaseIntentHandler.ServiceExtraNames.CHECK_ID.name(), checkId);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_COUNTERS.name(), bundle);
     }
 
     public void getPhotoCounters(long photoId) {
         Bundle bundle = new Bundle();
-        bundle.putLong(BaseIntentHandler.ServiceExtraNames.PHOTO_ID.name(),photoId);
-        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_PHOTO_COUNTERS.name(),bundle);
+        bundle.putLong(BaseIntentHandler.ServiceExtraNames.PHOTO_ID.name(), photoId);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_PHOTO_COUNTERS.name(), bundle);
     }
 
     public void likePhoto(long photoId) {

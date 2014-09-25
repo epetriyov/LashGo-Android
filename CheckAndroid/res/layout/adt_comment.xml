@@ -10,33 +10,39 @@
                android:layout_alignParentLeft="true"
                android:src="@drawable/ava"
             />
-    <com.lashgo.android.ui.views.RobotoTextView
-            android:id="@+id/user_name"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:ellipsize="end"
+    <LinearLayout
+            android:id="@+id/comment_line"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@id/user_avatar"
             android:layout_marginLeft="16dp"
+            android:orientation="horizontal"
+            >
+
+    <com.lashgo.android.ui.views.RobotoTextView
+            android:id="@+id/user_name"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1"
             app:fontName="@string/medium"
             android:textSize="16sp"
             android:textColor="@color/check_title_color"
             />
     <com.lashgo.android.ui.views.RobotoTextView
             android:id="@+id/comment_date"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_toRightOf="@id/user_name"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_marginLeft="16dp"
+            android:singleLine="true"
             app:fontName="@string/regular"
             android:textSize="14sp"
             android:textColor="@color/drawer_item_focused"
             />
+
+    </LinearLayout>
     <com.lashgo.android.ui.views.RobotoTextView
             android:id="@+id/comment_text"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:layout_below="@id/user_name"
+            android:layout_below="@id/comment_line"
             android:layout_toRightOf="@id/user_avatar"
             android:layout_marginTop="7dp"
             android:layout_marginLeft="16dp"

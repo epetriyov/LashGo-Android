@@ -180,7 +180,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
             if (!TextUtils.isEmpty(userDto.getAvatar())) {
                 PhotoUtils.displayImage(this, taskPhoto, LashGoUtils.getUserAvatarUrl(userDto.getAvatar()), imageSize, R.drawable.ava, false);
             }
-            topText.setText(userDto.getLogin());
+            topText.setText(TextUtils.isEmpty(userDto.getFio()) ? userDto.getLogin() : userDto.getFio());
         }
     }
 

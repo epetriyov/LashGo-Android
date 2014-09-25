@@ -118,6 +118,7 @@ public class CommentsActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void onCommentAdded(CommentDto commentDto) {
+        editComment.setText(null);
         if (commentDto != null) {
             commentsAdapter.add(commentDto);
             commentsAdapter.notifyDataSetChanged();

@@ -236,6 +236,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         });
         drawerTopView = findViewById(R.id.drawer_top_view);
         userAvatarView = (ImageView) findViewById(R.id.drawer_ava);
+        userAvatarView.setOnClickListener(this);
         userName = (TextView) findViewById(R.id.drawer_text);
         userName.setOnClickListener(this);
         ViewStub drawerMenuStub = (ViewStub) findViewById(R.id.view_login_stub);
@@ -414,7 +415,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public void onClick(View v) {
         if (v.getId() == R.id.item_tasks || v.getId() == R.id.item_news || v.getId() == R.id.item_subscribes) {
             selectItem(v);
-        } else if (v.getId() == R.id.drawer_text) {
+        } else if (settingsHelper.isLoggedIn() && (v.getId() == R.id.drawer_text || v.getId() == R.id.drawer_ava)) {
             startActivity(ProfileActivity.buildIntent(this, ProfileActivity.ProfileOwner.ME));
         }
     }
