@@ -255,7 +255,7 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void addMinePhoto() {
-        PhotoUtils.displayImage(this, userAvatar, Uri.parse(imgPath), avatarSize, R.drawable.ava, false);
+        PhotoUtils.displayImage(this, userAvatar, Uri.fromFile(new File(imgPath)), avatarSize, R.drawable.ava, false);
     }
 
     @Override

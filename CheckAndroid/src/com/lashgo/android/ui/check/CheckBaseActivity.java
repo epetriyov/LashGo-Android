@@ -73,9 +73,6 @@ public class CheckBaseActivity extends BaseActivity {
         if (checkDto == null && savedInstanceState != null) {
             checkDto = (CheckDto) savedInstanceState.getSerializable(ExtraNames.CHECK_DTO.name());
         }
-        if (checkDto == null) {
-            throw new IllegalStateException("Check can't be null");
-        }
     }
 
     @Override
@@ -97,6 +94,12 @@ public class CheckBaseActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (checkDto != null) {
+            getCheckCounters();
+        }
+    }
+
+    protected void getCheckCounters() {
         serviceHelper.getCheckCounters(checkDto.getId());
         isResumed = true;
         if (timerFinished) {
@@ -104,6 +107,7 @@ public class CheckBaseActivity extends BaseActivity {
             timerFinished = false;
         }
     }
+
 
     @Override
     protected void onPause() {

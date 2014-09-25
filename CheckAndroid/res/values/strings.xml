@@ -111,6 +111,7 @@
     <string name="photo_alredy_exist">Вы уже отправили фото для данного чека</string>
     <string name="server_error">Ошибка сервера</string>
     <string name="email_already_exist">Пользователь с таким email уже существует</string>
+    <string name="notification_title">Начался новый чек</string>
     <string-array name="make_photo_items">
         <item>Камера</item>
         <item>Галерея</item>

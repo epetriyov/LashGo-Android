@@ -2,6 +2,7 @@ package com.lashgo.android.ui.check;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,7 +15,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.lashgo.android.LashgoApplication;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.auth.LoginActivity;
@@ -36,17 +36,19 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
     private ViewPager viewPager;
     private ImageView cameraBtn;
     private boolean wasSent;
+    private int checkId;
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(ExtraNames.PHOTO_URL.name(), imgPath);
-        outState.putBoolean(ExtraNames.WAS_PHOTO_SENT.name(),wasSent);
+        outState.putBoolean(ExtraNames.WAS_PHOTO_SENT.name(), wasSent);
         super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void registerActionsListener() {
         super.registerActionsListener();
+        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK.name());
         addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_SEND_PHOTO.name());
     }
 
@@ -54,11 +56,23 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
     protected void unregisterActionsListener() {
         super.unregisterActionsListener();
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_SEND_PHOTO.name());
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK.name());
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+        if (intent != null) {
+            String checkId = intent.getStringExtra(ExtraNames.CHECK_ID.name());
+            if (!TextUtils.isEmpty(checkId)) {
+                try {
+                    this.checkId = Integer.parseInt(checkId);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         setContentView(R.layout.act_check_active);
         initViews();
     }
@@ -69,11 +83,11 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
         Intent intent = getIntent();
         if (intent != null) {
             imgPath = intent.getStringExtra(ExtraNames.PHOTO_URL.name());
-            wasSent = intent.getBooleanExtra(ExtraNames.WAS_PHOTO_SENT.name(),false);
+            wasSent = intent.getBooleanExtra(ExtraNames.WAS_PHOTO_SENT.name(), false);
         }
         if (imgPath == null && savedInstanceState != null) {
             imgPath = savedInstanceState.getString(ExtraNames.PHOTO_URL.name());
-            wasSent = savedInstanceState.getBoolean(ExtraNames.WAS_PHOTO_SENT.name(),false);
+            wasSent = savedInstanceState.getBoolean(ExtraNames.WAS_PHOTO_SENT.name(), false);
         }
     }
 
@@ -98,6 +112,8 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
                 viewPager.setCurrentItem(1);
             }
             initBottomPanel();
+        } else {
+            serviceHelper.getCheck(checkId);
         }
     }
 
@@ -126,11 +142,19 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
     @Override
     public void processServerResult(String action, int resultCode, Bundle data) {
         super.processServerResult(action, resultCode, data);
-        if (BaseIntentHandler.ServiceActionNames.ACTION_SEND_PHOTO.name().equals(action) && resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
-            startActivity(PhotoSentActivity.buildIntent(this, new String(imgPath)));
-            wasSent = true;
-            cameraBtn.setVisibility(View.GONE);
-            pagerAdapter.hideSendPhotoBtn();
+        if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
+            if (BaseIntentHandler.ServiceActionNames.ACTION_SEND_PHOTO.name().equals(action)) {
+                startActivity(PhotoSentActivity.buildIntent(this, new String(imgPath)));
+                wasSent = true;
+                cameraBtn.setVisibility(View.GONE);
+                pagerAdapter.hideSendPhotoBtn();
+            } else if (BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK.name().equals(action)) {
+                if (data != null) {
+                    checkDto = (com.lashgo.model.dto.CheckDto) data.getSerializable(BaseIntentHandler.ServiceExtraNames.CHECK_DTO.name());
+                    initViews();
+                    getCheckCounters();
+                }
+            }
         }
     }
 
@@ -166,7 +190,7 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
 
     @Override
     public void onPageSelected(int position) {
-        if (position == 1&& imgPath != null && !wasSent) {
+        if (position == 1 && imgPath != null && !wasSent) {
             pagerAdapter.showSendPhotoBtn();
         } else {
             pagerAdapter.hideSendPhotoBtn();
@@ -181,6 +205,12 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
     @Override
     public void imageDone(String imagePath) {
         this.imgPath = imagePath;
+    }
+
+    public static Intent buildIntent(Context context, String checkId) {
+        Intent intent = new Intent(context, CheckActiveActivity.class);
+        intent.putExtra(ExtraNames.CHECK_ID.name(), checkId);
+        return intent;
     }
 
     private class CheckPagerAdapter extends PagerAdapter {
