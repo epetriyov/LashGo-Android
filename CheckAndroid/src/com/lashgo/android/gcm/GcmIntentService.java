@@ -108,12 +108,12 @@ public class GcmIntentService extends IntentService {
                         0,
                         PendingIntent.FLAG_UPDATE_CURRENT
                 );
-
+        String checkName = bundle.getString(GCM_CHECK_NAME);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_logo)
                         .setContentTitle(getResources().getString(R.string.notification_title))
-                        .setContentText(bundle.getString(GCM_CHECK_NAME));
+                        .setContentText(checkName != null ? checkName : "");
 
         mBuilder.setContentIntent(resultPendingIntent);
         mBuilder.setAutoCancel(true);
