@@ -53,6 +53,8 @@ public class CommentsAdapter extends ArrayAdapter<CommentDto> {
             if (!TextUtils.isEmpty(commentDto.getUser().getAvatar())) {
                 int imageSize = PhotoUtils.convertDpToPixels(40, getContext());
                 PhotoUtils.displayImage(getContext(), viewHolder.userAvatar, LashGoUtils.getUserAvatarUrl(commentDto.getUser().getAvatar()), imageSize, R.drawable.ava, false);
+            } else {
+                viewHolder.userAvatar.setImageResource(R.drawable.ava);
             }
         }
         viewHolder.commentText.setText(commentDto.getContent());

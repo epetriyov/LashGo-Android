@@ -32,6 +32,13 @@ public class CommentsActivity extends BaseActivity implements View.OnClickListen
 
     private EditText editComment;
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(ExtraNames.CHECK_ID.name(),checkId);
+        outState.putLong(ExtraNames.PHOTO_ID.name(),photoId);
+        super.onSaveInstanceState(outState);
+    }
+
     public static Intent buildCheckIntent(Context context, int checkId) {
         Intent intent = new Intent(context, CommentsActivity.class);
         intent.putExtra(ExtraNames.CHECK_ID.name(), checkId);
@@ -45,14 +52,17 @@ public class CommentsActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initExtras(Bundle savedInstanceState) {
-        Intent intent = getIntent();
-        if (intent != null) {
-            checkId = intent.getIntExtra(ExtraNames.CHECK_ID.name(), -1);
-            photoId = intent.getLongExtra(ExtraNames.PHOTO_ID.name(), -1);
-        }
-        if (savedInstanceState != null && checkId <= 0 && photoId <= 0) {
+        if (savedInstanceState != null) {
             checkId = savedInstanceState.getInt(ExtraNames.CHECK_ID.name());
             photoId = savedInstanceState.getLong(ExtraNames.PHOTO_ID.name());
+        }
+        else
+        {
+            Intent intent = getIntent();
+            if (intent != null) {
+                checkId = intent.getIntExtra(ExtraNames.CHECK_ID.name(), -1);
+                photoId = intent.getLongExtra(ExtraNames.PHOTO_ID.name(), -1);
+            }
         }
     }
 

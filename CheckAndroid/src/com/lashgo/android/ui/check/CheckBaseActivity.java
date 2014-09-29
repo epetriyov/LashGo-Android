@@ -66,12 +66,13 @@ public class CheckBaseActivity extends BaseActivity {
     }
 
     protected void initCheckDto(Bundle savedInstanceState) {
-        Intent intent = getIntent();
-        if (intent != null) {
-            checkDto = (CheckDto) intent.getSerializableExtra(ExtraNames.CHECK_DTO.name());
-        }
-        if (checkDto == null && savedInstanceState != null) {
+        if (savedInstanceState != null) {
             checkDto = (CheckDto) savedInstanceState.getSerializable(ExtraNames.CHECK_DTO.name());
+        } else {
+            Intent intent = getIntent();
+            if (intent != null) {
+                checkDto = (CheckDto) intent.getSerializableExtra(ExtraNames.CHECK_DTO.name());
+            }
         }
     }
 
@@ -100,7 +101,9 @@ public class CheckBaseActivity extends BaseActivity {
     }
 
     protected void getCheckCounters() {
-        serviceHelper.getCheckCounters(checkDto.getId());
+        if (checkDto != null && checkDto.getWinnerPhotoDto() != null) {
+            serviceHelper.getPhotoCounters(checkDto.getWinnerPhotoDto().getId());
+        }
         isResumed = true;
         if (timerFinished) {
             onTimerFinished(to);

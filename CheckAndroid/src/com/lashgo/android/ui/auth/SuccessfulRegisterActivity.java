@@ -35,13 +35,6 @@ public class SuccessfulRegisterActivity extends BaseActivity implements View.OnC
         getActionBar().hide();
         imageSize = PhotoUtils.convertDpToPixels(64, this);
         initRegisterResponse(savedInstanceState);
-        Intent intent = getIntent();
-        if (intent != null) {
-            openMode = (LoginActivity.OpenMode) intent.getSerializableExtra(ExtraNames.OPEN_MODE.name());
-        }
-        if (openMode == null && savedInstanceState != null) {
-            openMode = (LoginActivity.OpenMode) savedInstanceState.getSerializable(ExtraNames.OPEN_MODE.name());
-        }
         findViewById(R.id.fill_profile).setOnClickListener(this);
         findViewById(R.id.continue_register).setOnClickListener(this);
         userAvatarView = (ImageView) findViewById(R.id.user_avatar);
@@ -55,12 +48,15 @@ public class SuccessfulRegisterActivity extends BaseActivity implements View.OnC
     }
 
     private void initRegisterResponse(Bundle savedInstanceState) {
-        Intent intent = getIntent();
-        if (intent != null) {
-            userDto = (UserDto) intent.getSerializableExtra(ExtraNames.USER_DTO.name());
-        }
-        if (savedInstanceState != null && userDto == null) {
+        if (savedInstanceState != null) {
             userDto = (UserDto) savedInstanceState.getSerializable(ExtraNames.USER_DTO.name());
+            openMode = (LoginActivity.OpenMode) savedInstanceState.getSerializable(ExtraNames.OPEN_MODE.name());
+        } else {
+            Intent intent = getIntent();
+            if (intent != null) {
+                userDto = (UserDto) intent.getSerializableExtra(ExtraNames.USER_DTO.name());
+                openMode = (LoginActivity.OpenMode) intent.getSerializableExtra(ExtraNames.OPEN_MODE.name());
+            }
         }
     }
 

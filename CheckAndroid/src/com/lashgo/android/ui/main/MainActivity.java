@@ -88,6 +88,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private int avaSize;
     private MenuItem exitMenu;
 
+    private int position;
+
     @Override
     protected void registerActionsListener() {
         addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_LOGIN.name());
@@ -416,7 +418,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (v.getId() == R.id.item_tasks || v.getId() == R.id.item_news || v.getId() == R.id.item_subscribes) {
             selectItem(v);
         } else if (settingsHelper.isLoggedIn() && (v.getId() == R.id.drawer_text || v.getId() == R.id.drawer_ava)) {
-            startActivity(ProfileActivity.buildIntent(this, ProfileActivity.ProfileOwner.ME));
+            startActivity(ProfileActivity.buildIntent(this, settingsHelper.getUserId()));
         }
     }
 
@@ -427,7 +429,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private void selectItem(View view) {
         // Create a new fragment and specify the planet to show based on position
         Fragment fragment = null;
-        int position = 0;
+        position = 0;
         if (view.getId() == R.id.item_tasks) {
             fragment = CheckListFragment.newInstance();
             position = 0;
@@ -481,6 +483,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         // Handle your other action bar items...
         if (item.getItemId() == R.id.action_exit) {
             logout();
+        } else if (item.getItemId() == R.id.action_refresh) {
+            if (position == 0) {
+                serviceHelper.getChecks();
+            }
         }
         return super.onOptionsItemSelected(item);
     }

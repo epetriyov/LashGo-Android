@@ -42,6 +42,7 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(ExtraNames.PHOTO_URL.name(), imgPath);
         outState.putBoolean(ExtraNames.WAS_PHOTO_SENT.name(), wasSent);
+        outState.putInt(ExtraNames.CHECK_ID.name(), checkId);
         super.onSaveInstanceState(outState);
     }
 
@@ -62,17 +63,6 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent = getIntent();
-        if (intent != null) {
-            String checkId = intent.getStringExtra(ExtraNames.CHECK_ID.name());
-            if (!TextUtils.isEmpty(checkId)) {
-                try {
-                    this.checkId = Integer.parseInt(checkId);
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
         setContentView(R.layout.act_check_active);
         initViews();
     }
@@ -80,14 +70,24 @@ public class CheckActiveActivity extends CheckBaseActivity implements View.OnCli
     @Override
     protected void initCheckDto(Bundle savedInstanceState) {
         super.initCheckDto(savedInstanceState);
-        Intent intent = getIntent();
-        if (intent != null) {
-            imgPath = intent.getStringExtra(ExtraNames.PHOTO_URL.name());
-            wasSent = intent.getBooleanExtra(ExtraNames.WAS_PHOTO_SENT.name(), false);
-        }
-        if (imgPath == null && savedInstanceState != null) {
+        if (savedInstanceState != null) {
             imgPath = savedInstanceState.getString(ExtraNames.PHOTO_URL.name());
             wasSent = savedInstanceState.getBoolean(ExtraNames.WAS_PHOTO_SENT.name(), false);
+            checkId = savedInstanceState.getInt(ExtraNames.CHECK_ID.name());
+        } else {
+            Intent intent = getIntent();
+            if (intent != null) {
+                imgPath = intent.getStringExtra(ExtraNames.PHOTO_URL.name());
+                wasSent = intent.getBooleanExtra(ExtraNames.WAS_PHOTO_SENT.name(), false);
+                String checkId = intent.getStringExtra(ExtraNames.CHECK_ID.name());
+                if (!TextUtils.isEmpty(checkId)) {
+                    try {
+                        this.checkId = Integer.parseInt(checkId);
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
     }
 

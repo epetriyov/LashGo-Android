@@ -104,8 +104,7 @@ public class SettingsHelper {
         this.sessionInfo = sessionInfo;
     }
 
-    public void saveLoginInfo(LoginInfo loginInfo)
-    {
+    public void saveLoginInfo(LoginInfo loginInfo) {
         saveSerializable(KEY_LOGIN_INFO, loginInfo);
     }
 
@@ -187,6 +186,13 @@ public class SettingsHelper {
 
     private void initSessionInfo() {
         sessionInfo = (SessionInfo) getSerializable(KEY_SESSION, SessionInfo.class);
+    }
+
+    public int getUserId() {
+        if (sessionInfo != null) {
+            return sessionInfo.getUserId();
+        }
+        return -1;
     }
 
     public SessionInfo getSessionInfo() {

@@ -27,7 +27,7 @@ import java.io.File;
 /**
  * Created by Eugene on 18.08.2014.
  */
-public class PhotoActivity extends BaseActivity implements View.OnClickListener, MakePhotoDialog.OnImageDoneListener {
+public class PhotoActivity extends BaseActivity implements View.OnClickListener{
 
     private int imageSize;
 
@@ -50,11 +50,6 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     private PhotoDto photoDto;
 
     private String imgPath;
-
-    @Override
-    public void imageDone(String imagePath) {
-        this.imgPath = imagePath;
-    }
 
     public static enum PhotoType {
         TASK_PHOTO, USER_PHOTO, FROM_PROFILE_GALLERY, FROM_CHECK_GALLERY, WINNER_PHOTO
@@ -90,25 +85,18 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void initExtras(Bundle savedInstanceState) {
-        Intent intent = getIntent();
-        if (intent != null) {
-            imgPath = intent.getStringExtra(ExtraNames.PHOTO_URL.name());
-            photoType = (PhotoType) intent.getSerializableExtra(ExtraNames.PHOTO_TYPE.name());
-            checkDto = (CheckDto) intent.getSerializableExtra(ExtraNames.CHECK_DTO.name());
-            photoDto = (PhotoDto) intent.getSerializableExtra(ExtraNames.PHOTO_DTO.name());
-        }
         if (savedInstanceState != null) {
-            if (imgPath == null) {
-                imgPath = savedInstanceState.getString(ExtraNames.PHOTO_URL.name());
-            }
-            if (photoType == null) {
-                photoType = (PhotoType) savedInstanceState.getSerializable(ExtraNames.PHOTO_TYPE.name());
-            }
-            if (checkDto == null) {
-                checkDto = (CheckDto) savedInstanceState.getSerializable(ExtraNames.CHECK_DTO.name());
-            }
-            if (photoDto == null) {
-                photoDto = (PhotoDto) savedInstanceState.getSerializable(ExtraNames.PHOTO_DTO.name());
+            imgPath = savedInstanceState.getString(ExtraNames.PHOTO_URL.name());
+            photoType = (PhotoType) savedInstanceState.getSerializable(ExtraNames.PHOTO_TYPE.name());
+            checkDto = (CheckDto) savedInstanceState.getSerializable(ExtraNames.CHECK_DTO.name());
+            photoDto = (PhotoDto) savedInstanceState.getSerializable(ExtraNames.PHOTO_DTO.name());
+        } else {
+            Intent intent = getIntent();
+            if (intent != null) {
+                imgPath = intent.getStringExtra(ExtraNames.PHOTO_URL.name());
+                photoType = (PhotoType) intent.getSerializableExtra(ExtraNames.PHOTO_TYPE.name());
+                checkDto = (CheckDto) intent.getSerializableExtra(ExtraNames.CHECK_DTO.name());
+                photoDto = (PhotoDto) intent.getSerializableExtra(ExtraNames.PHOTO_DTO.name());
             }
         }
     }
@@ -118,16 +106,16 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         super.onCreate(savedInstanceState);
         initCustomActionBar(ActionBar.DISPLAY_HOME_AS_UP);
         initExtras(savedInstanceState);
-        setContentView(R.layout.act_photo);
+        setContentView(R.layout.adt_photo);
         initViews();
         if (checkDto != null) {
             if (PhotoType.WINNER_PHOTO.name().equals(photoType.name())) {
-                bottomPanelController = new CheckBottomPanelController(CheckBottomPanelController.FROM.PHOTO,this, checkDto.getWinnerPhotoDto());
+                bottomPanelController = new CheckBottomPanelController(CheckBottomPanelController.FROM.PHOTO, this, checkDto.getWinnerPhotoDto());
             } else {
-                bottomPanelController = new CheckBottomPanelController(CheckBottomPanelController.FROM.PHOTO,this, checkDto);
+                bottomPanelController = new CheckBottomPanelController(CheckBottomPanelController.FROM.PHOTO, this, checkDto);
             }
         } else {
-            bottomPanelController = new CheckBottomPanelController(CheckBottomPanelController.FROM.PHOTO,this, photoDto);
+            bottomPanelController = new CheckBottomPanelController(CheckBottomPanelController.FROM.PHOTO, this, photoDto);
         }
     }
 
@@ -197,9 +185,9 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
             }
         } else if (view.getId() == R.id.task_photo || view.getId() == R.id.check_name) {
             if (PhotoType.WINNER_PHOTO.name().equals(photoType.name()) && checkDto != null && checkDto.getWinnerInfo() != null) {
-                startActivity(ProfileActivity.buildIntent(this, ProfileActivity.ProfileOwner.OTHERS, checkDto.getWinnerInfo().getId()));
+                startActivity(ProfileActivity.buildIntent(this, checkDto.getWinnerInfo().getId()));
             } else if (PhotoType.FROM_CHECK_GALLERY.name().equals(photoType.name()) && photoDto != null && photoDto.getUser() != null) {
-                startActivity(ProfileActivity.buildIntent(this, ProfileActivity.ProfileOwner.OTHERS, photoDto.getUser().getId()));
+                startActivity(ProfileActivity.buildIntent(this, photoDto.getUser().getId()));
             } else if (photoDto != null && photoDto.getCheck() != null) {
                 serviceHelper.getCheck(photoDto.getCheck().getId());
             }

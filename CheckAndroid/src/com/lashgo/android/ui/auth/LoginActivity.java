@@ -71,12 +71,13 @@ public class LoginActivity extends BaseActivity implements AuthController.AuthLi
     }
 
     private void initExtras(Bundle savedInstanceState) {
-        Intent intent = getIntent();
-        if (intent != null) {
-            openMode = (OpenMode) intent.getSerializableExtra(ExtraNames.OPEN_MODE.name());
-        }
-        if (openMode == null && savedInstanceState != null) {
+        if (savedInstanceState != null) {
             openMode = (OpenMode) savedInstanceState.getSerializable(ExtraNames.OPEN_MODE.name());
+        } else {
+            Intent intent = getIntent();
+            if (intent != null) {
+                openMode = (OpenMode) intent.getSerializableExtra(ExtraNames.OPEN_MODE.name());
+            }
         }
     }
 

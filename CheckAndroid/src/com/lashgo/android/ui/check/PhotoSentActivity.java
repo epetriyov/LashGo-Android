@@ -33,12 +33,15 @@ public class PhotoSentActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void initExtras(Bundle savedInstanceState) {
-        Intent intent = getIntent();
-        if (intent != null) {
-            imgPath = intent.getStringExtra(BaseActivity.ExtraNames.PHOTO_URL.name());
-        }
-        if (savedInstanceState != null && imgPath == null) {
+        if (savedInstanceState != null) {
             imgPath = savedInstanceState.getString(BaseActivity.ExtraNames.PHOTO_URL.name());
+        }
+        else
+        {
+            Intent intent = getIntent();
+            if (intent != null) {
+                imgPath = intent.getStringExtra(BaseActivity.ExtraNames.PHOTO_URL.name());
+            }
         }
         if (imgPath == null) {
             throw new IllegalStateException("Image can't be empty");

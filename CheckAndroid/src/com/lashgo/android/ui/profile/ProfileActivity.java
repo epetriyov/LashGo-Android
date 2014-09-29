@@ -40,20 +40,10 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
 
     private PhotoGalleryAdapter photoGalleryAdapter;
 
-    public static enum ProfileOwner {ME, OTHERS}
-
-    private ProfileOwner profileOwner;
-
     private int userId;
 
-    public static Intent buildIntent(Context context, ProfileOwner profileOwner) {
+    public static Intent buildIntent(Context context, int userId) {
         Intent intent = new Intent(context, ProfileActivity.class);
-        intent.putExtra(ExtraNames.PROFILE_OWNER.name(), profileOwner);
-        return intent;
-    }
-
-    public static Intent buildIntent(Context context, ProfileOwner profileOwner, int userId) {
-        Intent intent = buildIntent(context, profileOwner);
         intent.putExtra(ExtraNames.USER_ID.name(), userId);
         return intent;
     }
@@ -66,27 +56,18 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(ExtraNames.PROFILE_OWNER.name(), profileOwner);
         outState.putInt(ExtraNames.USER_ID.name(), userId);
         super.onSaveInstanceState(outState);
     }
 
     private void initExtras(Bundle savedInstanceState) {
-        Intent intent = getIntent();
-        if (intent != null) {
-            profileOwner = (ProfileOwner) intent.getSerializableExtra(ExtraNames.PROFILE_OWNER.name());
-            userId = intent.getIntExtra(ExtraNames.USER_ID.name(), -1);
-        }
         if (savedInstanceState != null) {
-            if (profileOwner == null) {
-                profileOwner = (ProfileOwner) savedInstanceState.getSerializable(ExtraNames.PROFILE_OWNER.name());
+            userId = savedInstanceState.getInt(ExtraNames.USER_ID.name(), -1);
+        } else {
+            Intent intent = getIntent();
+            if (intent != null) {
+                userId = intent.getIntExtra(ExtraNames.USER_ID.name(), -1);
             }
-            if (userId <= 0) {
-                userId = savedInstanceState.getInt(ExtraNames.USER_ID.name(), -1);
-            }
-        }
-        if (profileOwner == null) {
-            throw new IllegalStateException("Profile owner can't be empty");
         }
     }
 
@@ -105,7 +86,7 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
     }
 
     private void loadProfile() {
-        if (ProfileOwner.ME.name().equals(profileOwner.name())) {
+        if (userId == settingsHelper.getUserId()) {
             serviceHelper.getMyUserProfile();
             serviceHelper.getMyPhotos();
         } else {

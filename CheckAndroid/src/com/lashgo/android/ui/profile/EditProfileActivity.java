@@ -75,15 +75,16 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void initUserDto(Bundle savedInstanceState) {
-        Intent intent = getIntent();
-        if (intent != null) {
-            userDto = (UserDto) intent.getSerializableExtra(ExtraNames.USER_DTO.name());
-            from = (FROM) intent.getSerializableExtra(ExtraNames.FROM.name());
-        }
-        if (savedInstanceState != null && userDto == null) {
+        if (savedInstanceState != null) {
             userDto = (UserDto) savedInstanceState.getSerializable(ExtraNames.USER_DTO.name());
             from = (FROM) savedInstanceState.getSerializable(ExtraNames.FROM.name());
             imgPath = savedInstanceState.getString(ExtraNames.PHOTO_URL.name());
+        } else {
+            Intent intent = getIntent();
+            if (intent != null) {
+                userDto = (UserDto) intent.getSerializableExtra(ExtraNames.USER_DTO.name());
+                from = (FROM) intent.getSerializableExtra(ExtraNames.FROM.name());
+            }
         }
         if (userDto == null) {
             throw new IllegalStateException("UserDto can't be empty");

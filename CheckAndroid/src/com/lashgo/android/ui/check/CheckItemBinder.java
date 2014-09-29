@@ -64,6 +64,10 @@ public class CheckItemBinder extends AdapterBinder {
         if (!TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
             PhotoUtils.displayImage(getContext(), viewHolder.checkIcon, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), imageSize, R.drawable.ava, false);
         }
+        else
+        {
+            viewHolder.checkIcon.setImageResource(R.drawable.ava);
+        }
         LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
         switch (checkState) {
             case ACTIVE:
