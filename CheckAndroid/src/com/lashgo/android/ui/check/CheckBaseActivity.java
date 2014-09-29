@@ -35,6 +35,7 @@ public class CheckBaseActivity extends BaseActivity {
         super.registerActionsListener();
         addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_LIKE_CHECK.name());
         addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_COUNTERS.name());
+        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_PHOTO_COUNTERS.name());
     }
 
     @Override
@@ -42,6 +43,7 @@ public class CheckBaseActivity extends BaseActivity {
         super.unregisterActionsListener();
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_LIKE_CHECK.name());
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_COUNTERS.name());
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_PHOTO_COUNTERS.name());
     }
 
     @Override
@@ -101,8 +103,12 @@ public class CheckBaseActivity extends BaseActivity {
     }
 
     protected void getCheckCounters() {
-        if (checkDto != null && checkDto.getWinnerPhotoDto() != null) {
-            serviceHelper.getPhotoCounters(checkDto.getWinnerPhotoDto().getId());
+        if (checkDto != null) {
+            if (checkDto.getWinnerPhotoDto() != null) {
+                serviceHelper.getPhotoCounters(checkDto.getWinnerPhotoDto().getId());
+            } else {
+                serviceHelper.getCheckCounters(checkDto.getId());
+            }
         }
         isResumed = true;
         if (timerFinished) {
@@ -135,3 +141,4 @@ public class CheckBaseActivity extends BaseActivity {
         }
     }
 }
+

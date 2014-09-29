@@ -75,12 +75,6 @@ public class CheckPhotosFragment extends BaseFragment implements AdapterView.OnI
         return view;
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(BaseActivity.ExtraNames.CHECK_DTO.name(), checkDto);
-        super.onSaveInstanceState(outState);
-    }
-
     public void initGallery(final ArrayList<PhotoDto> photoDtos) {
         this.photoDtos = photoDtos;
         if (photoDtos != null && photoGalleryAdapter != null) {
