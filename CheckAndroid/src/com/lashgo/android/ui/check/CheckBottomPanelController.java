@@ -185,23 +185,25 @@ public class CheckBottomPanelController implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.btn_share) {
-            //TODO not to implement
-        } else if (view.getId() == R.id.btn_likes) {
-            if (settingsHelper.isLoggedIn()) {
-                if (checkDto != null) {
-                    serviceHelper.likeCheck(checkDto.getId());
+        if (activity != null && activity.get() != null) {
+            if (view.getId() == R.id.btn_share) {
+                //TODO not to implement
+            } else if (view.getId() == R.id.btn_likes) {
+                if (settingsHelper.isLoggedIn()) {
+                    if (checkDto != null) {
+                        serviceHelper.likeCheck(checkDto.getId());
+                    } else {
+                        serviceHelper.likePhoto(photoDto.getId());
+                    }
                 } else {
-                    serviceHelper.likePhoto(photoDto.getId());
+                    activity.get().startActivity(new Intent(activity.get(), LoginActivity.class));
                 }
-            } else {
-                activity.get().startActivity(new Intent(activity.get(), LoginActivity.class));
-            }
-        } else if (view.getId() == R.id.btn_comments) {
-            if (checkDto != null) {
-                activity.get().startActivity(CommentsActivity.buildCheckIntent(activity.get(), checkDto.getId()));
-            } else {
-                activity.get().startActivity(CommentsActivity.buildPhotoIntent(activity.get(), photoDto.getId()));
+            } else if (view.getId() == R.id.btn_comments) {
+                if (photoDto != null) {
+                    activity.get().startActivity(CommentsActivity.buildPhotoIntent(activity.get(), photoDto.getId()));
+                } else if (checkDto != null && checkDto.getWinnerPhotoDto() != null) {
+                    activity.get().startActivity(CommentsActivity.buildPhotoIntent(activity.get(), checkDto.getWinnerPhotoDto().getId()));
+                }
             }
         }
     }
