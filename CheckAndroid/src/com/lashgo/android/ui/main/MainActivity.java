@@ -27,6 +27,8 @@ import com.lashgo.android.social.TwitterHelper;
 import com.lashgo.android.social.VkontakteListener;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.auth.AuthController;
+import com.lashgo.android.ui.auth.LoginActivity;
+import com.lashgo.android.ui.auth.SuccessfulRegisterActivity;
 import com.lashgo.android.ui.check.CheckListFragment;
 import com.lashgo.android.ui.news.NewsFragment;
 import com.lashgo.android.ui.profile.ProfileActivity;
@@ -504,7 +506,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onRegisterSuccessFull(UserDto userDto) {
-        updateDrawer();
+        finish();
+        startActivity(SuccessfulRegisterActivity.buildIntent(this, userDto, LoginActivity.OpenMode.FROM_CHECK));
     }
 
     private void updateDrawer() {
