@@ -9,12 +9,10 @@ import android.widget.TextView;
 import com.lashgo.android.LashgoConfig;
 import com.lashgo.android.R;
 import com.lashgo.android.ui.adapters.AdapterBinder;
-import com.lashgo.android.ui.images.CircleTransformation;
 import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.android.utils.UiUtils;
 import com.lashgo.model.dto.CheckDto;
-import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
 
@@ -23,14 +21,13 @@ import java.util.Calendar;
  */
 public class CheckItemBinder extends AdapterBinder {
 
-    public  static interface OnCheckStateChangeListener
-    {
+    public static interface OnCheckStateChangeListener {
         void onCheckStateChanged();
     }
 
     private OnCheckStateChangeListener onCheckStateChangeListener;
 
-    public CheckItemBinder(Context context,OnCheckStateChangeListener onCheckStateChangeListener) {
+    public CheckItemBinder(Context context, OnCheckStateChangeListener onCheckStateChangeListener) {
         super(context);
         this.onCheckStateChangeListener = onCheckStateChangeListener;
 
@@ -61,11 +58,12 @@ public class CheckItemBinder extends AdapterBinder {
         viewHolder.checkName.setText(checkDto.getName());
         viewHolder.checkDescription.setText(checkDto.getDescription());
         int imageSize = PhotoUtils.convertDpToPixels(48, getContext());
+        if (checkDto.getWinnerPhotoDto() != null && !TextUtils.isEmpty(checkDto.getWinnerPhotoDto().getUrl())) {
+            PhotoUtils.displayImage(getContext(), viewHolder.checkIcon, PhotoUtils.getFullPhotoUrl(checkDto.getWinnerPhotoDto().getUrl()), imageSize, R.drawable.ava, false);
+        }
         if (!TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
             PhotoUtils.displayImage(getContext(), viewHolder.checkIcon, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), imageSize, R.drawable.ava, false);
-        }
-        else
-        {
+        } else {
             viewHolder.checkIcon.setImageResource(R.drawable.ava);
         }
         LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
@@ -78,7 +76,7 @@ public class CheckItemBinder extends AdapterBinder {
                 UiUtils.startTimer(checkActiveCalendar.getTimeInMillis(), viewHolder.checkRemainingTime, new TimerFinishedListener() {
                     @Override
                     public void onTimerFinished() {
-                        if(onCheckStateChangeListener != null) {
+                        if (onCheckStateChangeListener != null) {
                             onCheckStateChangeListener.onCheckStateChanged();
                         }
                     }
@@ -92,7 +90,7 @@ public class CheckItemBinder extends AdapterBinder {
                 UiUtils.startTimer(checkVoteCalendar.getTimeInMillis(), viewHolder.checkRemainingTime, new TimerFinishedListener() {
                     @Override
                     public void onTimerFinished() {
-                        if(onCheckStateChangeListener != null) {
+                        if (onCheckStateChangeListener != null) {
                             onCheckStateChangeListener.onCheckStateChanged();
                         }
                     }

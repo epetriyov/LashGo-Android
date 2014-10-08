@@ -152,23 +152,23 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
         taskPhoto.setOnClickListener(this);
         if (checkDto != null) {
             if (!TextUtils.isEmpty(imgPath)) {
-                Picasso.with(this).load(Uri.fromFile(new File(imgPath))).fit().centerCrop().into(fullImage);
+                Picasso.with(this).load(Uri.fromFile(new File(imgPath))).fit().centerInside().into(fullImage);
                 setUpTopCheck(checkDto);
             } else if (photoType != null) {
                 if (PhotoType.TASK_PHOTO.name().equals(photoType.name()) && !TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
-                    Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl())).fit().centerCrop().into(fullImage);
+                    Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl())).fit().centerInside().into(fullImage);
                     setUpTopCheck(checkDto);
                 } else if (PhotoType.USER_PHOTO.name().equals(photoType.name()) && checkDto.getUserPhotoDto() != null && !TextUtils.isEmpty(checkDto.getUserPhotoDto().getUrl())) {
-                    Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(checkDto.getUserPhotoDto().getUrl())).fit().centerCrop().into(fullImage);
+                    Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(checkDto.getUserPhotoDto().getUrl())).fit().centerInside().into(fullImage);
                     setUpTopCheck(checkDto);
                 } else if (PhotoType.WINNER_PHOTO.name().equals(photoType.name()) && checkDto.getWinnerPhotoDto() != null && !TextUtils.isEmpty(checkDto.getWinnerPhotoDto().getUrl())) {
-                    Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(checkDto.getWinnerPhotoDto().getUrl())).fit().centerCrop().into(fullImage);
+                    Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(checkDto.getWinnerPhotoDto().getUrl())).fit().centerInside().into(fullImage);
                     setUpTopUser(checkDto.getWinnerInfo());
                     findViewById(R.id.medal).setVisibility(View.VISIBLE);
                 }
             }
         } else if (photoDto != null && !TextUtils.isEmpty(photoDto.getUrl())) {
-            Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(photoDto.getUrl())).fit().centerCrop().into(fullImage);
+            Picasso.with(this).load(PhotoUtils.getFullPhotoUrl(photoDto.getUrl())).fit().centerInside().into(fullImage);
             if (PhotoType.FROM_PROFILE_GALLERY.name().equals(photoType.name())) {
                 setUpTopCheck(photoDto.getCheck());
             } else {

@@ -149,6 +149,10 @@ public class CheckBottomPanelController implements View.OnClickListener {
                 /**
                  * check is finished
                  */
+                if (checkDto.getWinnerPhotoDto() == null) {
+                    view.findViewById(R.id.likes_layout).setVisibility(View.GONE);
+                    view.findViewById(R.id.comments_layout).setVisibility(View.GONE);
+                }
                 view.findViewById(R.id.time_layout).setVisibility(View.GONE);
                 view.findViewById(R.id.check_time).setVisibility(View.GONE);
             }
@@ -156,6 +160,10 @@ public class CheckBottomPanelController implements View.OnClickListener {
             /**
              * we are at the photo's screen
              */
+            if (photoDto == null) {
+                view.findViewById(R.id.likes_layout).setVisibility(View.GONE);
+                view.findViewById(R.id.comments_layout).setVisibility(View.GONE);
+            }
             view.findViewById(R.id.time_layout).setVisibility(View.GONE);
             view.findViewById(R.id.check_time).setVisibility(View.GONE);
         }
@@ -190,9 +198,9 @@ public class CheckBottomPanelController implements View.OnClickListener {
                 //TODO not to implement
             } else if (view.getId() == R.id.btn_likes) {
                 if (settingsHelper.isLoggedIn()) {
-                    if (checkDto != null) {
-                        serviceHelper.likeCheck(checkDto.getId());
-                    } else {
+                    if (checkDto != null && checkDto.getWinnerPhotoDto() != null) {
+                        serviceHelper.likePhoto(checkDto.getWinnerPhotoDto().getId());
+                    } else if (photoDto != null) {
                         serviceHelper.likePhoto(photoDto.getId());
                     }
                 } else {

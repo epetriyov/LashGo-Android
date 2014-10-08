@@ -73,7 +73,7 @@ public class CheckFinishedFragment extends BaseFragment implements View.OnClickL
             if (pagerAdapter.getCount() > 1) {
                 viewPager.setCurrentItem(1);
             }
-            ((CheckBaseActivity) getActivity()).setBottomPanel(new CheckBottomPanelController(CheckBottomPanelController.FROM.CHECK,(BaseActivity)getActivity(),view, checkDto));
+            ((CheckBaseActivity) getActivity()).initBottomPanel(view);
         }
         return view;
     }

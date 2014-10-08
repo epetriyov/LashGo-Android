@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.model.dto.CheckCounters;
@@ -15,6 +16,13 @@ import com.lashgo.model.dto.CheckDto;
 public class CheckBaseActivity extends BaseActivity {
 
     private TO to;
+
+    public void initBottomPanel(View view) {
+        bottomPanelController = new CheckBottomPanelController(CheckBottomPanelController.FROM.CHECK, this, view,checkDto);
+        CheckCounters checkCounters = new CheckCounters();
+        checkCounters.setPlayersCount(checkDto.getPlayersCount());
+        bottomPanelController.udpateCounters(checkCounters);
+    }
 
     public static enum TO {VOTE, to, FINISHED}
 
@@ -34,24 +42,20 @@ public class CheckBaseActivity extends BaseActivity {
     @Override
     protected void registerActionsListener() {
         super.registerActionsListener();
-        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_LIKE_CHECK.name());
-        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_COUNTERS.name());
-        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_PHOTO_COUNTERS.name());
+        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_LIKE_PHOTO.name());
     }
 
     @Override
     protected void unregisterActionsListener() {
         super.unregisterActionsListener();
-        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_LIKE_CHECK.name());
-        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_COUNTERS.name());
-        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_PHOTO_COUNTERS.name());
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_LIKE_PHOTO.name());
     }
 
     @Override
     public void processServerResult(String action, int resultCode, Bundle data) {
         super.processServerResult(action, resultCode, data);
         if (data != null) {
-            if (BaseIntentHandler.ServiceActionNames.ACTION_LIKE_CHECK.name().equals(action) && resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
+            if (BaseIntentHandler.ServiceActionNames.ACTION_LIKE_PHOTO.name().equals(action) && resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
                 Boolean isLikeAdded = data.getBoolean(BaseIntentHandler.ServiceExtraNames.IS_LIKE_ADDED.name());
                 if (isLikeAdded != null) {
                     bottomPanelController.updateLikesCount(isLikeAdded.booleanValue());
@@ -86,14 +90,7 @@ public class CheckBaseActivity extends BaseActivity {
 
 
     public void initBottomPanel() {
-        bottomPanelController = new CheckBottomPanelController(CheckBottomPanelController.FROM.CHECK, this, checkDto);
-        CheckCounters checkCounters = new CheckCounters();
-        checkCounters.setPlayersCount(checkDto.getPlayersCount());
-        bottomPanelController.udpateCounters(checkCounters);
-    }
-
-    public void setBottomPanel(CheckBottomPanelController checkBottomPanelController) {
-        this.bottomPanelController = checkBottomPanelController;
+        initBottomPanel(getWindow().getDecorView());
     }
 
     @Override
