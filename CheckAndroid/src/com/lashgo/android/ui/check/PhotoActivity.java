@@ -17,6 +17,7 @@ import com.lashgo.android.ui.profile.ProfileActivity;
 import com.lashgo.android.ui.views.RobotoTextView;
 import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.PhotoUtils;
+import com.lashgo.model.dto.CheckCounters;
 import com.lashgo.model.dto.CheckDto;
 import com.lashgo.model.dto.PhotoDto;
 import com.lashgo.model.dto.UserDto;
@@ -27,7 +28,7 @@ import java.io.File;
 /**
  * Created by Eugene on 18.08.2014.
  */
-public class PhotoActivity extends BaseActivity implements View.OnClickListener{
+public class PhotoActivity extends BaseActivity implements View.OnClickListener {
 
     private int imageSize;
 
@@ -117,6 +118,19 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener{
         } else {
             bottomPanelController = new CheckBottomPanelController(CheckBottomPanelController.FROM.PHOTO, this, photoDto);
         }
+        initCounters();
+    }
+
+    private void initCounters() {
+        CheckCounters checkCounters = new CheckCounters();
+        if (photoDto != null) {
+            checkCounters.setLikesCount(photoDto.getLikesCount());
+            checkCounters.setCommentsCount(photoDto.getCommentsCount());
+        } else if (checkDto.getWinnerPhotoDto() != null) {
+            checkCounters.setLikesCount(checkDto.getWinnerPhotoDto().getLikesCount());
+            checkCounters.setCommentsCount(checkDto.getWinnerPhotoDto().getCommentsCount());
+        }
+        bottomPanelController.udpateCounters(checkCounters);
     }
 
     private void setUpTopCheck(CheckDto checkDto) {
@@ -194,20 +208,6 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener{
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (photoDto != null || PhotoType.WINNER_PHOTO.name().equals(photoType.name())) {
-            if (photoDto != null) {
-                serviceHelper.getPhotoCounters(photoDto.getId());
-            } else {
-                serviceHelper.getPhotoCounters(checkDto.getWinnerPhotoDto().getId());
-            }
-        } else {
-            serviceHelper.getCheckCounters(checkDto.getId());
-        }
-    }
-
 
     @Override
     protected void registerActionsListener() {
@@ -215,8 +215,6 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener{
         addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_LIKE_CHECK.name());
         addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_LIKE_PHOTO.name());
         addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK.name());
-        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_PHOTO_COUNTERS.name());
-        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_COUNTERS.name());
     }
 
     @Override
@@ -225,8 +223,6 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener{
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_LIKE_CHECK.name());
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_LIKE_PHOTO.name());
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK.name());
-        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_PHOTO_COUNTERS.name());
-        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_COUNTERS.name());
     }
 
     @Override
@@ -256,8 +252,6 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener{
                             break;
                     }
                 }
-            } else {
-                bottomPanelController.udpateCounters((com.lashgo.model.dto.CheckCounters) data.getSerializable(BaseIntentHandler.ServiceExtraNames.COUNTERS.name()));
             }
         }
     }

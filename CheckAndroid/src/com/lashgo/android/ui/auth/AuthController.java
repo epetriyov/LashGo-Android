@@ -1,6 +1,5 @@
 package com.lashgo.android.ui.auth;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -12,8 +11,8 @@ import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.social.FacebookHelper;
 import com.lashgo.android.social.TwitterHelper;
 import com.lashgo.android.ui.BaseActivity;
-import com.lashgo.android.ui.main.MainActivity;
 import com.lashgo.android.utils.Md5Util;
+import com.lashgo.android.utils.UiUtils;
 import com.lashgo.model.dto.LoginInfo;
 import com.lashgo.model.dto.RegisterResponse;
 import com.lashgo.model.dto.UserDto;
@@ -68,6 +67,7 @@ public class AuthController implements View.OnClickListener {
         } else if (view.getId() == R.id.btn_twitter) {
             twitterHelper.loginWithTwitter();
         } else if (view.getId() == R.id.btn_login) {
+            UiUtils.hideSoftKeyboard(login);
             LoginInfo loginInfo = buildLoginInfo();
             if (loginInfo != null) {
                 serviceHelper.login(loginInfo);
@@ -75,6 +75,7 @@ public class AuthController implements View.OnClickListener {
         } else if (view.getId() == R.id.btn_recover_password) {
             baseActivity.startActivity(new Intent(baseActivity, PasswordRecoverActivity.class));
         } else if (view.getId() == R.id.btn_register) {
+            UiUtils.hideSoftKeyboard(login);
             LoginInfo loginInfo = buildLoginInfo();
             if (loginInfo != null) {
                 serviceHelper.register(loginInfo);
@@ -130,7 +131,7 @@ public class AuthController implements View.OnClickListener {
     private void onRegisterSuccessFull(UserDto registerResponse) {
         if (registerResponse != null) {
             if (registerResponse.getLogin() != null) {
-                if(authListener != null) {
+                if (authListener != null) {
                     authListener.onRegisterSuccessFull(registerResponse);
                 }
             } else {
@@ -140,7 +141,7 @@ public class AuthController implements View.OnClickListener {
     }
 
     private void onLoginSuccessFull() {
-        if(authListener != null) {
+        if (authListener != null) {
             authListener.onLoginSuccessFull();
         }
     }
@@ -155,6 +156,7 @@ public class AuthController implements View.OnClickListener {
 
     public static interface AuthListener {
         void onLoginSuccessFull();
+
         void onRegisterSuccessFull(UserDto userDto);
     }
 }

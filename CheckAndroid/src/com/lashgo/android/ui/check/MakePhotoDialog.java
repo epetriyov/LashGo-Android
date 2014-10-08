@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
-import com.lashgo.android.LashgoApplication;
 import com.lashgo.android.R;
 import com.lashgo.android.utils.IntentUtils;
 
@@ -27,6 +26,10 @@ public class MakePhotoDialog extends DialogFragment {
 
     public interface OnImageDoneListener {
         void imageDone(String imagePath);
+    }
+
+    public MakePhotoDialog() {
+        super();
     }
 
     public MakePhotoDialog(OnImageDoneListener listener) {

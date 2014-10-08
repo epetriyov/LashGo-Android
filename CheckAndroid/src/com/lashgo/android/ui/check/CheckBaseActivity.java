@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
+import com.lashgo.model.dto.CheckCounters;
 import com.lashgo.model.dto.CheckDto;
 
 /**
@@ -55,8 +56,6 @@ public class CheckBaseActivity extends BaseActivity {
                 if (isLikeAdded != null) {
                     bottomPanelController.updateLikesCount(isLikeAdded.booleanValue());
                 }
-            } else if ((BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_COUNTERS.name().equals(action) || BaseIntentHandler.ServiceActionNames.ACTION_GET_PHOTO_COUNTERS.name().equals(action)) && resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
-                bottomPanelController.udpateCounters((com.lashgo.model.dto.CheckCounters) data.getSerializable(BaseIntentHandler.ServiceExtraNames.COUNTERS.name()));
             }
         }
     }
@@ -88,6 +87,9 @@ public class CheckBaseActivity extends BaseActivity {
 
     public void initBottomPanel() {
         bottomPanelController = new CheckBottomPanelController(CheckBottomPanelController.FROM.CHECK, this, checkDto);
+        CheckCounters checkCounters = new CheckCounters();
+        checkCounters.setPlayersCount(checkDto.getPlayersCount());
+        bottomPanelController.udpateCounters(checkCounters);
     }
 
     public void setBottomPanel(CheckBottomPanelController checkBottomPanelController) {
