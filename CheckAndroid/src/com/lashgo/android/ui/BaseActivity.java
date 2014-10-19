@@ -2,7 +2,6 @@ package com.lashgo.android.ui;
 
 import android.app.ActionBar;
 import android.app.DialogFragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
@@ -18,7 +17,6 @@ import com.lashgo.android.service.ServiceHelper;
 import com.lashgo.android.service.ServiceReceiver;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.settings.SettingsHelper;
-import com.lashgo.android.ui.start.SplashActivity;
 import com.lashgo.android.utils.ContextUtils;
 import com.lashgo.model.dto.ErrorDto;
 import com.lashgo.model.dto.SocialInfo;
@@ -206,7 +204,6 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
     }
 
     public void processServerResult(String action, int resultCode, Bundle data) {
-
     }
 
     private void applyDisplayOptions(int options) {
@@ -224,7 +221,6 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
     }
 
     public static enum ExtraNames {
-        CHECK_DTO, PHOTO_URL, PROFILE_OWNER, USER_ID, PHOTO_DTO, PHOTO_TYPE, USER_DTO, CHECK_ID, PHOTO_ID, FROM, REQUEST_TOKEN, TWITTER_URL, WAS_PHOTO_SENT, OPEN_MODE
+        CHECK_DTO, PHOTO_URL, PROFILE_OWNER, USER_ID, PHOTO_DTO, PHOTO_TYPE, USER_DTO, CHECK_ID, PHOTO_ID, FROM, REQUEST_TOKEN, TWITTER_URL, WAS_PHOTO_SENT, CHECK_LIST, OPEN_MODE,PHOTOS_LIST, SELECTED_PHOTO, ACTIVITY_REFERRER;
     }
-
 }

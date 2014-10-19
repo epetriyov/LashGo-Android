@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.lashgo.android"
-        android:versionCode="3"
-        android:versionName="1.2"
+          android:versionCode="3"
+          android:versionName="1.2"
         >
 
     <uses-sdk
@@ -110,22 +110,23 @@
                 />
 
         <activity android:name=".ui.check.PhotoActivity"
+                  android:label="@string/photo"
                   android:screenOrientation="portrait"
                   android:theme="@style/Theme.LashGo.TransparentActionBar"
                 />
 
-        <activity android:name=".ui.check.CheckActiveActivity"
+        <activity android:name=".ui.check.CheckActivity"
                   android:screenOrientation="portrait"
                   android:label="@string/task">
         </activity>
 
-        <activity android:name=".ui.check.CheckFinishedActivity"
+        <activity android:name=".ui.check.CheckPhotoActivity"
                   android:label="@string/task"
                   android:screenOrientation="portrait"
                 >
         </activity>
 
-        <activity android:name=".ui.check.CheckVoteActivity"
+        <activity android:name=".ui.check.CheckPagerActivity"
                   android:label="@string/task"
                   android:screenOrientation="portrait"
                 >
