@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.ImageView;
 import com.lashgo.android.R;
 import com.lashgo.android.utils.PhotoUtils;
-import com.squareup.picasso.Picasso;
 
 /**
  * Created by Eugene on 25.08.2014.
@@ -38,7 +37,7 @@ public class VotePhotoController implements View.OnClickListener {
         }
         this.votePhotoListener = votePhotoListener;
         this.imageWidth = imageWidth;
-        this.imageHeight= imageHeight;
+        this.imageHeight = imageHeight;
         photoLayout = rootLayout.findViewById(photoLayoutId);
         photoLayout.setOnClickListener(this);
         photoLayout.setVisibility(View.INVISIBLE);
@@ -54,8 +53,7 @@ public class VotePhotoController implements View.OnClickListener {
 
     public void setImage(Context context, String imageUrl) {
         if (!TextUtils.isEmpty(imageUrl)) {
-            Picasso.with(context).load(PhotoUtils.getFullPhotoUrl(imageUrl)).centerCrop().
-                    resize(imageWidth, imageHeight).into(photoImg);
+            PhotoUtils.displayImage(context, photoImg, PhotoUtils.getFullPhotoUrl(imageUrl), imageWidth, imageHeight);
             photoLayout.setVisibility(View.VISIBLE);
         }
     }
@@ -80,8 +78,7 @@ public class VotePhotoController implements View.OnClickListener {
         updateCheckState(false);
     }
 
-    public void showShadow()
-    {
+    public void showShadow() {
         photoShadow.setVisibility(View.VISIBLE);
     }
 
@@ -97,16 +94,16 @@ public class VotePhotoController implements View.OnClickListener {
             if (isChecked) {
                 photoShadow.setVisibility(View.GONE);
                 votePhotoListener.clearOtherChecks(this);
-            }
-            else
-            {
+            } else {
                 votePhotoListener.setFirstHint();
             }
-        }
-        else if (view.equals(photoLayout))
-        {
+        } else if (view.equals(photoLayout)) {
             votePhotoListener.openPhotoActivity(this);
         }
+    }
+
+    public View getImageView() {
+        return photoImg;
     }
 
     public static interface VotePhotoListener {

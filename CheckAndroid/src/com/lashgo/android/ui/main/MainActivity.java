@@ -116,7 +116,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void processServerResult(String action, int resultCode, Bundle data) {
-        stopProgress();
         if (BaseIntentHandler.ServiceActionNames.ACTION_GET_MAIN_SCREEN_INFO.name().equals(action)) {
             if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
                 MainScreenInfoDto mainScreenInfoDto = (MainScreenInfoDto) data.getSerializable(BaseIntentHandler.ServiceExtraNames.MAIN_SCREEN_INFO.name());

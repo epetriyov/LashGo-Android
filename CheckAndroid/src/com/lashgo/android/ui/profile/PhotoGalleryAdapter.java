@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import com.lashgo.android.R;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.model.dto.PhotoDto;
-import com.squareup.picasso.Picasso;
 
 /**
  * Created by Eugene on 27.08.2014.
@@ -58,8 +57,7 @@ public class PhotoGalleryAdapter extends ArrayAdapter<PhotoDto> {
             viewHolder.winnerIcon.setVisibility(View.GONE);
         }
         if (!TextUtils.isEmpty(photoItem.getUrl())) {
-            Picasso.with(getContext()).load(PhotoUtils.getFullPhotoUrl(photoItem.getUrl())).centerCrop().
-                    resize(imageSize, imageSize).into(viewHolder.photoView);
+            PhotoUtils.displayImage(getContext(), viewHolder.photoView, PhotoUtils.getFullPhotoUrl(photoItem.getUrl()), imageSize);
         }
         return convertView;
     }

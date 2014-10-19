@@ -19,7 +19,6 @@ import com.lashgo.android.ui.start.SplashActivity;
 import com.lashgo.android.ui.start.StartActivity;
 import dagger.Module;
 import dagger.Provides;
-import org.w3c.dom.Comment;
 
 /**
  * Created with IntelliJ IDEA.
@@ -32,10 +31,10 @@ import org.w3c.dom.Comment;
         injects = {
                 MainActivity.class,
                 CheckBottomPanelController.class,
-                CheckActiveActivity.class,
-                CheckVoteActivity.class,
-                CheckFinishedActivity.class,
+                CheckActivity.class,
                 PhotoActivity.class,
+                CheckPhotoActivity.class,
+                PhotoFragment.class,
                 VoteProcessActivity.class,
                 ProfileActivity.class,
                 LoginActivity.class,

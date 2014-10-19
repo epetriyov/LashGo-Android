@@ -5,6 +5,7 @@
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="48dp">
+    <!--
     <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
                   android:orientation="horizontal"
                   android:gravity="center"
@@ -52,6 +53,7 @@
                 android:textColor="@color/white"
                 />
     </LinearLayout>
+    -->
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="0dp" android:layout_height="match_parent"
@@ -106,7 +108,7 @@
                 android:id="@+id/btn_peoples_count"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_mob_normal"
+                android:src="@drawable/ic_mob"
 
                 />
         <com.lashgo.android.ui.views.RobotoTextView

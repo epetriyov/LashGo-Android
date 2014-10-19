@@ -7,12 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import com.lashgo.android.LashgoConfig;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
+import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.BaseFragment;
 import com.lashgo.android.ui.adapters.MultyTypeAdapter;
-import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.model.dto.CheckDto;
 import com.lashgo.model.dto.ResponseList;
 
@@ -52,45 +51,24 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
     @Override
     protected void registerActionsListener() {
         addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_LIST.name());
-        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK.name());
     }
 
     @Override
     protected void unregisterActionsListener() {
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_LIST.name());
-        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK.name());
     }
 
     @Override
     public void processServerResult(String action, int resultCode, Bundle data) {
-        stopProgress();
-        if (BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_LIST.name().equals(action)) {
-            if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
+        if (resultCode == BaseIntentHandler.FAILURE_RESPONSE) {
+            ((BaseActivity) getActivity()).showErrorToast(data);
+        } else {
+            if (BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_LIST.name().equals(action) && data != null) {
                 ResponseList<CheckDto> checkDtoResponseList = (ResponseList<CheckDto>) data.getSerializable(BaseIntentHandler.ServiceExtraNames.KEY_CHECK_DTO_LIST.name());
                 if (checkDtoResponseList != null) {
                     if (checkDtoResponseList.getResultCollection() != null) {
                         this.resultCollection = new ArrayList<>(checkDtoResponseList.getResultCollection());
                         onCheckListLoaded();
-                    }
-                }
-            }
-        } else if (BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK.name().equals(action) && BaseIntentHandler.SUCCESS_RESPONSE == resultCode) {
-            {
-                if (data != null) {
-                    CheckDto selectedCheck = (CheckDto) data.getSerializable(BaseIntentHandler.ServiceExtraNames.CHECK_DTO.name());
-                    LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(selectedCheck);
-                    switch (checkState) {
-                        case ACTIVE:
-                            startActivity(CheckActiveActivity.buildIntent(getActivity(), selectedCheck, CheckActiveActivity.class));
-                            break;
-                        case VOTE:
-                            startActivity(CheckVoteActivity.buildIntent(getActivity(), selectedCheck, CheckVoteActivity.class));
-                            break;
-                        case FINISHED:
-                            startActivity(CheckFinishedActivity.buildIntent(getActivity(), selectedCheck, CheckFinishedActivity.class));
-                            break;
-                        default:
-                            break;
                     }
                 }
             }
@@ -152,7 +130,7 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
         Object selectedItem = multyTypeAdapter.getItem(position);
         if (selectedItem instanceof CheckDto) {
             CheckDto selectedCheck = (CheckDto) selectedItem;
-            serviceHelper.getCheck(selectedCheck.getId());
+            startActivity(CheckActivity.buildIntent(getActivity(), selectedCheck));
         } else {
             throw new IllegalStateException("Selected item is not CheckDto object");
         }

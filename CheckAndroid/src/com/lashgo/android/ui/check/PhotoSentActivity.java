@@ -1,6 +1,5 @@
 package com.lashgo.android.ui.check;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,7 +8,6 @@ import android.view.View;
 import com.lashgo.android.R;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.utils.PhotoUtils;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
@@ -35,9 +33,7 @@ public class PhotoSentActivity extends BaseActivity implements View.OnClickListe
     private void initExtras(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             imgPath = savedInstanceState.getString(BaseActivity.ExtraNames.PHOTO_URL.name());
-        }
-        else
-        {
+        } else {
             Intent intent = getIntent();
             if (intent != null) {
                 imgPath = intent.getStringExtra(BaseActivity.ExtraNames.PHOTO_URL.name());
@@ -55,8 +51,7 @@ public class PhotoSentActivity extends BaseActivity implements View.OnClickListe
         initExtras(savedInstanceState);
         setContentView(R.layout.act_sent_photo);
         findViewById(R.id.close_btn).setOnClickListener(this);
-        Picasso.with(this).load(Uri.fromFile(new File(imgPath))).centerCrop().
-                resize(PhotoUtils.getScreenWidth(this), PhotoUtils.convertDpToPixels(296, this)).into((android.widget.ImageView) findViewById(R.id.sent_photo));
+        PhotoUtils.displayImage(this, (android.widget.ImageView) findViewById(R.id.sent_photo), Uri.fromFile(new File(imgPath)), PhotoUtils.getScreenWidth(this), PhotoUtils.convertDpToPixels(296, this));
     }
 
     @Override

@@ -114,7 +114,6 @@ public class LoginActivity extends BaseActivity implements AuthController.AuthLi
 
     @Override
     public void processServerResult(String action, int resultCode, Bundle data) {
-        stopProgress();
         authController.handleServerResponse(action, resultCode, data);
     }
 

@@ -78,7 +78,9 @@ public class BaseFragment extends Fragment implements ServiceReceiver {
     }
 
     public void processServerResult(String action, int resultCode, Bundle data) {
-
+        if (resultCode == BaseIntentHandler.FAILURE_RESPONSE) {
+            ((BaseActivity) getActivity()).showErrorToast(data);
+        }
     }
 
     @Override

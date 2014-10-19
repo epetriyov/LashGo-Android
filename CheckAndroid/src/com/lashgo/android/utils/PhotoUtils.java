@@ -8,7 +8,6 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -18,10 +17,11 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.widget.ImageView;
 import com.lashgo.android.LashgoConfig;
+import com.lashgo.android.ui.check.CheckActivity;
 import com.lashgo.android.ui.images.CircleTransformation;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-
-import java.io.IOException;
+import com.squareup.picasso.RequestCreator;
 
 /**
  * Created by Eugene on 20.07.2014.
@@ -33,13 +33,6 @@ public final class PhotoUtils {
 
     public static String getFullPhotoUrl(String photoName) {
         return new StringBuilder(LashgoConfig.BASE_URL).append(LashgoConfig.PHOTO_BASE_URI).append(photoName).toString();
-    }
-
-    public static void displayImage(Context context, ImageView imageView, String imageSource, int imageSize, int placeHolderId, boolean displayStroke) {
-        if (!TextUtils.isEmpty(imageSource)) {
-            Picasso.with(context).load(imageSource).centerCrop().
-                    resize(imageSize, imageSize).transform(new CircleTransformation(context, displayStroke)).placeholder(placeHolderId).into(imageView);
-        }
     }
 
     public static int convertDpToPixels(float dp, Context context) {
@@ -96,20 +89,13 @@ public final class PhotoUtils {
         return filePathOriginal;
     }
 
-    public static void displayImage(Context context, ImageView imageView, Uri uri, int imageSize, int placeHolderId, boolean displayStroke) {
-        if (uri != null) {
-            Picasso.with(context).load(uri).centerCrop().
-                    resize(imageSize, imageSize).transform(new CircleTransformation(context, displayStroke)).placeholder(placeHolderId).into(imageView);
-        }
-    }
-
     /**
      * Get a file path from a Uri. This will get the the path for Storage Access
      * Framework Documents, as well as the _data field for the MediaStore and
      * other file-based ContentProviders.
      *
      * @param context The context.
-     * @param uri The Uri to query.
+     * @param uri     The Uri to query.
      * @author paulburke
      */
     @SuppressLint("NewApi")
@@ -156,7 +142,7 @@ public final class PhotoUtils {
                 }
 
                 final String selection = "_id=?";
-                final String[] selectionArgs = new String[] {
+                final String[] selectionArgs = new String[]{
                         split[1]
                 };
 
@@ -179,9 +165,9 @@ public final class PhotoUtils {
      * Get the value of the data column for this Uri. This is useful for
      * MediaStore Uris, and other file-based ContentProviders.
      *
-     * @param context The context.
-     * @param uri The Uri to query.
-     * @param selection (Optional) Filter used in the query.
+     * @param context       The context.
+     * @param uri           The Uri to query.
+     * @param selection     (Optional) Filter used in the query.
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
@@ -231,5 +217,95 @@ public final class PhotoUtils {
      */
     public static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    public static void displayFullImage(Context context, ImageView imageView, String imageSource) {
+        if (!TextUtils.isEmpty(imageSource)) {
+            Picasso.with(context)
+                    .load(imageSource)
+                    .fit()
+                    .centerInside()
+                    .into(imageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError() {
+
+                        }
+                    });
+        }
+    }
+
+    public static void displayImage(Context context, ImageView imageView, String imageSource, int imageSize, int placeHolderId, boolean displayStroke) {
+        displayImage(context, imageView, imageSource, imageSize, imageSize, placeHolderId, displayStroke, true);
+    }
+
+    public static void displayImage(Context context, ImageView imageView, Uri uri, int imageSize, int placeHolderId, boolean displayStroke) {
+        displayImage(context, imageView, uri, imageSize, imageSize, placeHolderId, displayStroke, true);
+    }
+
+    public static void displayFullImage(CheckActivity context, ImageView imageView, Uri uri) {
+        if (uri != null) {
+            Picasso.with(context).load(uri).fit().centerInside().
+                    into(imageView);
+        }
+    }
+
+    public static void displayImage(Context context, ImageView photoImg, String fullPhotoUrl, int imageWidth, int imageHeight, int placeHolder, boolean displayStroke, boolean useTransform) {
+        if (!TextUtils.isEmpty(fullPhotoUrl)) {
+            RequestCreator requestCreator =
+                    Picasso.with(context)
+                            .load(fullPhotoUrl)
+                            .centerCrop()
+                            .resize(imageWidth, imageHeight);
+            if (useTransform) {
+                requestCreator.transform(new CircleTransformation(context, displayStroke));
+            }
+            if (placeHolder > 0) {
+                requestCreator.placeholder(placeHolder)
+                        .error(placeHolder);
+            }
+            requestCreator.into(photoImg, new Callback() {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onError() {
+
+                }
+            });
+        }
+    }
+
+    public static void displayImage(Context context, ImageView photoImg, String fullPhotoUrl, int imageWidth, int imageHeight) {
+        displayImage(context, photoImg, fullPhotoUrl, imageWidth, imageHeight, -1, false, false);
+    }
+
+    public static void displayImage(Context context, ImageView photoImg, Uri uri, int screenWidth, int imageHeight) {
+        displayImage(context, photoImg, uri, screenWidth, imageHeight, -1, false, false);
+    }
+
+    private static void displayImage(Context context, ImageView photoImg, Uri uri, int screenWidth, int imageHeight, int placeHolder, boolean displayStroke, boolean useTransform) {
+        if (uri != null) {
+            RequestCreator requestCreator = Picasso.with(context).load(uri).centerCrop().
+                    resize(screenWidth, imageHeight);
+            if (useTransform) {
+                requestCreator.transform(new CircleTransformation(context, displayStroke));
+            }
+            if (placeHolder > 0) {
+                requestCreator.placeholder(placeHolder)
+                        .error(placeHolder);
+            }
+            requestCreator.into(photoImg);
+        }
+    }
+
+    public static void displayImage(Context context, ImageView photoView, String fullPhotoUrl, int imageSize) {
+        displayImage(context, photoView, fullPhotoUrl, imageSize, imageSize);
     }
 }

@@ -112,6 +112,8 @@
     <string name="server_error">Ошибка сервера</string>
     <string name="email_already_exist">Пользователь с таким email уже существует</string>
     <string name="notification_title">Начался новый чек</string>
+    <string name="ok">OK</string>
+    <string name="photo">Фото</string>
     <string-array name="make_photo_items">
         <item>Камера</item>
         <item>Галерея</item>

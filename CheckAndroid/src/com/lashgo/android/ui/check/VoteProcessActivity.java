@@ -1,5 +1,7 @@
 package com.lashgo.android.ui.check;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -9,8 +11,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
+import com.lashgo.android.ui.BaseActivity;
+import com.lashgo.android.ui.ImageAnimation;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.android.utils.UiUtils;
+import com.lashgo.model.dto.CheckDto;
 import com.lashgo.model.dto.PhotoDto;
 import com.lashgo.model.dto.VoteAction;
 import com.lashgo.model.dto.VotePhotosResult;
@@ -22,7 +27,7 @@ import java.util.List;
 /**
  * Created by Eugene on 20.08.2014.
  */
-public class VoteProcessActivity extends CheckBaseActivity implements View.OnClickListener, VotePhotoController.VotePhotoListener {
+public class VoteProcessActivity extends BaseActivity implements View.OnClickListener, VotePhotoController.VotePhotoListener {
 
     private int returnedPhotosCount;
     private ScreenState screenState;
@@ -36,6 +41,23 @@ public class VoteProcessActivity extends CheckBaseActivity implements View.OnCli
     private VotePhotoController fourthPhotoController;
     private int photosCount;
     private int votedPhotosCount = 1;
+    private View baloonHint;
+    private CheckDto checkDto;
+    private ImageAnimation imageAnimation;
+    private ImageView expandedImageView;
+
+    public static Intent buildIntent(Context context, CheckDto checkDto) {
+        Intent intent = new Intent(context, CheckActivity.class);
+        intent.putExtra(ExtraNames.CHECK_DTO.name(), checkDto);
+        return intent;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(ExtraNames.CHECK_DTO.name(), checkDto);
+        super.onSaveInstanceState(outState);
+    }
+
 
     @Override
     public void clearOtherChecks(VotePhotoController votePhotoController) {
@@ -66,7 +88,8 @@ public class VoteProcessActivity extends CheckBaseActivity implements View.OnCli
         } else if (votePhotoController.equals(fourthPhotoController)) {
             photoPosition = 3;
         }
-        startActivity(PhotoActivity.newIntent(this, votePhotos.get(photoPosition), PhotoActivity.PhotoType.FROM_CHECK_GALLERY));
+        PhotoUtils.displayFullImage(this, expandedImageView, PhotoUtils.getFullPhotoUrl(votePhotos.get(photoPosition).getUrl()));
+        imageAnimation.zoomImageFromThumb(votePhotoController.getImageView(), getResources().getInteger(android.R.integer.config_shortAnimTime));
     }
 
     @Override
@@ -107,11 +130,26 @@ public class VoteProcessActivity extends CheckBaseActivity implements View.OnCli
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initCheckDto(savedInstanceState);
         setContentView(R.layout.act_first_vote);
+        expandedImageView = (ImageView) findViewById(R.id.expanded_image);
+        imageAnimation = new ImageAnimation(this, findViewById(R.id.shadow),findViewById(R.id.container), expandedImageView);
         initViews();
         serviceHelper.getVotePhotos(checkDto.getId(), true);
         screenState = ScreenState.CHOOSE_PHOTO;
     }
+
+    private void initCheckDto(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            checkDto = (CheckDto) savedInstanceState.getSerializable(ExtraNames.CHECK_DTO.name());
+        } else {
+            Intent intent = getIntent();
+            if (intent != null) {
+                checkDto = (CheckDto) intent.getSerializableExtra(ExtraNames.CHECK_DTO.name());
+            }
+        }
+    }
+
 
     @Override
     public void processServerResult(String action, int resultCode, Bundle data) {
@@ -208,15 +246,16 @@ public class VoteProcessActivity extends CheckBaseActivity implements View.OnCli
                     });
             voteButton = (ImageView) findViewById(R.id.vote_button);
             voteButton.setOnClickListener(this);
+            baloonHint = findViewById(R.id.baloon_hint);
+            if (settingsHelper.alreadyVoted()) {
+                baloonHint.setVisibility(View.GONE);
+            }
             voteHint = (TextView) findViewById(R.id.vote_hint);
             photosCounter = (TextView) findViewById(R.id.checks_counter);
             updateCounter();
-            initBottomPanel();
-        }
-    }
+            new CheckBottomPanelController(this,checkDto);
 
-    public void initBottomPanel() {
-        bottomPanelController = new CheckBottomPanelController(CheckBottomPanelController.FROM.CHECK,this, checkDto, CheckBottomPanelController.ButtonColors.GRAY);
+        }
     }
 
     private void updateCounter() {
@@ -244,6 +283,8 @@ public class VoteProcessActivity extends CheckBaseActivity implements View.OnCli
             } else {
                 votedPhotosCount += returnedPhotosCount;
                 serviceHelper.getVotePhotos(checkDto.getId(), false);
+                settingsHelper.firstVote();
+                baloonHint.setVisibility(View.GONE);
             }
         }
     }

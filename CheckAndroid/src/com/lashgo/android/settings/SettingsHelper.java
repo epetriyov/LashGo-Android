@@ -32,6 +32,7 @@ public class SettingsHelper {
     private static final String KEY_LAST_NEWS_VIEW = "last_news_view";
     private SessionInfo sessionInfo;
     private SharedPreferences preferences;
+    private boolean alreadyVoted;
 
     public SettingsHelper(Context context) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -205,5 +206,13 @@ public class SettingsHelper {
 
     public String getLastSubscriptionsView() {
         return getString(KEY_LAST_SUBSCRIPTIONS_VIEW, new SimpleDateFormat(LashgoConfig.DATE_FORMAT).format(new Date()));
+    }
+
+    public boolean alreadyVoted() {
+        return alreadyVoted;
+    }
+
+    public void firstVote() {
+        alreadyVoted = true;
     }
 }

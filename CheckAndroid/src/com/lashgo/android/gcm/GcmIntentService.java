@@ -31,7 +31,7 @@ import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.lashgo.android.R;
-import com.lashgo.android.ui.check.CheckActiveActivity;
+import com.lashgo.android.ui.check.CheckActivity;
 import com.lashgo.android.ui.main.MainActivity;
 
 /**
@@ -102,7 +102,16 @@ public class GcmIntentService extends IntentService {
 // Adds the back stack for the Intent (but not the Intent itself)
         stackBuilder.addParentStack(MainActivity.class);
 // Adds the Intent that starts the Activity to the top of the stack
-        stackBuilder.addNextIntent(CheckActiveActivity.buildIntent(this, bundle.getString(GCM_CHECK_ID)));
+        String checkId = bundle.getString(GCM_CHECK_ID);
+        try {
+            int checkIntId = Integer.parseInt(checkId);
+            stackBuilder.addNextIntent(CheckActivity.buildIntent(this, checkIntId));
+        }catch (NumberFormatException e)
+        {
+            e.printStackTrace();
+            stackBuilder.addNextIntent(new Intent(this,MainActivity.class));
+        }
+
         PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(
                         0,

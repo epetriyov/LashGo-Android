@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
+import com.lashgo.android.ui.check.ActivityReferrer;
 import com.lashgo.android.ui.check.PhotoActivity;
 import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.PhotoUtils;
@@ -33,9 +34,11 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
     private ImageView editView;
     private MenuItem editMenu;
 
+    private ArrayList<PhotoDto> photosList;
+
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        startActivity(PhotoActivity.newIntent(this, photoGalleryAdapter.getItem(i), PhotoActivity.PhotoType.FROM_PROFILE_GALLERY));
+        startActivity(PhotoActivity.buildIntent(this, photosList, i, ActivityReferrer.FROM_PROFILE_GALLERY.name()));
     }
 
     private PhotoGalleryAdapter photoGalleryAdapter;
@@ -121,7 +124,8 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
                     editMenu.setVisible(true);
                 }
             } else if (BaseIntentHandler.ServiceActionNames.ACTION_GET_MY_PHOTOS.name().equals(action) || BaseIntentHandler.ServiceActionNames.ACTION_GET_USER_PHOTOS.name().equals(action)) {
-                initGallery((ArrayList<PhotoDto>) data.getSerializable(BaseIntentHandler.ServiceExtraNames.PHOTOS_LIST.name()));
+                photosList = new ArrayList<>((ArrayList<PhotoDto>) data.getSerializable(BaseIntentHandler.ServiceExtraNames.PHOTOS_LIST.name()));
+                initGallery(photosList);
             }
         }
     }

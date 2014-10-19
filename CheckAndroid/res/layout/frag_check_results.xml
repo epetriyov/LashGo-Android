@@ -6,6 +6,7 @@
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:background="@drawable/bg_check"
+        android:paddingTop="@dimen/action_bar_height"
         >
     <include layout="@layout/view_check_top_panel"/>
     <GridView

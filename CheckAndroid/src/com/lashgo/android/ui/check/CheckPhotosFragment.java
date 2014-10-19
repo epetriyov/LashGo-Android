@@ -53,7 +53,7 @@ public class CheckPhotosFragment extends BaseFragment implements AdapterView.OnI
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = getLayoutInflater(savedInstanceState).inflate(R.layout.frag_check_results, null);
+        View view = inflater.inflate(R.layout.frag_check_results, container, false);
         if (checkDto != null) {
             int imageSize = PhotoUtils.convertDpToPixels(48, getActivity());
             view.findViewById(R.id.vote_time).setVisibility(View.GONE);
@@ -92,6 +92,6 @@ public class CheckPhotosFragment extends BaseFragment implements AdapterView.OnI
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        startActivity(PhotoActivity.newIntent(getActivity(), photoGalleryAdapter.getItem(i), PhotoActivity.PhotoType.FROM_CHECK_GALLERY));
+        startActivity(PhotoActivity.buildIntent(getActivity(), photoDtos, i, ActivityReferrer.FROM_CHECK_GALLERY.name()));
     }
 }
