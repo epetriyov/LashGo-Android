@@ -272,4 +272,28 @@ public class ServiceHelper {
         extras.putLong(BaseIntentHandler.ServiceExtraNames.PHOTO_ID.name(), photoId);
         runRequest(BaseIntentHandler.ServiceActionNames.ACTION_LIKE_PHOTO.name(), extras);
     }
+
+    public void getSubscriptions() {
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_SUBSCRIPTIONS.name(), new Bundle());
+    }
+
+    public void getSubscribers() {
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_SUBSCRIBERS.name(), new Bundle());
+    }
+
+    public void subscribe(SubscribeDto subscribeDto) {
+        Bundle extras = new Bundle();
+        extras.putSerializable(BaseIntentHandler.ServiceExtraNames.SUBSCRIPTION_DTO.name(), subscribeDto);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_SUBSCRIBE.name(), extras);
+    }
+
+    public void unsubscribe(int userId) {
+        Bundle extras = new Bundle();
+        extras.putInt(BaseIntentHandler.ServiceExtraNames.USER_ID.name(), userId);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_UNSUBSCRIBE.name(), extras);
+    }
+
+    public void getEvents() {
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_EVENTS.name(), new Bundle());
+    }
 }

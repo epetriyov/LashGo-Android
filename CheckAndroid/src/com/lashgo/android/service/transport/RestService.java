@@ -92,4 +92,19 @@ public interface RestService {
 
     @POST(Path.Photos.LIKE)
     ResponseObject<Boolean> likePhoto(@Body Long photoId);
+
+    @POST(Path.Users.SUBSCRIPTIONS)
+    ResponseObject subscribe(@Body SubscribeDto subscribeDto);
+
+    @DELETE(Path.Users.SUBSCRIPTION)
+    ResponseObject unsubscribe(@retrofit.http.Path("userId") int userId);
+
+    @GET(Path.Users.SUBSCRIPTIONS)
+    ResponseList<SubscriptionDto> getSubscriptions();
+
+    @GET(Path.Users.SUBSCRIBERS)
+    ResponseList<SubscriptionDto> getSubscribers();
+
+    @GET(Path.Events.GET)
+    ResponseList<EventDto> getEvents();
 }

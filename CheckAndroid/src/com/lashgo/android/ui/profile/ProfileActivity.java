@@ -20,6 +20,7 @@ import com.lashgo.android.ui.check.PhotoActivity;
 import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.model.dto.PhotoDto;
+import com.lashgo.model.dto.SubscribeDto;
 import com.lashgo.model.dto.UserDto;
 
 import java.util.ArrayList;
@@ -35,6 +36,8 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
     private MenuItem editMenu;
 
     private ArrayList<PhotoDto> photosList;
+
+    private int localUserSubscibersCount;
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -103,13 +106,6 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
         getMenuInflater().inflate(R.menu.menu_profile, menu);
         editMenu = menu.findItem(R.id.action_edit);
         editView = (ImageView) editMenu.getActionView();
-        editView.setImageResource(R.drawable.ic_action_edit);
-        editView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(EditProfileActivity.buildIntent(ProfileActivity.this, userDto, EditProfileActivity.FROM.PROFILE));
-            }
-        });
         editMenu.setVisible(false);
         return true;
     }
@@ -119,13 +115,59 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
         super.processServerResult(action, resultCode, data);
         if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE && data != null) {
             if (BaseIntentHandler.ServiceActionNames.ACTION_GET_USER_PROFILE.name().equals(action) || BaseIntentHandler.ServiceActionNames.ACTION_GET_MY_USER_PROFILE.name().equals(action)) {
-                initViews((UserDto) data.getSerializable(BaseIntentHandler.ServiceExtraNames.USER_PROFILE.name()));
+                UserDto loadedUser = (UserDto) data.getSerializable(BaseIntentHandler.ServiceExtraNames.USER_PROFILE.name());
+                initViews(loadedUser);
                 if (BaseIntentHandler.ServiceActionNames.ACTION_GET_MY_USER_PROFILE.name().equals(action)) {
-                    editMenu.setVisible(true);
+                    editView.setImageResource(R.drawable.ic_action_edit);
+                    editView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            startActivity(EditProfileActivity.buildIntent(ProfileActivity.this, userDto, EditProfileActivity.FROM.PROFILE));
+                        }
+                    });
+                } else {
+                    if (loadedUser.isSubscription()) {
+                        editView.setImageResource(R.drawable.ic_subscribed);
+                        editView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                serviceHelper.unsubscribe(userId);
+                            }
+                        });
+                    } else {
+                        editView.setImageResource(R.drawable.ic_subscribe);
+                        editView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                serviceHelper.subscribe(new SubscribeDto(userId));
+                            }
+                        });
+                    }
                 }
+                editMenu.setVisible(true);
             } else if (BaseIntentHandler.ServiceActionNames.ACTION_GET_MY_PHOTOS.name().equals(action) || BaseIntentHandler.ServiceActionNames.ACTION_GET_USER_PHOTOS.name().equals(action)) {
                 photosList = new ArrayList<>((ArrayList<PhotoDto>) data.getSerializable(BaseIntentHandler.ServiceExtraNames.PHOTOS_LIST.name()));
                 initGallery(photosList);
+            } else if (BaseIntentHandler.ServiceActionNames.ACTION_SUBSCRIBE.name().equals(action)) {
+                localUserSubscibersCount++;
+                updateSubscribersCount();
+                editView.setImageResource(R.drawable.ic_subscribed);
+                editView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        serviceHelper.unsubscribe(userId);
+                    }
+                });
+            } else if (BaseIntentHandler.ServiceActionNames.ACTION_UNSUBSCRIBE.name().equals(action)) {
+                localUserSubscibersCount--;
+                updateSubscribersCount();
+                editView.setImageResource(R.drawable.ic_subscribe);
+                editView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        serviceHelper.subscribe(new SubscribeDto(userId));
+                    }
+                });
             }
         }
     }
@@ -140,8 +182,14 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
         }
     }
 
+    private void updateSubscribersCount()
+    {
+        ((TextView) findViewById(R.id.user_subscribers)).setText(String.valueOf(localUserSubscibersCount));
+    }
+
     private void initViews(UserDto userDto) {
         this.userDto = userDto;
+        this.localUserSubscibersCount = userDto.getUserSubscribers();
         if (userDto != null) {
             int imageSize = PhotoUtils.convertDpToPixels(64, this);
             if (!TextUtils.isEmpty(userDto.getAvatar())) {
@@ -168,6 +216,8 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
         addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_MY_USER_PROFILE.name());
         addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_USER_PHOTOS.name());
         addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_MY_PHOTOS.name());
+        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_SUBSCRIBE.name());
+        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_UNSUBSCRIBE.name());
     }
 
     @Override
@@ -177,5 +227,7 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_MY_USER_PROFILE.name());
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_USER_PHOTOS.name());
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_MY_PHOTOS.name());
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_SUBSCRIBE.name());
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_UNSUBSCRIBE.name());
     }
 }

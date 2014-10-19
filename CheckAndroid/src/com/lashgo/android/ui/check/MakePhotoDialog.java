@@ -62,7 +62,7 @@ public class MakePhotoDialog extends DialogFragment {
     private Uri setImageUri() {
         // Store image in dcim
         File file = new File(Environment.getExternalStorageDirectory()
-                + "/DCIM/Camera/", "IMG_" + new Date().getTime() + ".png");
+                + "/DCIM/Camera/", "IMG_" + new Date().getTime() + ".jpg");
         Uri imgUri = Uri.fromFile(file);
         if (listener != null) {
             listener.imageDone(file.getAbsolutePath());

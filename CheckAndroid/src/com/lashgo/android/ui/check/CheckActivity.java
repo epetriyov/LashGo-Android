@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -102,7 +103,7 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
         initCheckDto(savedInstanceState);
         setContentView(R.layout.act_check);
         expandedImageView = (ImageView) findViewById(R.id.expanded_image);
-        imageAnimation = new ImageAnimation(this, findViewById(R.id.shadow),findViewById(R.id.container), expandedImageView);
+        imageAnimation = new ImageAnimation(this, findViewById(R.id.shadow), findViewById(R.id.container), expandedImageView);
         if (checkDto == null) {
             serviceHelper.getCheck(checkId);
         } else {
@@ -244,6 +245,20 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
         pagerAdapter.notifyDataSetChanged();
     }
 
+    private class AsyncProccessImage extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            return PhotoUtils.compressImage(imgPath);
+        }
+
+        @Override
+        protected void onPostExecute(String fileName) {
+            imgPath = fileName;
+            addMinePhoto();
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -251,12 +266,12 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
             if (requestCode == MakePhotoDialog.PICK_IMAGE) {
                 if (data != null) {
                     imgPath = PhotoUtils.getPath(this, data.getData());
-                    addMinePhoto();
+                    new AsyncProccessImage().execute();
                 } else {
                     Toast.makeText(this, R.string.empty_image_was_chosen, Toast.LENGTH_LONG).show();
                 }
             } else if (requestCode == MakePhotoDialog.CAPTURE_IMAGE) {
-                addMinePhoto();
+                new AsyncProccessImage().execute();
             }
         } else {
             imgPath = null;

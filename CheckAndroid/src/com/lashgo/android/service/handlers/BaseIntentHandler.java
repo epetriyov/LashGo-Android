@@ -87,6 +87,16 @@ public abstract class BaseIntentHandler {
             return new GetCheckCountersHandler();
         } else if (ServiceActionNames.ACTION_GET_PHOTO_COUNTERS.name().equals(action)) {
             return new GetPhotoCountersHandler();
+        } else if (ServiceActionNames.ACTION_GET_SUBSCRIPTIONS.name().equals(action)) {
+            return new GetSubscrptionsHandler();
+        } else if (ServiceActionNames.ACTION_GET_SUBSCRIBERS.name().equals(action)) {
+            return new GetSubscribersHandler();
+        } else if (ServiceActionNames.ACTION_SUBSCRIBE.name().equals(action)) {
+            return new SubscribeHandler();
+        } else if (ServiceActionNames.ACTION_UNSUBSCRIBE.name().equals(action)) {
+            return new UnsubscribeHandler();
+        } else if (ServiceActionNames.ACTION_GET_EVENTS.name().equals(action)) {
+            return new GetEventsHandler();
         } else {
             throw new IllegalArgumentException("illegal action - " + action);
         }
@@ -105,7 +115,7 @@ public abstract class BaseIntentHandler {
         ACTION_SAVE_PROFILE, ACTION_GET_CHECK_COMMENTS,
         ACTION_GET_PHOTO_COMMENTS, ACTION_ADD_PHOTO_COMMENT,
         ACTION_ADD_CHECK_COMMENT, ACTION_GET_CHECK_COUNTERS,
-        ACTION_GET_PHOTO_COUNTERS, ACTION_LIKE_PHOTO, ACTION_GET_CHECK_LIST
+        ACTION_GET_PHOTO_COUNTERS, ACTION_LIKE_PHOTO, ACTION_GET_SUBSCRIPTIONS, ACTION_GET_SUBSCRIBERS, ACTION_SUBSCRIBE, ACTION_UNSUBSCRIBE, ACTION_GET_EVENTS, ACTION_GET_CHECK_LIST
     }
 
     public static enum ServiceExtraNames {
@@ -117,7 +127,7 @@ public abstract class BaseIntentHandler {
         VOTE_PHOTO_LIST, VOTE_ACTION, CHECK_ID, IS_LIKE_ADDED,
         USER_ID, USER_PROFILE, PHOTOS_LIST, CHECK_DTO,
         AVATAR_PATH, PHOTO_ID, COMMENTS_LIST, COMMENT_TEXT,
-        COMMENT, EMAIL, COUNTERS, IS_PHOTOS_COUNT_INCLUDED
+        COMMENT, EMAIL, COUNTERS, SUBSCRIPTION_DTO, SUBSCRIPTIONS_DTO, SUBSCRIBERS_DTO, EVENTS_DTO, IS_PHOTOS_COUNT_INCLUDED
     }
 
     public static final String ERROR_EXTRA = "error_extra";
