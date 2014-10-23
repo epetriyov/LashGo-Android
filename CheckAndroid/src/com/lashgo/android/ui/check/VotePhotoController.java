@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import com.lashgo.android.R;
 import com.lashgo.android.utils.PhotoUtils;
+import com.lashgo.model.dto.VotePhoto;
 
 /**
  * Created by Eugene on 25.08.2014.
@@ -28,7 +29,7 @@ public class VotePhotoController implements View.OnClickListener {
 
     private VotePhotoListener votePhotoListener;
 
-    public VotePhotoController(VotePhotoListener votePhotoListener, View rootLayout, int photoLayoutId, int photoImageId, int photoCheckId, int photoShadowId, int imageWidth, int imageHeight) {
+    public VotePhotoController(Context context, VotePhotoListener votePhotoListener, View rootLayout, int photoLayoutId, int photoImageId, int photoCheckId, int photoShadowId, int imageWidth, int imageHeight, VotePhoto votePhoto) {
         if (rootLayout == null) {
             throw new IllegalArgumentException("Root layout can't be null");
         }
@@ -45,6 +46,7 @@ public class VotePhotoController implements View.OnClickListener {
         photoCheck = (ImageView) rootLayout.findViewById(photoCheckId);
         photoCheck.setOnClickListener(this);
         photoShadow = rootLayout.findViewById(photoShadowId);
+        setImage(context, votePhoto.getPhotoDto().getUrl());
     }
 
     public boolean isChecked() {
@@ -64,14 +66,6 @@ public class VotePhotoController implements View.OnClickListener {
             photoCheck.setImageResource(R.drawable.ic_green_check_pressed);
             votePhotoListener.showOtherShadows(this);
         }
-    }
-
-    public void newVote() {
-        voteDone = false;
-        isChecked = false;
-        photoCheck.setImageResource(R.drawable.ic_check_nornal);
-        photoShadow.setVisibility(View.GONE);
-        photoLayout.setVisibility(View.INVISIBLE);
     }
 
     public void clearCheck() {

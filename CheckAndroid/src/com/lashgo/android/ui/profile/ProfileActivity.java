@@ -156,7 +156,13 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
                         });
                     }
                 }
-                editMenu.setVisible(true);
+                if (settingsHelper.isLoggedIn()) {
+                    editMenu.setVisible(true);
+                }
+                else
+                {
+                    editMenu.setVisible(false);
+                }
             } else if (BaseIntentHandler.ServiceActionNames.ACTION_GET_MY_PHOTOS.name().equals(action) || BaseIntentHandler.ServiceActionNames.ACTION_GET_USER_PHOTOS.name().equals(action)) {
                 photosList = new ArrayList<>((ArrayList<PhotoDto>) data.getSerializable(BaseIntentHandler.ServiceExtraNames.PHOTOS_LIST.name()));
                 initGallery(photosList);
@@ -182,6 +188,7 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
                 });
             }
         }
+
     }
 
     private void initGallery(ArrayList<PhotoDto> photoDtos) {

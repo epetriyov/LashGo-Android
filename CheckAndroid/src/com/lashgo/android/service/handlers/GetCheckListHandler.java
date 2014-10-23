@@ -15,7 +15,7 @@ public class GetCheckListHandler extends BaseIntentHandler {
 
     @Override
     protected Bundle doExecute(Intent intent) throws IOException, RetrofitError {
-        ResponseList<CheckDto> checkDtoResponseList = service.getChecks();
+        ResponseList<CheckDto> checkDtoResponseList = service.getChecks(intent.getStringExtra(ServiceExtraNames.SEARCH_TEXT.name()));
         Bundle data = new Bundle();
         data.putSerializable(ServiceExtraNames.KEY_CHECK_DTO_LIST.name(), checkDtoResponseList);
         return data;

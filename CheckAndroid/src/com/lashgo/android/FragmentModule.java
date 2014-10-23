@@ -6,6 +6,7 @@ import com.lashgo.android.ui.activity.ActivityFragment;
 import com.lashgo.android.ui.check.CheckListFragment;
 import com.lashgo.android.ui.check.CheckPhotosFragment;
 import com.lashgo.android.ui.check.PhotoFragment;
+import com.lashgo.android.ui.check.VoteFragment;
 import com.lashgo.android.ui.news.NewsFragment;
 import com.lashgo.android.ui.subscribes.SubscribesFragment;
 import dagger.Module;
@@ -21,6 +22,7 @@ import dagger.Provides;
                 SubscribesFragment.class,
                 ActivityFragment.class,
                 PhotoFragment.class,
+                VoteFragment.class,
                 SubscribesFragment.class,
                 CheckPhotosFragment.class,
                 ServiceBinder.class

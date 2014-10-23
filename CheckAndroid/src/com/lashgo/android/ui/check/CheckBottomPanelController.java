@@ -9,6 +9,8 @@ import com.lashgo.android.R;
 import com.lashgo.android.settings.SettingsHelper;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.comments.CommentsActivity;
+import com.lashgo.android.ui.subscribes.SubscribesActivity;
+import com.lashgo.android.ui.subscribes.SubscribesFragment;
 import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.UiUtils;
 import com.lashgo.model.dto.CheckDto;
@@ -125,8 +127,7 @@ public class CheckBottomPanelController implements View.OnClickListener {
                     throw new IllegalStateException("Photo can't be null at comments click");
                 }
             } else if (view.getId() == R.id.btn_peoples_count) {
-                //TODO open players list
-//                activity.get().startActivity(CommentsActivity.buildPhotoIntent(activity.get(), photoDto.getId()));
+                activity.get().startActivity(SubscribesActivity.buildIntent(activity.get(), checkDto.getId(), SubscribesFragment.ScreenType.CHECK_USERS));
             }
         }
     }

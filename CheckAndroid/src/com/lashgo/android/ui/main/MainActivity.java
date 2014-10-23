@@ -302,7 +302,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (drawerAuthMenu != null) {
             drawerAuthMenu.setVisibility(View.GONE);
         }
-        showFragment(CheckListFragment.newInstance());
+        showFragment(CheckListFragment.newInstance(CheckListFragment.StartOptions.LOAD_ON_START));
         setTitle(menuItems[0]);
         drawerLayout.closeDrawer(drawerMenu);
     }
@@ -406,7 +406,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         Fragment fragment = null;
         position = 0;
         if (view.getId() == R.id.item_tasks) {
-            fragment = CheckListFragment.newInstance();
+            fragment = CheckListFragment.newInstance(CheckListFragment.StartOptions.LOAD_ON_START);
             position = 0;
         } else if (view.getId() == R.id.item_news) {
             fragment = NewsFragment.newInstance();
@@ -463,7 +463,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     protected void refresh() {
         serviceHelper.getMainScreenInfo(settingsHelper.getLastNewsView(), settingsHelper.getLastSubscriptionsView());
         if (position == 0) {
-            serviceHelper.getChecks();
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+            if(fragment != null) {
+                ((CheckListFragment) fragment).refresh();
+            }
         }
     }
 

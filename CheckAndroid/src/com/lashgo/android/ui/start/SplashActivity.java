@@ -13,6 +13,7 @@ import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.auth.LoginActivity;
 import com.lashgo.android.ui.main.MainActivity;
 import com.squareup.picasso.Picasso;
+import com.viewpagerindicator.CirclePageIndicator;
 
 /**
  * Created by Eugene on 02.03.14.
@@ -60,6 +61,8 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
                 return view == o;
             }
         });
+        CirclePageIndicator mIndicator = (CirclePageIndicator) findViewById(R.id.circle_indicator);
+        mIndicator.setViewPager(viewPager);
         findViewById(R.id.btn_skip).setOnClickListener(this);
         findViewById(R.id.btn_enter).setOnClickListener(this);
     }

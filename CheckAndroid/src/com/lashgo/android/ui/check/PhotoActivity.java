@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 import com.lashgo.android.R;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.BaseFragment;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 /**
  * Created by Eugene on 18.10.2014.
  */
-public class PhotoActivity extends BaseActivity {
+public class PhotoActivity extends BaseActivity implements ViewPager.OnPageChangeListener {
 
     private ArrayList<PhotoDto> photoDtos;
 
@@ -30,6 +31,8 @@ public class PhotoActivity extends BaseActivity {
     private FragmentPagerAdapter pagerAdapter;
 
     private ViewPager viewPager;
+    private View leftArrow;
+    private View rightArrow;
 
     public static Intent buildIntent(Context context, ArrayList<PhotoDto> photoDtos, int selectedPhotoItem, String activityReferrer) {
         Intent intent = new Intent(context, PhotoActivity.class);
@@ -67,11 +70,14 @@ public class PhotoActivity extends BaseActivity {
         initCustomActionBar(ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_TITLE);
         initPhotosList(savedInstanceState);
         setContentView(R.layout.act_photo);
+        leftArrow = findViewById(R.id.left_arrow);
+        rightArrow = findViewById(R.id.right_arrow);
         PagerContainer mContainer = (PagerContainer) findViewById(R.id.pager_container);
         viewPager = mContainer.getViewPager();
         pagerAdapter = new PhotosPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(selectedPhotoItem);
+        viewPager.setOnPageChangeListener(this);
     }
 
     @Override
@@ -81,6 +87,29 @@ public class PhotoActivity extends BaseActivity {
 
     @Override
     public void logout() {
+
+    }
+
+    @Override
+    public void onPageScrolled(int i, float v, int i2) {
+    }
+
+    @Override
+    public void onPageSelected(int i) {
+        if (i == 0 && photoDtos.size() > 1) {
+            rightArrow.setVisibility(View.GONE);
+            leftArrow.setVisibility(View.VISIBLE);
+        } else if (i == photoDtos.size() - 1) {
+            rightArrow.setVisibility(View.VISIBLE);
+            leftArrow.setVisibility(View.GONE);
+        } else {
+            rightArrow.setVisibility(View.VISIBLE);
+            leftArrow.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int i) {
 
     }
 

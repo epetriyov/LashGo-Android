@@ -29,14 +29,14 @@ public interface RestService {
     ResponseObject<MainScreenInfoDto> getUserMainScreenInfo(@Query("news_last_view") String newsLastView, @Query("subscriptions_last_view") String subscriptionsLastView);
 
     @GET(Path.Checks.GET)
-    ResponseList<CheckDto> getChecks();
+    ResponseList<CheckDto> getChecks(@Query("search_text") String searchText);
 
     @Multipart
     @POST(Path.Checks.PHOTOS)
     ResponseObject saveCheckPhoto(@retrofit.http.Path("checkId") int checkId, @Part("photo") TypedFile photo);
 
     @GET(Path.Checks.VOTE_PHOTOS)
-    ResponseObject<VotePhotosResult> getVotePhotos(@retrofit.http.Path("checkId") int checkId, @Query("is_count_included") boolean isCountIncluded);
+    ResponseList<VotePhoto> getVotePhotos(@retrofit.http.Path("checkId") int checkId);
 
     @POST(Path.Photos.VOTE)
     ResponseObject votePhoto(@Body VoteAction voteAction);
@@ -107,4 +107,10 @@ public interface RestService {
 
     @GET(Path.Events.GET)
     ResponseList<EventDto> getEvents();
+
+    @GET(Path.Users.GET)
+    ResponseList<SubscriptionDto> findUsers(@Query("search_text") String searchText);
+
+    @GET(Path.Checks.USERS)
+    ResponseList<SubscriptionDto> getCheckUsers(@retrofit.http.Path("checkId") int checkId);
 }

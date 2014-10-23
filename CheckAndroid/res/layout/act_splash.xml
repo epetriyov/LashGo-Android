@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res/com.lashgo.android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
         >
@@ -10,6 +10,17 @@
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             />
+    <com.viewpagerindicator.CirclePageIndicator
+            android:id="@+id/circle_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="9dp"
+            app:fillColor="@color/splash_top_color"
+            app:pageColor="@color/circle_color"
+            app:radius="3dp"
+            app:strokeColor="@color/circle_color"
+            app:strokeWidth="1dp"/>
     <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
         <ImageView android:layout_width="127dp" android:layout_height="46dp"
                    android:src="@drawable/black_logo"

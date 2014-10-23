@@ -11,6 +11,7 @@ import com.lashgo.android.service.ServiceBinder;
 import com.lashgo.android.service.ServiceHelper;
 import com.lashgo.android.service.ServiceReceiver;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
+import com.lashgo.android.settings.SettingsHelper;
 import dagger.ObjectGraph;
 
 import javax.inject.Inject;
@@ -27,6 +28,9 @@ public abstract class BaseFragment extends Fragment implements ServiceReceiver {
 
     @Inject
     protected ServiceHelper serviceHelper;
+
+    @Inject
+    protected SettingsHelper settingsHelper;
 
     private ObjectGraph fragmentGraph;
 

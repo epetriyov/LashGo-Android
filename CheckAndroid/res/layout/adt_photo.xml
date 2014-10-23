@@ -59,5 +59,16 @@
                      android:layout_gravity="bottom"
                     />
         </FrameLayout>
+        <!--
+        <ImageView
+                android:id="@+id/vote_btn"
+                android:layout_width="61dp" android:layout_height="61dp"
+                android:layout_gravity="top|right"
+                android:layout_marginTop="21dp"
+                android:layout_marginRight="13dp"
+                android:src="@drawable/btn_like"
+                android:visibility="gone"
+                />
+                -->
     </FrameLayout>
 </FrameLayout>

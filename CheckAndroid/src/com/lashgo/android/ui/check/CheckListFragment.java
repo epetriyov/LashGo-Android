@@ -2,6 +2,7 @@ package com.lashgo.android.ui.check;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,14 +25,49 @@ import java.util.Collection;
  */
 public class CheckListFragment extends BaseFragment implements AdapterView.OnItemClickListener, CheckItemBinder.OnCheckStateChangeListener {
 
+    public static enum StartOptions {
+        LOAD_ON_START, DONT_LOAD_ON_START
+    }
+
     private ListView checkListView;
 
     private MultyTypeAdapter multyTypeAdapter;
 
     private Collection<CheckDto> resultCollection;
 
+    private StartOptions loadOnStart;
+
+    private String searchText;
+
     public CheckListFragment() {
         // Empty constructor required for fragment subclasses
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            searchText = savedInstanceState.getString(BaseActivity.ExtraNames.SEARCH_TEXT.name());
+            loadOnStart = (StartOptions) savedInstanceState.getSerializable(BaseActivity.ExtraNames.LOAD_ON_START.name());
+        } else {
+            Bundle args = getArguments();
+            if (args != null) {
+                searchText = args.getString(BaseActivity.ExtraNames.SEARCH_TEXT.name());
+                loadOnStart = (StartOptions) args.getSerializable(BaseActivity.ExtraNames.LOAD_ON_START.name());
+            }
+        }
+    }
+
+    public void setSearchText(String searchText) {
+        this.searchText = searchText;
+        refresh();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(BaseActivity.ExtraNames.SEARCH_TEXT.name(), searchText);
+        outState.putSerializable(BaseActivity.ExtraNames.LOAD_ON_START.name(), loadOnStart);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -45,12 +81,15 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
         checkListView.setAdapter(multyTypeAdapter);
         checkListView.setOnItemClickListener(this);
         getActivity().setTitle(R.string.check_list);
+        if (StartOptions.LOAD_ON_START.equals(loadOnStart) || !TextUtils.isEmpty(searchText)) {
+            refresh();
+        }
         return checkListView;
     }
 
     @Override
     public void refresh() {
-        serviceHelper.getChecks();
+        serviceHelper.getChecks(searchText);
     }
 
     @Override
@@ -126,8 +165,12 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
         }
     }
 
-    public static Fragment newInstance() {
-        return new CheckListFragment();
+    public static Fragment newInstance(StartOptions loadOnStart) {
+        Fragment fragment = new CheckListFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(BaseActivity.ExtraNames.LOAD_ON_START.name(), loadOnStart);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -146,11 +189,5 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
         if (getActivity() != null && !isDetached()) {
             onCheckListLoaded();
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        serviceHelper.getChecks();
     }
 }

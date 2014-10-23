@@ -17,7 +17,6 @@ import com.lashgo.android.service.ServiceHelper;
 import com.lashgo.android.service.ServiceReceiver;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.settings.SettingsHelper;
-import com.lashgo.android.ui.main.MainActivity;
 import com.lashgo.android.ui.search.SearchActivity;
 import com.lashgo.android.utils.ContextUtils;
 import com.lashgo.model.dto.ErrorDto;
@@ -227,7 +226,11 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
     }
 
     public static enum ExtraNames {
-        CHECK_DTO, PHOTO_URL, PROFILE_OWNER, USER_ID, PHOTO_DTO, PHOTO_TYPE, USER_DTO, CHECK_ID, PHOTO_ID, FROM, REQUEST_TOKEN, TWITTER_URL, WAS_PHOTO_SENT, CHECK_LIST, OPEN_MODE, PHOTOS_LIST, SELECTED_PHOTO, ACTIVITY_REFERRER;
+        CHECK_DTO, PHOTO_URL, PROFILE_OWNER, USER_ID, PHOTO_DTO,
+        PHOTO_TYPE, USER_DTO, CHECK_ID, PHOTO_ID, FROM, REQUEST_TOKEN,
+        TWITTER_URL, WAS_PHOTO_SENT, CHECK_LIST, OPEN_MODE, PHOTOS_LIST,
+        SELECTED_PHOTO, ACTIVITY_REFERRER, LOAD_ON_START, SEARCH_TEXT,
+        VOTE_PHOTOS, POSITION, SIZE;
     }
 
     @Override
@@ -240,7 +243,7 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
         searchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                startActivity(new Intent(BaseActivity.this, SearchActivity.class));
             }
         });
 //        ImageView notificationsView = (ImageView) menu.findItem(R.id.action_notifications).getActionView();
@@ -261,9 +264,8 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
             settingsHelper.logout();
         } else if (item.getItemId() == R.id.action_refresh) {
             refresh();
-        } else if (item.getItemId() == R.id.action_search)
-        {
-            startActivity(new Intent(this,SearchActivity.class));
+        } else if (item.getItemId() == R.id.action_search) {
+            startActivity(new Intent(this, SearchActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }

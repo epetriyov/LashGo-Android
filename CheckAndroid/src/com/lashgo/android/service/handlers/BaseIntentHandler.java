@@ -97,6 +97,10 @@ public abstract class BaseIntentHandler {
             return new UnsubscribeHandler();
         } else if (ServiceActionNames.ACTION_GET_EVENTS.name().equals(action)) {
             return new GetEventsHandler();
+        }  else if (ServiceActionNames.ACTION_FIND_USERS.name().equals(action)) {
+            return new FindUserHandler();
+        }  else if (ServiceActionNames.ACTION_GET_CHECK_LIST.name().equals(action)) {
+            return new GetCheckUsersHandler();
         } else {
             throw new IllegalArgumentException("illegal action - " + action);
         }
@@ -115,7 +119,10 @@ public abstract class BaseIntentHandler {
         ACTION_SAVE_PROFILE, ACTION_GET_CHECK_COMMENTS,
         ACTION_GET_PHOTO_COMMENTS, ACTION_ADD_PHOTO_COMMENT,
         ACTION_ADD_CHECK_COMMENT, ACTION_GET_CHECK_COUNTERS,
-        ACTION_GET_PHOTO_COUNTERS, ACTION_LIKE_PHOTO, ACTION_GET_SUBSCRIPTIONS, ACTION_GET_SUBSCRIBERS, ACTION_SUBSCRIBE, ACTION_UNSUBSCRIBE, ACTION_GET_EVENTS, ACTION_GET_CHECK_LIST
+        ACTION_GET_PHOTO_COUNTERS, ACTION_LIKE_PHOTO,
+        ACTION_GET_SUBSCRIPTIONS, ACTION_GET_SUBSCRIBERS,
+        ACTION_SUBSCRIBE, ACTION_UNSUBSCRIBE, ACTION_GET_EVENTS,
+        ACTION_FIND_USERS, ACTION_GET_CHECK_USERS, ACTION_GET_CHECK_LIST
     }
 
     public static enum ServiceExtraNames {
@@ -127,7 +134,8 @@ public abstract class BaseIntentHandler {
         VOTE_PHOTO_LIST, VOTE_ACTION, CHECK_ID, IS_LIKE_ADDED,
         USER_ID, USER_PROFILE, PHOTOS_LIST, CHECK_DTO,
         AVATAR_PATH, PHOTO_ID, COMMENTS_LIST, COMMENT_TEXT,
-        COMMENT, EMAIL, COUNTERS, SUBSCRIPTION_DTO, SUBSCRIPTIONS_DTO, SUBSCRIBERS_DTO, EVENTS_DTO, IS_PHOTOS_COUNT_INCLUDED
+        COMMENT, EMAIL, COUNTERS, SUBSCRIPTION_DTO, SUBSCRIPTIONS_DTO,
+        SUBSCRIBERS_DTO, EVENTS_DTO, SEARCH_TEXT, USERS_DTO, IS_PHOTOS_COUNT_INCLUDED
     }
 
     public static final String ERROR_EXTRA = "error_extra";

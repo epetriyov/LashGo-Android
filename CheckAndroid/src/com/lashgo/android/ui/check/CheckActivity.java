@@ -237,7 +237,7 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
 
     private void openVotePerspective() {
         findViewById(R.id.vote_layout).setVisibility(View.VISIBLE);
-        actionBtn.setImageResource(R.drawable.btn_vote);
+        actionBtn.setImageResource(R.drawable.btn_like);
         final TextView voteCheckTime = ((TextView) findViewById(R.id.vote_check_time));
         long finishMillis = checkDto.getStartDate().getTime() + checkDto.getDuration() * DateUtils.HOUR_IN_MILLIS + checkDto.getVoteDuration() * DateUtils.HOUR_IN_MILLIS;
         UiUtils.startTimer(finishMillis, voteCheckTime, new TimerFinishedListener() {

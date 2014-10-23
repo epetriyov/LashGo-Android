@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.lashgo.android.R;
+import com.lashgo.android.settings.SettingsHelper;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.model.dto.SubscriptionDto;
 
@@ -19,9 +20,12 @@ public class SubscriptionAdapter extends ArrayAdapter<SubscriptionDto> {
 
     private ActionBtnClickListener listener;
 
-    public SubscriptionAdapter(Context context, ActionBtnClickListener listener) {
+    private SettingsHelper settingsHelper;
+
+    public SubscriptionAdapter(Context context, ActionBtnClickListener listener, SettingsHelper settingsHelper) {
         super(context, -1);
         this.listener = listener;
+        this.settingsHelper = settingsHelper;
     }
 
     private static class ViewHolder {
@@ -57,10 +61,15 @@ public class SubscriptionAdapter extends ArrayAdapter<SubscriptionDto> {
             PhotoUtils.displayImage(getContext(), viewHolder.userAvatar, subscriptionDto.getUserAvatar(), photoSize, R.drawable.ava, false);
         }
         viewHolder.userName.setText(!TextUtils.isEmpty(subscriptionDto.getFio()) ? subscriptionDto.getFio() : subscriptionDto.getUserLogin());
-        if (!subscriptionDto.isAmISubscribed()) {
-            viewHolder.actionBtn.setImageResource(R.drawable.add_user);
+        if (settingsHelper.isLoggedIn()) {
+            viewHolder.actionBtn.setVisibility(View.VISIBLE);
+            if (!subscriptionDto.isAmISubscribed()) {
+                viewHolder.actionBtn.setImageResource(R.drawable.add_user);
+            } else {
+                viewHolder.actionBtn.setImageResource(R.drawable.follow_user);
+            }
         } else {
-            viewHolder.actionBtn.setImageResource(R.drawable.follow_user);
+            viewHolder.actionBtn.setVisibility(View.GONE);
         }
         return convertView;
     }

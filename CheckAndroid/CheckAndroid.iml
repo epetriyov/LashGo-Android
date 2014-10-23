@@ -21,6 +21,7 @@
     <orderEntry type="module" module-name="facebook" />
     <orderEntry type="module" module-name="vksdk" />
     <orderEntry type="library" name="libs" level="project" />
+    <orderEntry type="module" module-name="viewpagerindicator" />
   </component>
 </module>
 

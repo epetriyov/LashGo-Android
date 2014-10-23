@@ -159,13 +159,14 @@ public class ServiceHelper {
         runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_MAIN_SCREEN_INFO.name(), extras);
     }
 
-    public void getChecks() {
-        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_LIST.name(), new Bundle());
+    public void getChecks(String searchText) {
+        Bundle bundle = new Bundle();
+        bundle.putString(BaseIntentHandler.ServiceExtraNames.SEARCH_TEXT.name(),searchText);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_LIST.name(), bundle);
     }
 
-    public void getVotePhotos(int checkId, boolean isPhotosCountedIncluded) {
+    public void getVotePhotos(int checkId) {
         Bundle extras = new Bundle();
-        extras.putBoolean(BaseIntentHandler.ServiceExtraNames.IS_PHOTOS_COUNT_INCLUDED.name(), isPhotosCountedIncluded);
         extras.putInt(BaseIntentHandler.ServiceExtraNames.CHECK_ID.name(), checkId);
         runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_VOTE_PHOTOS.name(), extras);
     }
@@ -302,5 +303,17 @@ public class ServiceHelper {
 
     public void getEvents() {
         runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_EVENTS.name(), new Bundle());
+    }
+
+    public void searchUsers(String searchText) {
+        Bundle bundle = new Bundle();
+        bundle.putString(BaseIntentHandler.ServiceExtraNames.SEARCH_TEXT.name(), searchText);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_FIND_USERS.name(), bundle);
+    }
+
+    public void getCheckUsers(int checkId) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(BaseIntentHandler.ServiceExtraNames.CHECK_ID.name(), checkId);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_LIST.name(), bundle);
     }
 }
