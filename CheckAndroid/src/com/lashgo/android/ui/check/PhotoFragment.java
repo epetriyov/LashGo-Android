@@ -9,12 +9,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.lashgo.android.R;
+import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.BaseFragment;
 import com.lashgo.android.ui.profile.ProfileActivity;
 import com.lashgo.android.ui.views.RobotoTextView;
 import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.PhotoUtils;
+import com.lashgo.model.dto.CheckCounters;
 import com.lashgo.model.dto.CheckDto;
 import com.lashgo.model.dto.PhotoDto;
 import com.lashgo.model.dto.UserDto;
@@ -39,6 +41,7 @@ public class PhotoFragment extends BaseFragment implements View.OnClickListener 
     private PhotoDto photoDto;
 
     private String activityReferrer;
+    private CheckBottomPanelController bottomPanel;
 
     public static Fragment newInstance(PhotoDto photoDto, String activityReferrer) {
         PhotoFragment photoFragment = new PhotoFragment();
@@ -75,8 +78,34 @@ public class PhotoFragment extends BaseFragment implements View.OnClickListener 
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.adt_photo, container, false);
         initViews(view);
-        new CheckBottomPanelController((BaseActivity) getActivity(), view, photoDto);
+        bottomPanel = new CheckBottomPanelController((BaseActivity) getActivity(), view, photoDto);
         return view;
+    }
+
+    @Override
+    protected void registerActionsListener() {
+        super.registerActionsListener();
+        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_PHOTO_COUNTERS.name());
+    }
+
+    @Override
+    protected void unregisterActionsListener() {
+        super.unregisterActionsListener();
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_PHOTO_COUNTERS.name());
+    }
+
+    @Override
+    public void processServerResult(String action, int resultCode, Bundle data) {
+        super.processServerResult(action, resultCode, data);
+        if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE && data != null) {
+            CheckCounters checkCounters = (CheckCounters) data.getSerializable(BaseIntentHandler.ServiceExtraNames.COUNTERS.name());
+            bottomPanel.updateCommentsCount(checkCounters.getCommentsCount());
+        }
+    }
+
+    @Override
+    public void refresh() {
+        serviceHelper.getPhotoCounters(photoDto.getId());
     }
 
     private void setUpTopCheck(CheckDto checkDto) {

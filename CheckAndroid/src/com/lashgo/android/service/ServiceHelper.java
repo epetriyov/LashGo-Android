@@ -46,8 +46,11 @@ public class ServiceHelper {
         serviceCallbackListenerMap.put(action, new WeakReference<>(serviceCallbackListener));
     }
 
-    public void removeActionListener(String action) {
-        serviceCallbackListenerMap.remove(action);
+    public void removeActionListener(String action, ServiceCallbackListener serviceCallbackListener) {
+        WeakReference<ServiceCallbackListener> listener = serviceCallbackListenerMap.get(action);
+        if (listener != null && listener.get() != null && listener.get().equals(serviceCallbackListener)) {
+            serviceCallbackListenerMap.remove(action);
+        }
     }
 
     private Intent createIntent(final String actionName) {
@@ -273,12 +276,16 @@ public class ServiceHelper {
         runRequest(BaseIntentHandler.ServiceActionNames.ACTION_LIKE_PHOTO.name(), extras);
     }
 
-    public void getSubscriptions() {
-        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_SUBSCRIPTIONS.name(), new Bundle());
+    public void getSubscriptions(int userId) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(BaseIntentHandler.ServiceExtraNames.USER_ID.name(), userId);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_SUBSCRIPTIONS.name(), bundle);
     }
 
-    public void getSubscribers() {
-        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_SUBSCRIBERS.name(), new Bundle());
+    public void getSubscribers(int userId) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(BaseIntentHandler.ServiceExtraNames.USER_ID.name(), userId);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_SUBSCRIBERS.name(), bundle);
     }
 
     public void subscribe(SubscribeDto subscribeDto) {

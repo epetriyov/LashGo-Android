@@ -1,10 +1,8 @@
 package com.lashgo.android.ui.start;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import com.lashgo.android.LashgoApplication;
-import com.lashgo.android.settings.SettingsHelper;
+import android.view.Menu;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.main.MainActivity;
 
@@ -22,5 +20,20 @@ public class StartActivity extends BaseActivity {
             startActivity(new Intent(this, MainActivity.class));
         }
         finish();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return true;
+    }
+
+    @Override
+    protected void refresh() {
+
+    }
+
+    @Override
+    public void logout() {
+
     }
 }

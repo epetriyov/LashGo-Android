@@ -68,4 +68,14 @@ public class PasswordRecoverActivity extends BaseActivity {
         super.unregisterActionsListener();
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_PASSWORD_RECOVER.name());
     }
+
+    @Override
+    public void logout() {
+        //TODO not to implement
+    }
+
+    @Override
+    protected void refresh() {
+
+    }
 }

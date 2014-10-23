@@ -58,6 +58,7 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
     private int pagesCount;
     private ImageAnimation imageAnimation;
     private ImageView expandedImageView;
+    private CheckBottomPanelController bottomPanel;
 
     public enum TO {to, FINISHED, VOTE}
 
@@ -107,6 +108,7 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
         if (checkDto == null) {
             serviceHelper.getCheck(checkId);
         } else {
+            bottomPanel = new CheckBottomPanelController(this, getWindow().getDecorView(), checkDto);
             initViews();
             loadCheck();
         }
@@ -168,7 +170,7 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
 
     private void loadCheck() {
         findViewById(R.id.lashgo_progress).setVisibility(View.GONE);
-        new CheckBottomPanelController(this, getWindow().getDecorView(), checkDto);
+        bottomPanel.updatePeoplesCount(checkDto.getPlayersCount());
         LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
         if (LashgoConfig.CheckState.VOTE.equals(checkState)) {
             openVotePerspective();
@@ -215,6 +217,9 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
             } else if (BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK.name().equals(action)) {
                 if (data != null) {
                     checkDto = (com.lashgo.model.dto.CheckDto) data.getSerializable(BaseIntentHandler.ServiceExtraNames.CHECK_DTO.name());
+                    if (bottomPanel == null) {
+                        bottomPanel = new CheckBottomPanelController(this, getWindow().getDecorView(), checkDto);
+                    }
                     loadCheck();
                     updatePagesCount();
                     pagerAdapter.notifyDataSetChanged();
@@ -466,5 +471,15 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
         } else {
             timerFinished = true;
         }
+    }
+
+    @Override
+    public void logout() {
+
+    }
+
+    @Override
+    protected void refresh() {
+        serviceHelper.getCheck(checkId);
     }
 }

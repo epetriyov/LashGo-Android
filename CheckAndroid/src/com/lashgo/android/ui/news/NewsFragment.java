@@ -27,6 +27,11 @@ public class NewsFragment extends BaseFragment {
         return rootView;
     }
 
+    @Override
+    public void refresh() {
+
+    }
+
     public static Fragment newInstance() {
         return new NewsFragment();
     }

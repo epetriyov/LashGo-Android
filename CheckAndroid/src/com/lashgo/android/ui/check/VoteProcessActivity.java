@@ -13,6 +13,7 @@ import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.ImageAnimation;
+import com.lashgo.android.ui.main.MainActivity;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.android.utils.UiUtils;
 import com.lashgo.model.dto.CheckDto;
@@ -133,7 +134,7 @@ public class VoteProcessActivity extends BaseActivity implements View.OnClickLis
         initCheckDto(savedInstanceState);
         setContentView(R.layout.act_first_vote);
         expandedImageView = (ImageView) findViewById(R.id.expanded_image);
-        imageAnimation = new ImageAnimation(this, findViewById(R.id.shadow),findViewById(R.id.container), expandedImageView);
+        imageAnimation = new ImageAnimation(this, findViewById(R.id.shadow), findViewById(R.id.container), expandedImageView);
         initViews();
         serviceHelper.getVotePhotos(checkDto.getId(), true);
         screenState = ScreenState.CHOOSE_PHOTO;
@@ -178,6 +179,17 @@ public class VoteProcessActivity extends BaseActivity implements View.OnClickLis
                 voteHint.setText(R.string.go_to_next_partition);
             }
         }
+    }
+
+    @Override
+    protected void refresh() {
+
+    }
+
+    @Override
+    public void logout() {
+        settingsHelper.logout();
+        finish();
     }
 
     private void updatePhotos(VotePhotosResult votePhotos) {
@@ -253,7 +265,7 @@ public class VoteProcessActivity extends BaseActivity implements View.OnClickLis
             voteHint = (TextView) findViewById(R.id.vote_hint);
             photosCounter = (TextView) findViewById(R.id.checks_counter);
             updateCounter();
-            new CheckBottomPanelController(this,checkDto);
+            new CheckBottomPanelController(this, checkDto);
 
         }
     }

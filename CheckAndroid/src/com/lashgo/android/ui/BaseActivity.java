@@ -2,13 +2,13 @@ package com.lashgo.android.ui;
 
 import android.app.ActionBar;
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.View;
-import android.view.Window;
+import android.view.*;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.crittercism.app.Crittercism;
 import com.lashgo.android.*;
@@ -17,6 +17,8 @@ import com.lashgo.android.service.ServiceHelper;
 import com.lashgo.android.service.ServiceReceiver;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.settings.SettingsHelper;
+import com.lashgo.android.ui.main.MainActivity;
+import com.lashgo.android.ui.search.SearchActivity;
 import com.lashgo.android.utils.ContextUtils;
 import com.lashgo.model.dto.ErrorDto;
 import com.lashgo.model.dto.SocialInfo;
@@ -46,6 +48,7 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
     protected Handler handler;
     @Inject
     ServiceBinder serviceBinder;
+    protected MenuItem exitMenu;
     private View customActionBarView;
     private View homeBtn;
     private TextView actionBarTitle;
@@ -107,7 +110,7 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
     }
 
     protected void removeActionListener(String actionName) {
-        serviceHelper.removeActionListener(actionName);
+        serviceHelper.removeActionListener(actionName, serviceBinder);
     }
 
     @Override
@@ -177,6 +180,9 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
         }
     }
 
+    public void setScreenTitle(int titleId) {
+        actionBarTitle.setText(titleId);
+    }
 
     protected void initCustomActionBar(int displayOptions) {
         getActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -221,6 +227,48 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
     }
 
     public static enum ExtraNames {
-        CHECK_DTO, PHOTO_URL, PROFILE_OWNER, USER_ID, PHOTO_DTO, PHOTO_TYPE, USER_DTO, CHECK_ID, PHOTO_ID, FROM, REQUEST_TOKEN, TWITTER_URL, WAS_PHOTO_SENT, CHECK_LIST, OPEN_MODE,PHOTOS_LIST, SELECTED_PHOTO, ACTIVITY_REFERRER;
+        CHECK_DTO, PHOTO_URL, PROFILE_OWNER, USER_ID, PHOTO_DTO, PHOTO_TYPE, USER_DTO, CHECK_ID, PHOTO_ID, FROM, REQUEST_TOKEN, TWITTER_URL, WAS_PHOTO_SENT, CHECK_LIST, OPEN_MODE, PHOTOS_LIST, SELECTED_PHOTO, ACTIVITY_REFERRER;
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        exitMenu = menu.findItem(R.id.action_exit);
+        exitMenu.setVisible(settingsHelper.isLoggedIn());
+        ImageView searchView = (ImageView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setImageResource(R.drawable.ic_action_search);
+        searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+//        ImageView notificationsView = (ImageView) menu.findItem(R.id.action_notifications).getActionView();
+//        notificationsView.setImageResource(R.drawable.ic_action_notifications);
+//        notificationsView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//            }
+//        });
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_exit) {
+            logout();
+            settingsHelper.logout();
+        } else if (item.getItemId() == R.id.action_refresh) {
+            refresh();
+        } else if (item.getItemId() == R.id.action_search)
+        {
+            startActivity(new Intent(this,SearchActivity.class));
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    protected abstract void refresh();
+
+    public abstract void logout();
 }

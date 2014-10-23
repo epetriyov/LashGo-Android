@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import com.facebook.UiLifecycleHelper;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
@@ -163,5 +164,20 @@ public class LoginActivity extends BaseActivity implements AuthController.AuthLi
     protected void onPause() {
         super.onPause();
         facebookUiHelper.onPause();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return true;
+    }
+
+    @Override
+    protected void refresh() {
+
+    }
+
+    @Override
+    public void logout() {
+        //TODO not to implement
     }
 }

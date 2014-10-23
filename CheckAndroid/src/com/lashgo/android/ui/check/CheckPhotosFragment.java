@@ -11,6 +11,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.lashgo.android.R;
+import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.BaseFragment;
 import com.lashgo.android.ui.profile.PhotoGalleryAdapter;
@@ -42,10 +43,16 @@ public class CheckPhotosFragment extends BaseFragment implements AdapterView.OnI
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(BaseActivity.ExtraNames.CHECK_DTO.name(), checkDto);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        if (args != null) {
+        if (savedInstanceState != null) {
             checkDto = (CheckDto) args.getSerializable(BaseActivity.ExtraNames.CHECK_DTO.name());
         }
     }
@@ -68,11 +75,14 @@ public class CheckPhotosFragment extends BaseFragment implements AdapterView.OnI
             photosGallery.setOnItemClickListener(this);
             photoGalleryAdapter = new PhotoGalleryAdapter(getActivity(), galImageSize);
             photosGallery.setAdapter(photoGalleryAdapter);
-            if (photoDtos != null) {
-                updateList();
-            }
+            serviceHelper.getCheckPhotos(checkDto.getId());
         }
         return view;
+    }
+
+    @Override
+    public void refresh() {
+        serviceHelper.getCheckPhotos(checkDto.getId());
     }
 
     public void initGallery(final ArrayList<PhotoDto> photoDtos) {
@@ -93,5 +103,27 @@ public class CheckPhotosFragment extends BaseFragment implements AdapterView.OnI
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         startActivity(PhotoActivity.buildIntent(getActivity(), photoDtos, i, ActivityReferrer.FROM_CHECK_GALLERY.name()));
+    }
+
+    @Override
+    public void processServerResult(String action, int resultCode, Bundle data) {
+        super.processServerResult(action, resultCode, data);
+        if (data != null && resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
+            if (BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_PHOTOS.name().equals(action)) {
+                initGallery((ArrayList<com.lashgo.model.dto.PhotoDto>) data.getSerializable(BaseIntentHandler.ServiceExtraNames.PHOTOS_LIST.name()));
+            }
+        }
+    }
+
+    @Override
+    protected void registerActionsListener() {
+        super.registerActionsListener();
+        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_PHOTOS.name());
+    }
+
+    @Override
+    protected void unregisterActionsListener() {
+        super.unregisterActionsListener();
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_PHOTOS.name());
     }
 }

@@ -114,6 +114,13 @@
     <string name="notification_title">Начался новый чек</string>
     <string name="ok">OK</string>
     <string name="photo">Фото</string>
+    <string name="subscribers_list">Подписчики</string>
+    <string name="no_result">Список пуст</string>
+    <string name="signed_up">подписан на</string>
+    <string name="commented">прокомментировал фото</string>
+    <string name="won">выиграл в чеке</string>
+    <string name="you">Ты</string>
+    <string name="activity">Активность</string>
     <string-array name="make_photo_items">
         <item>Камера</item>
         <item>Галерея</item>

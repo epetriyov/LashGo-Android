@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -61,6 +62,21 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
         });
         findViewById(R.id.btn_skip).setOnClickListener(this);
         findViewById(R.id.btn_enter).setOnClickListener(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return true;
+    }
+
+    @Override
+    protected void refresh() {
+
+    }
+
+    @Override
+    public void logout() {
+
     }
 
     @Override

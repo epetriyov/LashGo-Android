@@ -6,6 +6,7 @@ import com.lashgo.android.social.FacebookHelper;
 import com.lashgo.android.social.TwitterHelper;
 import com.lashgo.android.social.VkontakteListener;
 import com.lashgo.android.ui.BaseActivity;
+import com.lashgo.android.ui.activity.ActivitiesActivity;
 import com.lashgo.android.ui.auth.LoginActivity;
 import com.lashgo.android.ui.auth.PasswordRecoverActivity;
 import com.lashgo.android.ui.auth.SuccessfulRegisterActivity;
@@ -15,8 +16,10 @@ import com.lashgo.android.ui.comments.CommentsActivity;
 import com.lashgo.android.ui.main.MainActivity;
 import com.lashgo.android.ui.profile.EditProfileActivity;
 import com.lashgo.android.ui.profile.ProfileActivity;
+import com.lashgo.android.ui.search.SearchActivity;
 import com.lashgo.android.ui.start.SplashActivity;
 import com.lashgo.android.ui.start.StartActivity;
+import com.lashgo.android.ui.subscribes.SubscribesActivity;
 import dagger.Module;
 import dagger.Provides;
 
@@ -39,6 +42,9 @@ import dagger.Provides;
                 ProfileActivity.class,
                 LoginActivity.class,
                 SuccessfulRegisterActivity.class,
+                SubscribesActivity.class,
+                ActivitiesActivity.class,
+                SearchActivity.class,
                 TwitterAuthActivity.class,
                 PhotoSentActivity.class,
                 CommentsActivity.class,

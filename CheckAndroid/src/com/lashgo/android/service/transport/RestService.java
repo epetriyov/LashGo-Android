@@ -100,10 +100,10 @@ public interface RestService {
     ResponseObject unsubscribe(@retrofit.http.Path("userId") int userId);
 
     @GET(Path.Users.SUBSCRIPTIONS)
-    ResponseList<SubscriptionDto> getSubscriptions();
+    ResponseList<SubscriptionDto> getSubscriptions(@retrofit.http.Path("userId") int userId);
 
     @GET(Path.Users.SUBSCRIBERS)
-    ResponseList<SubscriptionDto> getSubscribers();
+    ResponseList<SubscriptionDto> getSubscribers(@retrofit.http.Path("userId") int userId);
 
     @GET(Path.Events.GET)
     ResponseList<EventDto> getEvents();

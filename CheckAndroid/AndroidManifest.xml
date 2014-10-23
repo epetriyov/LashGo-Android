@@ -90,7 +90,6 @@
                 />
 
         <activity android:name=".ui.profile.ProfileActivity"
-                  android:launchMode="singleTask"
                   android:theme="@style/Theme.LashGo.TransparentActionBar"
                   android:screenOrientation="portrait"
                 />
@@ -103,6 +102,19 @@
         <activity android:name=".ui.profile.EditProfileActivity"
                   android:screenOrientation="portrait"
                   android:label="@string/edit"
+                />
+
+        <activity android:name=".ui.subscribes.SubscribesActivity"
+                  android:screenOrientation="portrait"
+                />
+
+        <activity android:name=".ui.search.SearchActivity"
+                  android:screenOrientation="portrait"
+                />
+
+        <activity android:name=".ui.activity.ActivitiesActivity"
+                  android:screenOrientation="portrait"
+                  android:label="@string/activity"
                 />
 
         <activity android:name=".ui.start.SplashActivity"

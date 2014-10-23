@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by Eugene on 15.07.2014.
  */
-public class BaseFragment extends Fragment implements ServiceReceiver {
+public abstract class BaseFragment extends Fragment implements ServiceReceiver {
 
     @Inject
     ServiceBinder serviceBinder;
@@ -39,7 +39,7 @@ public class BaseFragment extends Fragment implements ServiceReceiver {
 
     }
 
-
+    public abstract void refresh();
 
     protected void registerActionsListener() {
 
@@ -50,7 +50,7 @@ public class BaseFragment extends Fragment implements ServiceReceiver {
     }
 
     protected void removeActionListener(String actionName) {
-        serviceHelper.removeActionListener(actionName);
+        serviceHelper.removeActionListener(actionName,serviceBinder);
     }
 
 

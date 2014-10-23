@@ -7,10 +7,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import com.lashgo.android.R;
 import com.lashgo.android.ui.BaseActivity;
+import com.lashgo.android.ui.BaseFragment;
 import com.lashgo.android.ui.views.PagerContainer;
 import com.lashgo.model.dto.PhotoDto;
 
@@ -26,6 +26,10 @@ public class PhotoActivity extends BaseActivity {
     private int selectedPhotoItem;
 
     private String activityReferrer;
+
+    private FragmentPagerAdapter pagerAdapter;
+
+    private ViewPager viewPager;
 
     public static Intent buildIntent(Context context, ArrayList<PhotoDto> photoDtos, int selectedPhotoItem, String activityReferrer) {
         Intent intent = new Intent(context, PhotoActivity.class);
@@ -64,10 +68,20 @@ public class PhotoActivity extends BaseActivity {
         initPhotosList(savedInstanceState);
         setContentView(R.layout.act_photo);
         PagerContainer mContainer = (PagerContainer) findViewById(R.id.pager_container);
-        ViewPager viewPager = mContainer.getViewPager();
-        PagerAdapter pagerAdapter = new PhotosPagerAdapter(getSupportFragmentManager());
+        viewPager = mContainer.getViewPager();
+        pagerAdapter = new PhotosPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(selectedPhotoItem);
+    }
+
+    @Override
+    protected void refresh() {
+        ((BaseFragment) pagerAdapter.getItem(viewPager.getCurrentItem())).refresh();
+    }
+
+    @Override
+    public void logout() {
+
     }
 
     private class PhotosPagerAdapter extends FragmentPagerAdapter {

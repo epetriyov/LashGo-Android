@@ -5,11 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
@@ -34,8 +31,8 @@ public class CommentsActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(ExtraNames.CHECK_ID.name(),checkId);
-        outState.putLong(ExtraNames.PHOTO_ID.name(),photoId);
+        outState.putInt(ExtraNames.CHECK_ID.name(), checkId);
+        outState.putLong(ExtraNames.PHOTO_ID.name(), photoId);
         super.onSaveInstanceState(outState);
     }
 
@@ -55,14 +52,20 @@ public class CommentsActivity extends BaseActivity implements View.OnClickListen
         if (savedInstanceState != null) {
             checkId = savedInstanceState.getInt(ExtraNames.CHECK_ID.name());
             photoId = savedInstanceState.getLong(ExtraNames.PHOTO_ID.name());
-        }
-        else
-        {
+        } else {
             Intent intent = getIntent();
             if (intent != null) {
                 checkId = intent.getIntExtra(ExtraNames.CHECK_ID.name(), -1);
                 photoId = intent.getLongExtra(ExtraNames.PHOTO_ID.name(), -1);
             }
+        }
+    }
+
+    private void updateComments() {
+        if (checkId > 0) {
+            serviceHelper.getCheckComments(checkId);
+        } else {
+            serviceHelper.getPhotoComments(photoId);
         }
     }
 
@@ -73,11 +76,7 @@ public class CommentsActivity extends BaseActivity implements View.OnClickListen
         setContentView(R.layout.act_comments);
         initExtras(savedInstanceState);
         initViews();
-        if (checkId > 0) {
-            serviceHelper.getCheckComments(checkId);
-        } else {
-            serviceHelper.getPhotoComments(photoId);
-        }
+        updateComments();
     }
 
     private void initViews() {
@@ -86,9 +85,7 @@ public class CommentsActivity extends BaseActivity implements View.OnClickListen
         commentsListView.setAdapter(commentsAdapter);
         if (!settingsHelper.isLoggedIn()) {
             findViewById(R.id.add_comment_layout).setVisibility(View.GONE);
-        }
-        else
-        {
+        } else {
             findViewById(R.id.btn_add_comment).setOnClickListener(this);
             editComment = (EditText) findViewById(R.id.edit_comment);
         }
@@ -127,6 +124,16 @@ public class CommentsActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
+    @Override
+    protected void refresh() {
+        updateComments();
+    }
+
+    @Override
+    public void logout() {
+
+    }
+
     private void onCommentAdded(CommentDto commentDto) {
         editComment.setText(null);
         if (commentDto != null) {
@@ -137,6 +144,7 @@ public class CommentsActivity extends BaseActivity implements View.OnClickListen
 
     private void onCommentsLoaded(ArrayList<CommentDto> commentsList) {
         if (commentsList != null) {
+            commentsAdapter.clear();
             for (CommentDto commentDto : commentsList) {
                 commentsAdapter.add(commentDto);
             }

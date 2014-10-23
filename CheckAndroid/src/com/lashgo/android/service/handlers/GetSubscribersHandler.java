@@ -14,7 +14,7 @@ import java.io.IOException;
 public class GetSubscribersHandler extends BaseIntentHandler {
     @Override
     protected Bundle doExecute(Intent intent) throws IOException, RetrofitError {
-        ResponseList<SubscriptionDto> responseList = service.getSubscribers();
+        ResponseList<SubscriptionDto> responseList = service.getSubscribers(intent.getIntExtra(ServiceExtraNames.USER_ID.name(),-1));
         Bundle bundle = new Bundle();
         bundle.putSerializable(ServiceExtraNames.SUBSCRIBERS_DTO.name(), responseList.getResultCollection());
         return bundle;

@@ -45,6 +45,12 @@ public class PhotoSentActivity extends BaseActivity implements View.OnClickListe
     }
 
     @Override
+    public void logout() {
+        settingsHelper.logout();
+        finish();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActionBar().hide();
@@ -52,6 +58,11 @@ public class PhotoSentActivity extends BaseActivity implements View.OnClickListe
         setContentView(R.layout.act_sent_photo);
         findViewById(R.id.close_btn).setOnClickListener(this);
         PhotoUtils.displayImage(this, (android.widget.ImageView) findViewById(R.id.sent_photo), Uri.fromFile(new File(imgPath)), PhotoUtils.getScreenWidth(this), PhotoUtils.convertDpToPixels(296, this));
+    }
+
+    @Override
+    protected void refresh() {
+
     }
 
     @Override

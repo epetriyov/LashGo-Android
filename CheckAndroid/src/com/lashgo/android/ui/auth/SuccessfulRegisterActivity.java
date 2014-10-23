@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -88,5 +89,21 @@ public class SuccessfulRegisterActivity extends BaseActivity implements View.OnC
         if (requestCode == EDIT_PROFILE_REQUEST && resultCode == RESULT_OK) {
             finish();
         }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return true;
+    }
+
+    @Override
+    public void logout() {
+        //TODO not to implement
+    }
+
+    @Override
+    protected void refresh() {
+
     }
 }

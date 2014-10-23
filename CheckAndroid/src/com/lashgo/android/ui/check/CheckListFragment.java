@@ -49,6 +49,11 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
     }
 
     @Override
+    public void refresh() {
+        serviceHelper.getChecks();
+    }
+
+    @Override
     protected void registerActionsListener() {
         addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_LIST.name());
     }

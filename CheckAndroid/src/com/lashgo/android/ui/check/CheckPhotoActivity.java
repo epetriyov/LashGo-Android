@@ -50,7 +50,6 @@ public class CheckPhotoActivity extends BaseActivity {
         viewPager = mContainer.getViewPager();
         pagerAdapter = new CheckFinishedPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
-        serviceHelper.getCheckPhotos(checkDto.getId());
     }
 
     private void initExtras(Bundle savedInstanceState) {
@@ -93,29 +92,19 @@ public class CheckPhotoActivity extends BaseActivity {
     }
 
     @Override
-    protected void registerActionsListener() {
-        super.registerActionsListener();
-        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_PHOTOS.name());
-        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_LIKE_PHOTO.name());
-    }
-
-    @Override
-    protected void unregisterActionsListener() {
-        super.unregisterActionsListener();
-        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_PHOTOS.name());
-        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_LIKE_PHOTO.name());
-    }
-
-    @Override
-    public void processServerResult(String action, int resultCode, Bundle data) {
-        super.processServerResult(action, resultCode, data);
-        if (data != null && resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
-            if (BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_PHOTOS.name().equals(action)) {
-                CheckPhotosFragment fragment = (CheckPhotosFragment) LashGoUtils.findFragmentByPosition(this, viewPager, pagerAdapter, 1);
-                if (fragment != null) {
-                    fragment.initGallery((ArrayList<com.lashgo.model.dto.PhotoDto>) data.getSerializable(BaseIntentHandler.ServiceExtraNames.PHOTOS_LIST.name()));
-                }
-            }
+    protected void refresh() {
+        PhotoFragment photoFragment = (PhotoFragment) LashGoUtils.findFragmentByPosition(this, viewPager, pagerAdapter, 0);
+        if (photoFragment != null) {
+            photoFragment.refresh();
         }
+        CheckPhotosFragment checkPhotosFragment = (CheckPhotosFragment) LashGoUtils.findFragmentByPosition(this, viewPager, pagerAdapter, 1);
+        if (checkPhotosFragment != null) {
+            checkPhotosFragment.refresh();
+        }
+    }
+
+    @Override
+    public void logout() {
+
     }
 }

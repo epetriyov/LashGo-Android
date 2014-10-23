@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res/com.lashgo.android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:paddingTop="18dp"
+              android:paddingBottom="18dp"
+              android:paddingRight="16dp"
+              android:gravity="center_vertical"
+        >
+    <ImageView
+            android:id="@+id/pointer"
+            android:layout_width="11dp" android:layout_height="11dp"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/led_blue"
+            />
+    <ImageView
+            android:id="@+id/user_avatar"
+            android:layout_width="48dp" android:layout_height="48dp"
+            android:layout_marginLeft="11dp"
+            android:src="@drawable/ava"
+            android:visibility="gone"
+            />
+
+    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:orientation="vertical"
+                  android:layout_marginLeft="5dp"
+            >
+        <com.lashgo.android.ui.views.RobotoTextView
+                android:id="@+id/action_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Бет Додсон выложил задание"
+                />
+        <com.lashgo.android.ui.views.RobotoTextView
+                android:id="@+id/event_date"
+                android:layout_marginTop="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fontName="@string/regular"
+                android:textSize="14sp"
+                android:textColor="@color/check_state_color"
+                android:text="15 мин"
+                />
+    </LinearLayout>
+    <ImageView
+            android:id="@+id/object_photo"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/ava"
+            />
+
+</LinearLayout>

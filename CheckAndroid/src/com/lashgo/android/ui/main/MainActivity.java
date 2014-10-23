@@ -9,7 +9,6 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
@@ -26,13 +25,13 @@ import com.lashgo.android.social.FacebookHelper;
 import com.lashgo.android.social.TwitterHelper;
 import com.lashgo.android.social.VkontakteListener;
 import com.lashgo.android.ui.BaseActivity;
+import com.lashgo.android.ui.activity.ActivityFragment;
 import com.lashgo.android.ui.auth.AuthController;
 import com.lashgo.android.ui.auth.LoginActivity;
 import com.lashgo.android.ui.auth.SuccessfulRegisterActivity;
 import com.lashgo.android.ui.check.CheckListFragment;
 import com.lashgo.android.ui.news.NewsFragment;
 import com.lashgo.android.ui.profile.ProfileActivity;
-import com.lashgo.android.ui.subscribes.SubscribesFragment;
 import com.lashgo.android.utils.ContextUtils;
 import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.PhotoUtils;
@@ -88,7 +87,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private View subscribesCountRoot;
     private View drawerTopView;
     private int avaSize;
-    private MenuItem exitMenu;
 
     private int position;
 
@@ -293,30 +291,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onSaveInstanceState(outState);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        exitMenu = menu.findItem(R.id.action_exit);
-        exitMenu.setVisible(settingsHelper.isLoggedIn());
-//        ImageView searchView = (ImageView) menu.findItem(R.id.action_search).getActionView();
-//        searchView.setImageResource(R.drawable.ic_action_search);
-//        searchView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
-//        ImageView notificationsView = (ImageView) menu.findItem(R.id.action_notifications).getActionView();
-//        notificationsView.setImageResource(R.drawable.ic_action_notifications);
-//        notificationsView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
-        return true;
-    }
-
     private void initNotAuthDrawerMenu() {
         if (exitMenu != null) {
             exitMenu.setVisible(false);
@@ -438,7 +412,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             fragment = NewsFragment.newInstance();
             position = 1;
         } else if (view.getId() == R.id.item_subscribes) {
-            fragment = SubscribesFragment.newInstance();
+            fragment = new ActivityFragment();
             position = 2;
         }
         showFragment(fragment);
@@ -476,20 +450,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
         // Pass the event to ActionBarDrawerToggle, if it returns
         // true, then it has handled the app icon touch event
         if (drawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        // Handle your other action bar items...
-        if (item.getItemId() == R.id.action_exit) {
-            logout();
-        } else if (item.getItemId() == R.id.action_refresh) {
-            if (position == 0) {
-                serviceHelper.getChecks();
-            }
+        return true;
+    }
+
+    @Override
+    protected void refresh() {
+        serviceHelper.getMainScreenInfo(settingsHelper.getLastNewsView(), settingsHelper.getLastSubscriptionsView());
+        if (position == 0) {
+            serviceHelper.getChecks();
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -518,8 +493,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-    private void logout() {
-        settingsHelper.logout();
-        updateDrawer();
+    public void logout() {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                updateDrawer();
+            }
+        }, 100l);
+
     }
 }

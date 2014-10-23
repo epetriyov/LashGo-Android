@@ -6,7 +6,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.lashgo.android.LashgoConfig;
 import com.lashgo.android.R;
-import com.lashgo.android.service.ServiceHelper;
 import com.lashgo.android.settings.SettingsHelper;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.comments.CommentsActivity;
@@ -51,6 +50,10 @@ public class CheckBottomPanelController implements View.OnClickListener {
         btnComments.setOnClickListener(this);
     }
 
+    public void updatePeoplesCount(int peoplesCount) {
+        this.peoplesCount.setText(String.valueOf(peoplesCount));
+    }
+
     public CheckBottomPanelController(final BaseActivity activity, View view, final PhotoDto photoDto) {
         commonInit(activity, view);
         this.photoDto = photoDto;
@@ -59,7 +62,11 @@ public class CheckBottomPanelController implements View.OnClickListener {
         }
         view.findViewById(R.id.time_layout).setVisibility(View.GONE);
         view.findViewById(R.id.peoples_layout).setVisibility(View.GONE);
-        commentsCount.setText(String.valueOf(photoDto.getCommentsCount()));
+        updateCommentsCount(photoDto.getCommentsCount());
+    }
+
+    public void updateCommentsCount(int commentsCount) {
+        this.commentsCount.setText(String.valueOf(commentsCount));
     }
 
     public CheckBottomPanelController(final BaseActivity activity, final View view, final CheckDto checkDto) {
@@ -68,7 +75,7 @@ public class CheckBottomPanelController implements View.OnClickListener {
         if (checkDto == null) {
             throw new IllegalArgumentException("Check can't be empty!");
         }
-        peoplesCount.setText(String.valueOf(checkDto.getPlayersCount()));
+        updatePeoplesCount(checkDto.getPlayersCount());
         LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
         /**
          * we are at check screen

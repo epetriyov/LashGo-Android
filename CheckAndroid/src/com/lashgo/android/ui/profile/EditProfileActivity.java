@@ -183,6 +183,12 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
+    @Override
+    public void logout() {
+        settingsHelper.logout();
+        finish();
+    }
+
     private void initViews() {
         userAvatar = (ImageView) findViewById(R.id.user_avatar);
         avatarSize = PhotoUtils.convertDpToPixels(64, this);
@@ -227,6 +233,11 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
             }
         });
         return true;
+    }
+
+    @Override
+    protected void refresh() {
+
     }
 
     @Override

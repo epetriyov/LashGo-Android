@@ -17,6 +17,8 @@ import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.check.ActivityReferrer;
 import com.lashgo.android.ui.check.PhotoActivity;
+import com.lashgo.android.ui.subscribes.SubscribesActivity;
+import com.lashgo.android.ui.subscribes.SubscribesFragment;
 import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.model.dto.PhotoDto;
@@ -111,6 +113,16 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
     }
 
     @Override
+    protected void refresh() {
+        loadProfile();
+    }
+
+    @Override
+    public void logout() {
+        loadProfile();
+    }
+
+    @Override
     public void processServerResult(String action, int resultCode, Bundle data) {
         super.processServerResult(action, resultCode, data);
         if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE && data != null) {
@@ -182,14 +194,15 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
         }
     }
 
-    private void updateSubscribersCount()
-    {
+    private void updateSubscribersCount() {
         ((TextView) findViewById(R.id.user_subscribers)).setText(String.valueOf(localUserSubscibersCount));
     }
 
     private void initViews(UserDto userDto) {
         this.userDto = userDto;
         this.localUserSubscibersCount = userDto.getUserSubscribers();
+        findViewById(R.id.user_subscribes_layout).setOnClickListener(this);
+        findViewById(R.id.user_subscribers_layout).setOnClickListener(this);
         if (userDto != null) {
             int imageSize = PhotoUtils.convertDpToPixels(64, this);
             if (!TextUtils.isEmpty(userDto.getAvatar())) {
@@ -200,7 +213,6 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
             ((TextView) findViewById(R.id.user_name)).setText(!TextUtils.isEmpty(userDto.getFio()) ? userDto.getFio() : userDto.getLogin());
             ((TextView) findViewById(R.id.checks_count)).setText(String.format(getString(R.string.checks_count), userDto.getChecksCount()));
             ((TextView) findViewById(R.id.comments_count)).setText(String.format(getString(R.string.comments_count), userDto.getCommentsCount()));
-            ((TextView) findViewById(R.id.likes_count)).setText(String.format(getString(R.string.likes_count), userDto.getLikesCount()));
         }
         GridView photosGallery = (GridView) findViewById(R.id.photos_galley);
         int imageSize = (PhotoUtils.getScreenWidth(this) - 20) / 2;
@@ -229,5 +241,16 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_MY_PHOTOS.name());
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_SUBSCRIBE.name());
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_UNSUBSCRIBE.name());
+    }
+
+    @Override
+    public void onClick(View view) {
+        super.onClick(view);
+        if (view.getId() == R.id.user_subscribes_layout) {
+            startActivity(SubscribesActivity.buildIntent(this, userId, SubscribesFragment.ScreenType.SUBSCRIPTIONS));
+        } else if (view.getId() == R.id.user_subscribers_layout) {
+            startActivity(SubscribesActivity.buildIntent(this, userId,
+                    SubscribesFragment.ScreenType.SUBSCRIBERS));
+        }
     }
 }

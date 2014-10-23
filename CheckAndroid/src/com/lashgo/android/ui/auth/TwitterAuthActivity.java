@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import com.lashgo.android.R;
@@ -67,5 +68,21 @@ public class TwitterAuthActivity extends BaseActivity {
             }
             return false;
         }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return true;
+    }
+
+    @Override
+    public void logout() {
+        //TODO not to implement
+    }
+
+    @Override
+    protected void refresh() {
+
     }
 }
