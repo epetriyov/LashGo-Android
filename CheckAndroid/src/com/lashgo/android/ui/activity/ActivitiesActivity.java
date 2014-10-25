@@ -9,6 +9,8 @@ import com.lashgo.android.R;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.main.MainActivity;
 
+import java.util.Date;
+
 /**
  * Created by Eugene on 20.10.2014.
  */
@@ -23,6 +25,7 @@ public class ActivitiesActivity extends BaseActivity {
         setContentView(R.layout.act_container);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.container, new ActivityFragment(), ACTIVITIES_TAG).commit();
+        settingsHelper.setLastSubscriptionsView(new Date());
     }
 
     @Override

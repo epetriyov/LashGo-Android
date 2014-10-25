@@ -314,6 +314,6 @@ public class ServiceHelper {
     public void getCheckUsers(int checkId) {
         Bundle bundle = new Bundle();
         bundle.putInt(BaseIntentHandler.ServiceExtraNames.CHECK_ID.name(), checkId);
-        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_LIST.name(), bundle);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_USERS.name(), bundle);
     }
 }

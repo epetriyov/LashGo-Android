@@ -41,7 +41,7 @@
                       android:orientation="horizontal"
                       android:paddingLeft="46dp"
                       android:paddingRight="46dp"
-                      android:layout_marginBottom="14dp"
+                      android:layout_marginBottom="20dp"
                       android:layout_alignParentBottom="true"
                 >
             <com.lashgo.android.ui.views.RobotoButton

@@ -85,11 +85,11 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
         initCustomActionBar(ActionBar.DISPLAY_HOME_AS_UP);
         initExtras(savedInstanceState);
         setContentView(R.layout.act_profile);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
+        GridView photosGallery = (GridView) findViewById(R.id.photos_galley);
+        int imageSize = (PhotoUtils.getScreenWidth(this) - 20) / 2;
+        photosGallery.setOnItemClickListener(this);
+        photoGalleryAdapter = new PhotoGalleryAdapter(this, imageSize);
+        photosGallery.setAdapter(photoGalleryAdapter);
         loadProfile();
     }
 
@@ -109,6 +109,11 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
         editMenu = menu.findItem(R.id.action_edit);
         editView = (ImageView) editMenu.getActionView();
         editMenu.setVisible(false);
+        if (settingsHelper.isLoggedIn()) {
+            editMenu.setVisible(true);
+        } else {
+            editMenu.setVisible(false);
+        }
         return true;
     }
 
@@ -155,13 +160,6 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
                             }
                         });
                     }
-                }
-                if (settingsHelper.isLoggedIn()) {
-                    editMenu.setVisible(true);
-                }
-                else
-                {
-                    editMenu.setVisible(false);
                 }
             } else if (BaseIntentHandler.ServiceActionNames.ACTION_GET_MY_PHOTOS.name().equals(action) || BaseIntentHandler.ServiceActionNames.ACTION_GET_USER_PHOTOS.name().equals(action)) {
                 photosList = new ArrayList<>((ArrayList<PhotoDto>) data.getSerializable(BaseIntentHandler.ServiceExtraNames.PHOTOS_LIST.name()));
@@ -221,11 +219,6 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
             ((TextView) findViewById(R.id.checks_count)).setText(String.format(getString(R.string.checks_count), userDto.getChecksCount()));
             ((TextView) findViewById(R.id.comments_count)).setText(String.format(getString(R.string.comments_count), userDto.getCommentsCount()));
         }
-        GridView photosGallery = (GridView) findViewById(R.id.photos_galley);
-        int imageSize = (PhotoUtils.getScreenWidth(this) - 20) / 2;
-        photosGallery.setOnItemClickListener(this);
-        photoGalleryAdapter = new PhotoGalleryAdapter(this, imageSize);
-        photosGallery.setAdapter(photoGalleryAdapter);
     }
 
     @Override

@@ -56,13 +56,12 @@ public class PhotoFragment extends BaseFragment implements View.OnClickListener 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        if (args != null) {
-            photoDto = (PhotoDto) args.getSerializable(BaseActivity.ExtraNames.PHOTO_DTO.name());
-            activityReferrer = args.getString(BaseActivity.ExtraNames.ACTIVITY_REFERRER.name());
-        }
-        if (photoDto == null && savedInstanceState != null) {
+        if (savedInstanceState != null) {
             photoDto = (PhotoDto) savedInstanceState.getSerializable(BaseActivity.ExtraNames.PHOTO_DTO.name());
             activityReferrer = savedInstanceState.getString(BaseActivity.ExtraNames.ACTIVITY_REFERRER.name());
+        } else if (args != null) {
+            photoDto = (PhotoDto) args.getSerializable(BaseActivity.ExtraNames.PHOTO_DTO.name());
+            activityReferrer = args.getString(BaseActivity.ExtraNames.ACTIVITY_REFERRER.name());
         }
     }
 

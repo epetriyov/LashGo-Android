@@ -1,5 +1,6 @@
 package com.lashgo.android.ui.check;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,7 +39,7 @@ public class VoteProcessActivity extends BaseActivity implements ViewPager.OnPag
     private int pagesCount = 0;
 
     public static Intent buildIntent(Context context, CheckDto checkDto) {
-        Intent intent = new Intent(context, CheckActivity.class);
+        Intent intent = new Intent(context, VoteProcessActivity.class);
         intent.putExtra(ExtraNames.CHECK_DTO.name(), checkDto);
         return intent;
     }
@@ -66,6 +67,7 @@ public class VoteProcessActivity extends BaseActivity implements ViewPager.OnPag
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initCustomActionBar(ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_TITLE);
         initCheckDto(savedInstanceState);
         setContentView(R.layout.act_first_vote);
         if (!TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
@@ -119,6 +121,7 @@ public class VoteProcessActivity extends BaseActivity implements ViewPager.OnPag
                 votePhotos = (ArrayList<VotePhoto>) data.getSerializable(BaseIntentHandler.ServiceExtraNames.VOTE_PHOTO_LIST.name());
                 calcPagesCount();
                 pagerAdapter.notifyDataSetChanged();
+                viewPager.setCurrentItem(pagesCount - 1);
             }
         }
     }
@@ -140,18 +143,22 @@ public class VoteProcessActivity extends BaseActivity implements ViewPager.OnPag
 
     }
 
-    @Override
-    public void onPageSelected(int i) {
-        if (i == 0 && pagerAdapter.getCount() > 1) {
-            rightArrow.setVisibility(View.GONE);
-            leftArrow.setVisibility(View.VISIBLE);
-        } else if (i == pagerAdapter.getCount() - 1) {
-            rightArrow.setVisibility(View.VISIBLE);
+    private void updateArrows(int currentPosition) {
+        if (currentPosition == 0 && pagerAdapter.getCount() > 1) {
             leftArrow.setVisibility(View.GONE);
+            rightArrow.setVisibility(View.VISIBLE);
+        } else if (currentPosition == pagerAdapter.getCount() - 1) {
+            leftArrow.setVisibility(View.VISIBLE);
+            rightArrow.setVisibility(View.GONE);
         } else {
             rightArrow.setVisibility(View.VISIBLE);
             leftArrow.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onPageSelected(int i) {
+        updateArrows(i);
     }
 
     @Override
@@ -160,10 +167,11 @@ public class VoteProcessActivity extends BaseActivity implements ViewPager.OnPag
     }
 
     public void continueVoting() {
-        int votePhotosCount = pagerAdapter.getCount() * 4 + 3 < votePhotos.size() ? pagerAdapter.getCount() * 4 + 3 : votePhotos.size() - 1;
-        pagesCount = votePhotosCount > 0 ? votePhotosCount / 4 + 1 : 0;
-        pagerAdapter.notifyDataSetChanged();
-        viewPager.setCurrentItem(pagerAdapter.getCount() - 1);
+//        int votePhotosCount = pagerAdapter.getCount() * 4 + 4 < votePhotos.size() ? pagerAdapter.getCount() * 4 + 4 : votePhotos.size();
+//        pagesCount = votePhotosCount > 0 ? (votePhotosCount % 4 != 0 ? votePhotosCount / 4 + 1 : votePhotosCount / 4) : 0;
+//        pagerAdapter.notifyDataSetChanged();
+//        viewPager.setCurrentItem(pagerAdapter.getCount() - 1);
+        serviceHelper.getVotePhotos(checkDto.getId());
     }
 
     private class VotesPagerAdapter extends FragmentPagerAdapter {
@@ -183,7 +191,7 @@ public class VoteProcessActivity extends BaseActivity implements ViewPager.OnPag
 
         @Override
         public Fragment getItem(int position) {
-            ArrayList<VotePhoto> votePhotoList = (ArrayList<VotePhoto>) (position * 4 + 4 < votePhotos.size() ? votePhotos.subList(position * 4, position * 4 + 3) : votePhotos.subList(position * 4, votePhotos.size() - 1));
+            ArrayList<VotePhoto> votePhotoList = new ArrayList<>(position * 4 + 4 < votePhotos.size() ? votePhotos.subList(position * 4, position * 4 + 4) : votePhotos.subList(position * 4, votePhotos.size()));
             return VoteFragment.newInstance(votePhotoList, position, votePhotos.size());
         }
     }
@@ -192,11 +200,11 @@ public class VoteProcessActivity extends BaseActivity implements ViewPager.OnPag
         int votePhotosCount = 0;
         if (votePhotos != null && votePhotos.size() > 0) {
             int i = 0;
-            while (!votePhotos.get(i).isShown()) {
+            while (i < votePhotos.size() && votePhotos.get(i).isShown()) {
                 i++;
             }
-            votePhotosCount = i + 4 < votePhotos.size() ? i * 4 + 3 : votePhotos.size() - 1;
+            votePhotosCount = i + 4 < votePhotos.size() ? i + 4 : votePhotos.size();
         }
-        pagesCount = votePhotosCount > 0 ? votePhotosCount / 4 + 1 : 0;
+        pagesCount = votePhotosCount > 0 ? (votePhotosCount % 4 != 0 ? votePhotosCount / 4 + 1 : votePhotosCount / 4) : 0;
     }
 }

@@ -93,7 +93,7 @@ public interface RestService {
     @POST(Path.Photos.LIKE)
     ResponseObject<Boolean> likePhoto(@Body Long photoId);
 
-    @POST(Path.Users.SUBSCRIPTIONS)
+    @POST(Path.Users.SUBSCRIPTION_POST)
     ResponseObject subscribe(@Body SubscribeDto subscribeDto);
 
     @DELETE(Path.Users.SUBSCRIPTION)

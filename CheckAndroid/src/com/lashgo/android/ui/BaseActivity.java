@@ -174,7 +174,7 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
         if (data != null) {
             ErrorDto errorDto = (ErrorDto) data.getSerializable(BaseIntentHandler.ERROR_EXTRA);
             if (errorDto != null && !TextUtils.isEmpty(errorDto.getErrorMessage())) {
-                ContextUtils.showToast(this, errorDto.getErrorMessage());
+                ContextUtils.showToast(this,handler, errorDto.getErrorMessage());
             }
         }
     }

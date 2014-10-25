@@ -46,7 +46,9 @@ public class VotePhotoController implements View.OnClickListener {
         photoCheck = (ImageView) rootLayout.findViewById(photoCheckId);
         photoCheck.setOnClickListener(this);
         photoShadow = rootLayout.findViewById(photoShadowId);
-        setImage(context, votePhoto.getPhotoDto().getUrl());
+        if (votePhoto != null) {
+            setImage(context, votePhoto.getPhotoDto().getUrl());
+        }
     }
 
     public boolean isChecked() {
@@ -58,6 +60,10 @@ public class VotePhotoController implements View.OnClickListener {
             PhotoUtils.displayImage(context, photoImg, PhotoUtils.getFullPhotoUrl(imageUrl), imageWidth, imageHeight);
             photoLayout.setVisibility(View.VISIBLE);
         }
+    }
+
+    public void setIsChecked(boolean isChecked) {
+        this.isChecked = isChecked;
     }
 
     public void voteDone() {

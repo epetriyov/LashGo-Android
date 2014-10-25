@@ -30,9 +30,9 @@ public class SettingsHelper {
     private static final String KEY_SOCIAL_INFO = "social_info";
     private static final String KEY_LAST_SUBSCRIPTIONS_VIEW = "last_subscription_date";
     private static final String KEY_LAST_NEWS_VIEW = "last_news_view";
+    private static final String KEY_ALREADY_VOTED = "already_voted";
     private SessionInfo sessionInfo;
     private SharedPreferences preferences;
-    private boolean alreadyVoted;
 
     public SettingsHelper(Context context) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -204,15 +204,19 @@ public class SettingsHelper {
         return getString(KEY_LAST_NEWS_VIEW, new SimpleDateFormat(LashgoConfig.DATE_FORMAT).format(new Date()));
     }
 
+    public void setLastSubscriptionsView(Date date) {
+        setString(KEY_LAST_SUBSCRIPTIONS_VIEW, new SimpleDateFormat(LashgoConfig.DATE_FORMAT).format(date));
+    }
+
     public String getLastSubscriptionsView() {
         return getString(KEY_LAST_SUBSCRIPTIONS_VIEW, new SimpleDateFormat(LashgoConfig.DATE_FORMAT).format(new Date()));
     }
 
     public boolean alreadyVoted() {
-        return alreadyVoted;
+        return getBoolean(KEY_ALREADY_VOTED, false);
     }
 
     public void firstVote() {
-        alreadyVoted = true;
+        setBoolean(KEY_ALREADY_VOTED, true);
     }
 }

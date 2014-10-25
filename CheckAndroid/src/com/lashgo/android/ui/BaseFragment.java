@@ -35,10 +35,15 @@ public abstract class BaseFragment extends Fragment implements ServiceReceiver {
     private ObjectGraph fragmentGraph;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         fragmentGraph = LashgoApplication.getInstance().getApplicationGraph().plus(getModules().toArray());
         fragmentGraph.inject(this);
         registerActionsListener();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
 
     }
@@ -61,6 +66,7 @@ public abstract class BaseFragment extends Fragment implements ServiceReceiver {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        fragmentGraph = null;
         unregisterActionsListener();
     }
 

@@ -184,17 +184,26 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
     private void openActivePerspective() {
         findViewById(R.id.vote_layout).setVisibility(View.GONE);
         actionBtn.setImageResource(R.drawable.btn_camera);
+        if (checkDto.getUserPhotoDto() != null || wasSent) {
+            actionBtn.setVisibility(View.GONE);
+        } else {
+            actionBtn.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void onClick(View view) {
         super.onClick(view);
         if (view.getId() == R.id.btn_action) {
-            if (settingsHelper.isLoggedIn()) {
-                DialogFragment makePhotoFragment = new MakePhotoDialog(this);
-                makePhotoFragment.show(getFragmentManager(), MakePhotoDialog.TAG);
+            if (LashGoUtils.getCheckState(checkDto).equals(LashgoConfig.CheckState.VOTE)) {
+                startActivity(VoteProcessActivity.buildIntent(this, checkDto));
             } else {
-                startActivity(new Intent(this, LoginActivity.class));
+                if (settingsHelper.isLoggedIn()) {
+                    DialogFragment makePhotoFragment = new MakePhotoDialog(this);
+                    makePhotoFragment.show(getFragmentManager(), MakePhotoDialog.TAG);
+                } else {
+                    startActivity(new Intent(this, LoginActivity.class));
+                }
             }
         } else if (view.getId() == R.id.btn_send_photo) {
             if (!TextUtils.isEmpty(imgPath) && new File(imgPath).exists()) {

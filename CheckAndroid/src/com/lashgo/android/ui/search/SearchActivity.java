@@ -23,6 +23,7 @@ public class SearchActivity extends BaseActivity {
     private CustomViewPager viewPager;
     private MainStatePagerAdapter pagerAdapter;
     private TabPageIndicator tabPageIndicator;
+    private String searchText;
 
     @Override
     protected void refresh() {
@@ -32,6 +33,12 @@ public class SearchActivity extends BaseActivity {
     @Override
     public void logout() {
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(ExtraNames.SEARCH_TEXT.name(), editSearch.getText().toString());
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -52,9 +59,16 @@ public class SearchActivity extends BaseActivity {
         }
     }
 
+    private void initExtras(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            searchText = savedInstanceState.getString(ExtraNames.SEARCH_TEXT.name());
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initExtras(savedInstanceState);
         getActionBar().hide();
         setContentView(R.layout.act_search);
         findViewById(R.id.btn_search).setOnClickListener(this);
@@ -90,9 +104,9 @@ public class SearchActivity extends BaseActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return CheckListFragment.newInstance(CheckListFragment.StartOptions.DONT_LOAD_ON_START);
+                    return CheckListFragment.newInstance(CheckListFragment.StartOptions.DONT_LOAD_ON_START,searchText);
                 case 1:
-                    return SubscribesFragment.newInstance(-1, SubscribesFragment.ScreenType.SEARCH_USERS);
+                    return SubscribesFragment.newInstance(-1, SubscribesFragment.ScreenType.SEARCH_USERS,searchText);
                 default:
                     return null;
             }

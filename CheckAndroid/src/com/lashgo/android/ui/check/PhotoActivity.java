@@ -52,15 +52,14 @@ public class PhotoActivity extends BaseActivity implements ViewPager.OnPageChang
 
     private void initPhotosList(Bundle savedInstanceState) {
         Intent intent = getIntent();
-        if (intent != null) {
-            photoDtos = (ArrayList<PhotoDto>) intent.getSerializableExtra(ExtraNames.PHOTOS_LIST.name());
-            selectedPhotoItem = intent.getIntExtra(ExtraNames.SELECTED_PHOTO.name(), selectedPhotoItem);
-            activityReferrer = intent.getStringExtra(ExtraNames.ACTIVITY_REFERRER.name());
-        }
-        if (photoDtos == null && savedInstanceState != null) {
+        if (savedInstanceState != null) {
             photoDtos = (ArrayList<PhotoDto>) savedInstanceState.getSerializable(ExtraNames.PHOTOS_LIST.name());
             selectedPhotoItem = savedInstanceState.getInt(ExtraNames.SELECTED_PHOTO.name(), selectedPhotoItem);
             activityReferrer = savedInstanceState.getString(ExtraNames.ACTIVITY_REFERRER.name());
+        } else if (intent != null) {
+            photoDtos = (ArrayList<PhotoDto>) intent.getSerializableExtra(ExtraNames.PHOTOS_LIST.name());
+            selectedPhotoItem = intent.getIntExtra(ExtraNames.SELECTED_PHOTO.name(), selectedPhotoItem);
+            activityReferrer = intent.getStringExtra(ExtraNames.ACTIVITY_REFERRER.name());
         }
     }
 
@@ -77,6 +76,7 @@ public class PhotoActivity extends BaseActivity implements ViewPager.OnPageChang
         pagerAdapter = new PhotosPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(selectedPhotoItem);
+        updateArrows(selectedPhotoItem);
         viewPager.setOnPageChangeListener(this);
     }
 
@@ -94,18 +94,22 @@ public class PhotoActivity extends BaseActivity implements ViewPager.OnPageChang
     public void onPageScrolled(int i, float v, int i2) {
     }
 
-    @Override
-    public void onPageSelected(int i) {
-        if (i == 0 && photoDtos.size() > 1) {
-            rightArrow.setVisibility(View.GONE);
-            leftArrow.setVisibility(View.VISIBLE);
-        } else if (i == photoDtos.size() - 1) {
+    private void updateArrows(int currentPosition) {
+        if (currentPosition == 0 && photoDtos.size() > 1) {
             rightArrow.setVisibility(View.VISIBLE);
             leftArrow.setVisibility(View.GONE);
+        } else if (currentPosition == photoDtos.size() - 1) {
+            rightArrow.setVisibility(View.GONE);
+            leftArrow.setVisibility(View.VISIBLE);
         } else {
             rightArrow.setVisibility(View.VISIBLE);
             leftArrow.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onPageSelected(int i) {
+        updateArrows(i);
     }
 
     @Override

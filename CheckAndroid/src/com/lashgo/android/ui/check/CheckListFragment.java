@@ -25,6 +25,15 @@ import java.util.Collection;
  */
 public class CheckListFragment extends BaseFragment implements AdapterView.OnItemClickListener, CheckItemBinder.OnCheckStateChangeListener {
 
+    public static Fragment newInstance(StartOptions loadOnStart, String searchText) {
+        Fragment fragment = new CheckListFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(BaseActivity.ExtraNames.LOAD_ON_START.name(), loadOnStart);
+        args.putString(BaseActivity.ExtraNames.SEARCH_TEXT.name(),searchText);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     public static enum StartOptions {
         LOAD_ON_START, DONT_LOAD_ON_START
     }

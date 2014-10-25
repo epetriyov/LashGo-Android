@@ -1,6 +1,8 @@
 package com.lashgo.android.ui.check;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +40,9 @@ public class VoteFragment extends BaseFragment implements View.OnClickListener, 
     private ImageView expandedImageView;
     private int position;
     private int totalSize;
+    private View voteGallery;
+    private boolean voteDone;
+    private int selectedPhoto;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -121,29 +126,8 @@ public class VoteFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void initViews(final View view) {
-        final View voteGallery = view.findViewById(R.id.vote_gallery_layout);
-        final boolean voteDone = votePhotos.get(0).isShown();
-        voteGallery.getViewTreeObserver().addOnGlobalLayoutListener(
-                new ViewTreeObserver.OnGlobalLayoutListener() {
-
-                    @Override
-                    public void onGlobalLayout() {
-                        int imageHeight = voteGallery.getHeight() / 2;
-                        int imageWidth = (PhotoUtils.getScreenWidth(getActivity()) - 20) / 2;
-                        firstPhotoController = new VotePhotoController(getActivity(), VoteFragment.this, view, R.id.first_vote_photo_layout, R.id.first_vote_photo, R.id.first_photo_check, R.id.first_photo_shadow, imageWidth, imageHeight, votePhotos.size() > 0 ? votePhotos.get(0) : null);
-                        secondPhotoController = new VotePhotoController(getActivity(), VoteFragment.this, view, R.id.second_vote_photo_layout, R.id.second_vote_photo, R.id.second_photo_check, R.id.second_photo_shadow, imageWidth, imageHeight, votePhotos.size() > 1 ? votePhotos.get(1) : null);
-                        thirdPhotoController = new VotePhotoController(getActivity(), VoteFragment.this, view, R.id.third_vote_photo_layout, R.id.third_vote_photo, R.id.third_photo_check, R.id.third_photo_shadow, imageWidth, imageHeight, votePhotos.size() > 2 ? votePhotos.get(2) : null);
-                        fourthPhotoController = new VotePhotoController(getActivity(), VoteFragment.this, view, R.id.fourth_vote_photo_layout, R.id.fourth_vote_photo, R.id.fourth_photo_check, R.id.fourth_photo_shadow, imageWidth, imageHeight, votePhotos.size() > 3 ? votePhotos.get(3) : null);
-                        if (voteDone) {
-                            firstPhotoController.voteDone();
-                            secondPhotoController.voteDone();
-                            thirdPhotoController.voteDone();
-                            fourthPhotoController.voteDone();
-                        }
-                        voteGallery.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                    }
-
-                });
+        voteGallery = view.findViewById(R.id.vote_gallery_layout);
+        voteDone = votePhotos.get(0).isShown();
         voteButton = (ImageView) view.findViewById(R.id.vote_button);
         voteButton.setOnClickListener(this);
         baloonHint = view.findViewById(R.id.baloon_hint);
@@ -156,11 +140,70 @@ public class VoteFragment extends BaseFragment implements View.OnClickListener, 
         updateCounter();
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (voteGallery.getHeight() > 0) {
+            initVoteGallery();
+        } else {
+            voteGallery.getViewTreeObserver().addOnGlobalLayoutListener(
+                    new ViewTreeObserver.OnGlobalLayoutListener() {
+
+                        @Override
+                        public void onGlobalLayout() {
+                            if (voteGallery.getHeight() > 0) {
+                                initVoteGallery();
+                                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                                    voteGallery.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                                } else {
+                                    voteGallery.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                                }
+                            }
+                        }
+
+                    });
+        }
+    }
+
+    private void initVoteGallery() {
+        int imageHeight = voteGallery.getHeight() / 2;
+        int imageWidth = (PhotoUtils.getScreenWidth(getActivity()) - 20) / 2;
+        firstPhotoController = new VotePhotoController(getActivity(), VoteFragment.this, getView(), R.id.first_vote_photo_layout, R.id.first_vote_photo, R.id.first_photo_check, R.id.first_photo_shadow, imageWidth, imageHeight, votePhotos.size() > 0 ? votePhotos.get(0) : null);
+        secondPhotoController = new VotePhotoController(getActivity(), VoteFragment.this, getView(), R.id.second_vote_photo_layout, R.id.second_vote_photo, R.id.second_photo_check, R.id.second_photo_shadow, imageWidth, imageHeight, votePhotos.size() > 1 ? votePhotos.get(1) : null);
+        thirdPhotoController = new VotePhotoController(getActivity(), VoteFragment.this, getView(), R.id.third_vote_photo_layout, R.id.third_vote_photo, R.id.third_photo_check, R.id.third_photo_shadow, imageWidth, imageHeight, votePhotos.size() > 2 ? votePhotos.get(2) : null);
+        fourthPhotoController = new VotePhotoController(getActivity(), VoteFragment.this, getView(), R.id.fourth_vote_photo_layout, R.id.fourth_vote_photo, R.id.fourth_photo_check, R.id.fourth_photo_shadow, imageWidth, imageHeight, votePhotos.size() > 3 ? votePhotos.get(3) : null);
+        if (voteDone) {
+            if (votePhotos.size() > 0 && votePhotos.get(0).isVoted()) {
+                firstPhotoController.setIsChecked(true);
+            }
+            if (votePhotos.size() > 1 && votePhotos.get(1).isVoted()) {
+                secondPhotoController.setIsChecked(true);
+            }
+            if (votePhotos.size() > 2 && votePhotos.get(2).isVoted()) {
+                thirdPhotoController.setIsChecked(true);
+            }
+            if (votePhotos.size() > 3 && votePhotos.get(3).isVoted()) {
+                fourthPhotoController.setIsChecked(true);
+            }
+            voteDone();
+            voteButton.setVisibility(View.GONE);
+            baloonHint.setVisibility(View.GONE);
+        }
+
+    }
+
+    private void voteDone() {
+        firstPhotoController.voteDone();
+        secondPhotoController.voteDone();
+        thirdPhotoController.voteDone();
+        fourthPhotoController.voteDone();
+    }
+
     private void updateCounter() {
         if (totalSize - position * 4 + 4 < 2) {
             photosCounter.setText(String.valueOf(totalSize));
         } else {
-            photosCounter.setText(String.format("%d-%d/%d", position * 4 + 1, position * 4 + 4, totalSize));
+            photosCounter.setText(String.format("%d-%d/%d", position * 4 + 1, position * 4 + votePhotos.size(), totalSize));
         }
     }
 
@@ -168,7 +211,7 @@ public class VoteFragment extends BaseFragment implements View.OnClickListener, 
     public void onClick(View view) {
         if (view.getId() == R.id.vote_button) {
             if (screenState.equals(ScreenState.CHOOSE_PHOTO)) {
-                int selectedPhoto = 0;
+                selectedPhoto = 0;
                 if (firstPhotoController.isChecked()) {
                     selectedPhoto = 1;
                 } else if (secondPhotoController.isChecked()) {
@@ -208,13 +251,13 @@ public class VoteFragment extends BaseFragment implements View.OnClickListener, 
         if (savedInstanceState != null) {
             votePhotos = (ArrayList<VotePhoto>) savedInstanceState.getSerializable(BaseActivity.ExtraNames.VOTE_PHOTOS.name());
             position = savedInstanceState.getInt(BaseActivity.ExtraNames.POSITION.name());
-            totalSize = savedInstanceState.getInt(BaseActivity.ExtraNames.POSITION.name());
+            totalSize = savedInstanceState.getInt(BaseActivity.ExtraNames.SIZE.name());
         } else {
             Bundle args = getArguments();
             if (args != null) {
                 votePhotos = (ArrayList<VotePhoto>) args.getSerializable(BaseActivity.ExtraNames.VOTE_PHOTOS.name());
                 position = args.getInt(BaseActivity.ExtraNames.POSITION.name());
-                totalSize = args.getInt(BaseActivity.ExtraNames.POSITION.name());
+                totalSize = args.getInt(BaseActivity.ExtraNames.SIZE.name());
             }
         }
     }
@@ -244,14 +287,22 @@ public class VoteFragment extends BaseFragment implements View.OnClickListener, 
         super.processServerResult(action, resultCode, data);
         if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
             if (BaseIntentHandler.ServiceActionNames.ACTION_VOTE.name().equals(action)) {
-                firstPhotoController.voteDone();
-                secondPhotoController.voteDone();
-                thirdPhotoController.voteDone();
-                fourthPhotoController.voteDone();
+                updateVotePhotos();
+                voteDone();
+                settingsHelper.firstVote();
                 screenState = ScreenState.NEXT_PHOTOS;
                 voteButton.setImageResource(R.drawable.btn_next_vote);
                 voteHint.setText(R.string.go_to_next_partition);
             }
+        }
+    }
+
+    private void updateVotePhotos() {
+        if (votePhotos != null) {
+            for (VotePhoto votePhoto : votePhotos) {
+                votePhoto.setShown(true);
+            }
+            votePhotos.get(selectedPhoto - 1).setVoted(true);
         }
     }
 

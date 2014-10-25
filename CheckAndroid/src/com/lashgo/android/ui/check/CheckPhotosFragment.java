@@ -53,6 +53,8 @@ public class CheckPhotosFragment extends BaseFragment implements AdapterView.OnI
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (savedInstanceState != null) {
+            checkDto = (CheckDto) savedInstanceState.getSerializable(BaseActivity.ExtraNames.CHECK_DTO.name());
+        } else if (args != null) {
             checkDto = (CheckDto) args.getSerializable(BaseActivity.ExtraNames.CHECK_DTO.name());
         }
     }

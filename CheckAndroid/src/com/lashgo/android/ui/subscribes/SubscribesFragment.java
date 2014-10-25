@@ -1,6 +1,7 @@
 package com.lashgo.android.ui.subscribes;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,16 @@ import java.util.ArrayList;
  */
 public class SubscribesFragment extends BaseFragment implements AdapterView.OnItemClickListener, SubscriptionAdapter.ActionBtnClickListener {
 
+    public static Fragment newInstance(int objectId, ScreenType screenType, String searchText) {
+        Bundle args = new Bundle();
+        args.putSerializable(SCREEN_TYPE, screenType);
+        args.putInt(BaseActivity.ExtraNames.USER_ID.name(), objectId);
+        args.putString(BaseActivity.ExtraNames.SEARCH_TEXT.name(), searchText);
+        SubscribesFragment fragment = new SubscribesFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     public static enum ScreenType {
         SUBSCRIPTIONS, SUBSCRIBERS, CHECK_USERS, SEARCH_USERS
     }
@@ -35,6 +46,7 @@ public class SubscribesFragment extends BaseFragment implements AdapterView.OnIt
 
     public void setSearchText(String searchText) {
         this.searchText = searchText;
+        refresh();
     }
 
     public static SubscribesFragment newInstance(int objectId, ScreenType screenType) {
@@ -50,6 +62,7 @@ public class SubscribesFragment extends BaseFragment implements AdapterView.OnIt
     public void onSaveInstanceState(Bundle outState) {
         outState.putSerializable(SCREEN_TYPE, screenType);
         outState.putInt(BaseActivity.ExtraNames.USER_ID.name(), objectId);
+        outState.putString(BaseActivity.ExtraNames.SEARCH_TEXT.name(), searchText);
         super.onSaveInstanceState(outState);
     }
 
@@ -57,13 +70,14 @@ public class SubscribesFragment extends BaseFragment implements AdapterView.OnIt
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        if (args != null) {
-            screenType = (ScreenType) args.getSerializable(SCREEN_TYPE);
-            objectId = args.getInt(BaseActivity.ExtraNames.USER_ID.name());
-        }
-        if (screenType == null && savedInstanceState != null) {
+        if (savedInstanceState != null) {
             screenType = (ScreenType) savedInstanceState.getSerializable(SCREEN_TYPE);
             objectId = savedInstanceState.getInt(BaseActivity.ExtraNames.USER_ID.name());
+            searchText = savedInstanceState.getString(BaseActivity.ExtraNames.SEARCH_TEXT.name());
+        } else if (args != null) {
+            screenType = (ScreenType) args.getSerializable(SCREEN_TYPE);
+            objectId = args.getInt(BaseActivity.ExtraNames.USER_ID.name());
+            searchText = args.getString(BaseActivity.ExtraNames.SEARCH_TEXT.name());
         }
     }
 
@@ -111,10 +125,10 @@ public class SubscribesFragment extends BaseFragment implements AdapterView.OnIt
                     updateAdapter(subscriptionDtos);
                 }
             } else if (action.equals(BaseIntentHandler.ServiceActionNames.ACTION_SUBSCRIBE.name()) || action.equals(BaseIntentHandler.ServiceActionNames.ACTION_UNSUBSCRIBE.name())) {
-                if (screenType.name().equals(ScreenType.SUBSCRIBERS)) {
-                    adapter.getItem(position).setAmISubscribed(!adapter.getItem(position).isAmISubscribed());
-                } else if (action.equals(BaseIntentHandler.ServiceActionNames.ACTION_UNSUBSCRIBE.name())) {
+                if (screenType.name().equals(ScreenType.SUBSCRIPTIONS) && action.equals(BaseIntentHandler.ServiceActionNames.ACTION_UNSUBSCRIBE.name())) {
                     adapter.remove(adapter.getItem(position));
+                } else {
+                    adapter.getItem(position).setAmISubscribed(!adapter.getItem(position).isAmISubscribed());
                 }
                 adapter.notifyDataSetChanged();
             }

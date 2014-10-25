@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -89,6 +90,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private int avaSize;
 
     private int position;
+    private View itemEvents;
+    private View itemNews;
 
     @Override
     protected void registerActionsListener() {
@@ -195,6 +198,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initExtras(savedInstanceState);
         setContentView(R.layout.act_main);
         facebookUiHelper.onCreate(savedInstanceState);
         VKSdk.initialize(vkSdkListener, getString(R.string.vkontakte_app_id), null);
@@ -247,6 +251,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         drawerAuthMenu = drawerAuthMenuStub.inflate();
         itemTasks = drawerAuthMenu.findViewById(R.id.item_tasks);
         itemTasks.setOnClickListener(this);
+        itemNews = drawerAuthMenu.findViewById(R.id.item_news);
+        itemEvents = drawerAuthMenu.findViewById(R.id.item_subscribes);
         taskCountBg = (ImageView) drawerAuthMenu.findViewById(R.id.tasks_count_bg);
         tasksCountRoot = drawerAuthMenu.findViewById(R.id.tasks_count);
         tasksCountView = (TextView) drawerAuthMenu.findViewById(R.id.tasks_count_value);
@@ -288,6 +294,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     protected void onSaveInstanceState(Bundle outState) {
         facebookUiHelper.onSaveInstanceState(outState);
         outState.putSerializable(TwitterHelper.KEY_REQUEST_TOKEN, twitterHelper.getRequestToken());
+        outState.putInt(ExtraNames.POSITION.name(), position);
         super.onSaveInstanceState(outState);
     }
 
@@ -316,8 +323,29 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (drawerLoginMenu != null) {
             drawerLoginMenu.setVisibility(View.GONE);
         }
-        selectItem(itemTasks);
+        View view = null;
+        switch (position) {
+            case 0:
+                view = itemTasks;
+                break;
+            case 1:
+                view = itemNews;
+                break;
+            case 2:
+                view = itemEvents;
+                break;
+            default:
+                view = itemTasks;
+                break;
+        }
+        selectItem(view);
 
+    }
+
+    private void initExtras(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            position = savedInstanceState.getInt(ExtraNames.POSITION.name(), 0);
+        }
     }
 
     /**
@@ -464,7 +492,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         serviceHelper.getMainScreenInfo(settingsHelper.getLastNewsView(), settingsHelper.getLastSubscriptionsView());
         if (position == 0) {
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-            if(fragment != null) {
+            if (fragment != null) {
                 ((CheckListFragment) fragment).refresh();
             }
         }

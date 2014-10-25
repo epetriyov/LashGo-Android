@@ -18,6 +18,7 @@
           <EditText
                   android:id="@+id/edit_search"
                   android:layout_width="0dp" android:layout_height="48dp"
+                  android:layout_weight="1"
                   android:layout_marginLeft="20dp"
                   android:layout_marginRight="20dp"
                   />
@@ -31,9 +32,10 @@
             android:id="@+id/titles"
             android:layout_width="fill_parent"
             android:layout_height="48dp"
-            android:background="@color/splash_top_color"/>
+            android:background="@android:color/white"
+            />
 
-        <ru.softlogic.smartkeeper.core.ui.views.CustomViewPager
+        <com.lashgo.android.ui.views.CustomViewPager
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

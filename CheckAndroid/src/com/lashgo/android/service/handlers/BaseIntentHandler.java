@@ -99,7 +99,7 @@ public abstract class BaseIntentHandler {
             return new GetEventsHandler();
         }  else if (ServiceActionNames.ACTION_FIND_USERS.name().equals(action)) {
             return new FindUserHandler();
-        }  else if (ServiceActionNames.ACTION_GET_CHECK_LIST.name().equals(action)) {
+        }  else if (ServiceActionNames.ACTION_GET_CHECK_USERS.name().equals(action)) {
             return new GetCheckUsersHandler();
         } else {
             throw new IllegalArgumentException("illegal action - " + action);

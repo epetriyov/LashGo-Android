@@ -61,6 +61,7 @@ public class CheckItemBinder extends AdapterBinder {
         if (checkDto.getWinnerPhotoDto() != null && !TextUtils.isEmpty(checkDto.getWinnerPhotoDto().getUrl())) {
             PhotoUtils.displayImage(getContext(), viewHolder.checkIcon, PhotoUtils.getFullPhotoUrl(checkDto.getWinnerPhotoDto().getUrl()), imageSize, R.drawable.ava, false);
         }
+        else
         if (!TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
             PhotoUtils.displayImage(getContext(), viewHolder.checkIcon, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), imageSize, R.drawable.ava, false);
         } else {

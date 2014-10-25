@@ -37,7 +37,7 @@
                                 />
                         <ImageView
                                 android:id="@+id/first_photo_check"
-                                android:layout_width="24dp" android:layout_height="24dp"
+                                android:layout_width="48dp" android:layout_height="48dp"
                                 android:layout_gravity="top|left"
                                 android:paddingTop="8dp"
                                 android:paddingLeft="8dp"
@@ -64,7 +64,7 @@
                                 />
                         <ImageView
                                 android:id="@+id/third_photo_check"
-                                android:layout_width="24dp" android:layout_height="24dp"
+                                android:layout_width="48dp" android:layout_height="48dp"
                                 android:layout_gravity="bottom|left"
                                 android:paddingBottom="8dp"
                                 android:paddingLeft="8dp"
@@ -97,7 +97,7 @@
                                 />
                         <ImageView
                                 android:id="@+id/second_photo_check"
-                                android:layout_width="24dp" android:layout_height="24dp"
+                                android:layout_width="48dp" android:layout_height="48dp"
                                 android:layout_gravity="top|right"
                                 android:paddingTop="8dp"
                                 android:paddingRight="8dp"
@@ -124,7 +124,7 @@
                                 />
                         <ImageView
                                 android:id="@+id/fourth_photo_check"
-                                android:layout_width="24dp" android:layout_height="24dp"
+                                android:layout_width="48dp" android:layout_height="48dp"
                                 android:layout_gravity="bottom|right"
                                 android:paddingBottom="8dp"
                                 android:paddingRight="8dp"

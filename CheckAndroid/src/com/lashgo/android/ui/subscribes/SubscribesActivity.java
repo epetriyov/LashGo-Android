@@ -37,13 +37,12 @@ public class SubscribesActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        if (intent != null) {
-            screenType = (SubscribesFragment.ScreenType) intent.getSerializableExtra(SubscribesFragment.SCREEN_TYPE);
-            objectId = intent.getIntExtra(ExtraNames.USER_ID.name(), -1);
-        }
-        if (screenType == null && savedInstanceState != null) {
+        if (savedInstanceState != null) {
             screenType = (SubscribesFragment.ScreenType) savedInstanceState.getSerializable(SubscribesFragment.SCREEN_TYPE);
             objectId = savedInstanceState.getInt(ExtraNames.USER_ID.name());
+        } else if (intent != null) {
+            screenType = (SubscribesFragment.ScreenType) intent.getSerializableExtra(SubscribesFragment.SCREEN_TYPE);
+            objectId = intent.getIntExtra(ExtraNames.USER_ID.name(), -1);
         }
         initCustomActionBar(ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_TITLE);
         setContentView(R.layout.act_container);
