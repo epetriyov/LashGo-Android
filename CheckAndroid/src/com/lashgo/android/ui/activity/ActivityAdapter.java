@@ -5,7 +5,6 @@ import android.graphics.Typeface;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.ClickableSpan;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.lashgo.android.R;
-import com.lashgo.android.ui.check.ActivityReferrer;
 import com.lashgo.android.ui.check.CheckActivity;
 import com.lashgo.android.ui.check.PhotoActivity;
 import com.lashgo.android.ui.profile.ProfileActivity;
@@ -22,10 +20,8 @@ import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.model.DbCodes;
 import com.lashgo.model.dto.EventDto;
-import com.lashgo.model.dto.PhotoDto;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 
 /**
  * Created by Eugene on 20.10.2014.
@@ -81,6 +77,8 @@ public class ActivityAdapter extends ArrayAdapter<EventDto> {
             });
             if (!TextUtils.isEmpty(eventDto.getUser().getAvatar())) {
                 PhotoUtils.displayImage(getContext(), viewHolder.userAvatar, LashGoUtils.getUserAvatarUrl(eventDto.getUser().getAvatar()), PhotoUtils.convertDpToPixels(40, getContext()), R.drawable.ava, false);
+            } else {
+                viewHolder.userAvatar.setImageResource(R.drawable.ava);
             }
         } else {
             viewHolder.userAvatar.setVisibility(View.GONE);
@@ -94,18 +92,16 @@ public class ActivityAdapter extends ArrayAdapter<EventDto> {
                     getContext().startActivity(CheckActivity.buildIntent(getContext(), eventDto.getCheck().getId()));
                 }
             });
-            PhotoUtils.displayImage(getContext(), viewHolder.objectPhoto, PhotoUtils.getFullPhotoUrl(eventDto.getCheck().getTaskPhotoUrl()), PhotoUtils.convertDpToPixels(48, getContext()),-1 ,false);
+            PhotoUtils.displayImage(getContext(), viewHolder.objectPhoto, PhotoUtils.getFullPhotoUrl(eventDto.getCheck().getTaskPhotoUrl()), PhotoUtils.convertDpToPixels(48, getContext()), -1, false);
         } else if (eventDto.getPhotoDto() != null && !TextUtils.isEmpty(eventDto.getPhotoDto().getUrl())) {
-            final ArrayList<PhotoDto> photoDtos = new ArrayList<PhotoDto>();
-            photoDtos.add(eventDto.getPhotoDto());
             viewHolder.objectPhoto.setVisibility(View.VISIBLE);
             viewHolder.objectPhoto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    getContext().startActivity(PhotoActivity.buildIntent(getContext(), photoDtos, 0, ActivityReferrer.FROM_CHECK_GALLERY.name()));
+                    getContext().startActivity(PhotoActivity.buildIntent(getContext(), eventDto.getPhotoDto().getId()));
                 }
             });
-            PhotoUtils.displayImage(getContext(), viewHolder.objectPhoto, PhotoUtils.getFullPhotoUrl(eventDto.getPhotoDto().getUrl()), PhotoUtils.convertDpToPixels(48, getContext()), -1 ,false);
+            PhotoUtils.displayImage(getContext(), viewHolder.objectPhoto, PhotoUtils.getFullPhotoUrl(eventDto.getPhotoDto().getUrl()), PhotoUtils.convertDpToPixels(48, getContext()), -1, false);
         } else if (eventDto.getObjectUser() != null) {
             viewHolder.objectPhoto.setVisibility(View.VISIBLE);
             viewHolder.objectPhoto.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +112,8 @@ public class ActivityAdapter extends ArrayAdapter<EventDto> {
             });
             if (!TextUtils.isEmpty(eventDto.getObjectUser().getAvatar())) {
                 PhotoUtils.displayImage(getContext(), viewHolder.objectPhoto, LashGoUtils.getUserAvatarUrl(eventDto.getObjectUser().getAvatar()), PhotoUtils.convertDpToPixels(40, getContext()), R.drawable.ava, false);
+            } else {
+                viewHolder.objectPhoto.setImageResource(R.drawable.ava);
             }
         } else {
             viewHolder.objectPhoto.setVisibility(View.GONE);

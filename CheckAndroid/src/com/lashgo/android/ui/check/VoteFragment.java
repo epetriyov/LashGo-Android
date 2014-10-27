@@ -43,6 +43,7 @@ public class VoteFragment extends BaseFragment implements View.OnClickListener, 
     private View voteGallery;
     private boolean voteDone;
     private int selectedPhoto;
+    private int checkId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -241,6 +242,7 @@ public class VoteFragment extends BaseFragment implements View.OnClickListener, 
                 photoIds[i] = votePhotos.get(i).getPhotoDto().getId();
             }
             voteAction.setPhotoIds(photoIds);
+            voteAction.setCheckId(checkId);
         }
         return voteAction;
     }
@@ -252,12 +254,14 @@ public class VoteFragment extends BaseFragment implements View.OnClickListener, 
             votePhotos = (ArrayList<VotePhoto>) savedInstanceState.getSerializable(BaseActivity.ExtraNames.VOTE_PHOTOS.name());
             position = savedInstanceState.getInt(BaseActivity.ExtraNames.POSITION.name());
             totalSize = savedInstanceState.getInt(BaseActivity.ExtraNames.SIZE.name());
+            checkId = savedInstanceState.getInt(BaseActivity.ExtraNames.CHECK_ID.name());
         } else {
             Bundle args = getArguments();
             if (args != null) {
                 votePhotos = (ArrayList<VotePhoto>) args.getSerializable(BaseActivity.ExtraNames.VOTE_PHOTOS.name());
                 position = args.getInt(BaseActivity.ExtraNames.POSITION.name());
                 totalSize = args.getInt(BaseActivity.ExtraNames.SIZE.name());
+                checkId = args.getInt(BaseActivity.ExtraNames.CHECK_ID.name());
             }
         }
     }
@@ -267,13 +271,15 @@ public class VoteFragment extends BaseFragment implements View.OnClickListener, 
         outState.putSerializable(BaseActivity.ExtraNames.VOTE_PHOTOS.name(), votePhotos);
         outState.putInt(BaseActivity.ExtraNames.POSITION.name(), position);
         outState.putInt(BaseActivity.ExtraNames.SIZE.name(), totalSize);
+        outState.putInt(BaseActivity.ExtraNames.CHECK_ID.name(), checkId);
         super.onSaveInstanceState(outState);
     }
 
-    public static Fragment newInstance(ArrayList<VotePhoto> votePhotoList, int position, int totalSize) {
+    public static Fragment newInstance(int checkId, ArrayList<VotePhoto> votePhotoList, int position, int totalSize) {
         VoteFragment voteFragment = new VoteFragment();
         Bundle args = new Bundle();
         args.putSerializable(BaseActivity.ExtraNames.VOTE_PHOTOS.name(), votePhotoList);
+        args.putInt(BaseActivity.ExtraNames.CHECK_ID.name(), checkId);
         args.putInt(BaseActivity.ExtraNames.POSITION.name(), position);
         args.putInt(BaseActivity.ExtraNames.SIZE.name(), totalSize);
         voteFragment.setArguments(args);

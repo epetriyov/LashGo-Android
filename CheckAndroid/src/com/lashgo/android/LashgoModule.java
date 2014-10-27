@@ -63,6 +63,7 @@ import java.text.SimpleDateFormat;
                 VoteHandler.class,
                 FindUserHandler.class,
                 GetCheckUsersHandler.class,
+                GetPhotoHandler.class,
                 ServiceHelper.class,
                 CheckInterceptor.class
         },

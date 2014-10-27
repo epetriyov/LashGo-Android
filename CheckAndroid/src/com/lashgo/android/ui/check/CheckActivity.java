@@ -59,6 +59,8 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
     private ImageAnimation imageAnimation;
     private ImageView expandedImageView;
     private CheckBottomPanelController bottomPanel;
+    private TextView checkName;
+    private TextView checkDescription;
 
     public enum TO {to, FINISHED, VOTE}
 
@@ -105,13 +107,20 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
         setContentView(R.layout.act_check);
         expandedImageView = (ImageView) findViewById(R.id.expanded_image);
         imageAnimation = new ImageAnimation(this, findViewById(R.id.shadow), findViewById(R.id.container), expandedImageView);
+        initViews();
         if (checkDto == null) {
             serviceHelper.getCheck(checkId);
         } else {
             bottomPanel = new CheckBottomPanelController(this, getWindow().getDecorView(), checkDto);
-            initViews();
+            updateCheckInfo();
             loadCheck();
         }
+    }
+
+    private void updateCheckInfo() {
+        checkName.setText(checkDto.getName());
+        checkDescription.setText(checkDto.getDescription());
+        updatePagesCount();
     }
 
     private void initCheckDto(Bundle savedInstanceState) {
@@ -150,8 +159,8 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
         imageSize = PhotoUtils.getScreenWidth(this) - CHECH_PHOTO_PADDINGS;
         actionBtn = (ImageView) findViewById(R.id.btn_action);
         actionBtn.setOnClickListener(this);
-        ((TextView) findViewById(R.id.check_name)).setText(checkDto.getName());
-        ((TextView) findViewById(R.id.task_description)).setText(checkDto.getDescription());
+        checkName = ((TextView) findViewById(R.id.check_name));
+        checkDescription = ((TextView) findViewById(R.id.task_description));
         PagerContainer mContainer = (PagerContainer) findViewById(R.id.pager_container);
         viewPager = mContainer.getViewPager();
         viewPager.setPageMargin(50);
@@ -229,8 +238,8 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
                     if (bottomPanel == null) {
                         bottomPanel = new CheckBottomPanelController(this, getWindow().getDecorView(), checkDto);
                     }
+                    updateCheckInfo();
                     loadCheck();
-                    updatePagesCount();
                     pagerAdapter.notifyDataSetChanged();
                 }
             }

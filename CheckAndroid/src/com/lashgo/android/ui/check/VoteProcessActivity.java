@@ -192,7 +192,7 @@ public class VoteProcessActivity extends BaseActivity implements ViewPager.OnPag
         @Override
         public Fragment getItem(int position) {
             ArrayList<VotePhoto> votePhotoList = new ArrayList<>(position * 4 + 4 < votePhotos.size() ? votePhotos.subList(position * 4, position * 4 + 4) : votePhotos.subList(position * 4, votePhotos.size()));
-            return VoteFragment.newInstance(votePhotoList, position, votePhotos.size());
+            return VoteFragment.newInstance(checkDto.getId(), votePhotoList, position, votePhotos.size());
         }
     }
 

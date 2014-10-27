@@ -113,4 +113,7 @@ public interface RestService {
 
     @GET(Path.Checks.USERS)
     ResponseList<SubscriptionDto> getCheckUsers(@retrofit.http.Path("checkId") int checkId);
+
+    @GET(Path.Photos.PHOTO)
+    ResponseObject<PhotoDto> getPhoto(@retrofit.http.Path("photoId") long photoId);
 }

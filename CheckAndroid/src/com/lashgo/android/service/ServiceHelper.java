@@ -316,4 +316,10 @@ public class ServiceHelper {
         bundle.putInt(BaseIntentHandler.ServiceExtraNames.CHECK_ID.name(), checkId);
         runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_USERS.name(), bundle);
     }
+
+    public void getPhoto(long photoId) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(BaseIntentHandler.ServiceExtraNames.PHOTO_ID.name(), photoId);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_PHOTO.name(), bundle);
+    }
 }
