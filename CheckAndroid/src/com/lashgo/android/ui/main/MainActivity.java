@@ -63,6 +63,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private View drawerAuthMenu;
 
+    private int subscribesCount;
+
     private String[] menuItems;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
@@ -156,7 +158,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 newsCountRoot.setVisibility(View.GONE);
             }
 
-            int subscribesCount = mainScreenInfoDto.getSubscribesCount();
+            subscribesCount = mainScreenInfoDto.getSubscribesCount();
             subscribesCountView.setText(String.valueOf(subscribesCount));
             if (subscribesCount > 9) {
                 subscribesCountBg.setImageResource(R.drawable.ic_notification_big);
@@ -440,7 +442,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             fragment = NewsFragment.newInstance();
             position = 1;
         } else if (view.getId() == R.id.item_subscribes) {
-            fragment = new ActivityFragment();
+            fragment = ActivityFragment.newInstance(subscribesCount);
             position = 2;
         }
         showFragment(fragment);

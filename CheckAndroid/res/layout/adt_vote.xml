@@ -184,4 +184,5 @@
             android:layout_height="match_parent"
             android:visibility="invisible"
             />
+    <include layout="@layout/dialog_progress"/>
 </FrameLayout>

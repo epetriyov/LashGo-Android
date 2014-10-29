@@ -1,10 +1,10 @@
 package com.lashgo.android.ui;
 
 import android.app.ActionBar;
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.*;
@@ -57,6 +57,7 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
     private String tag;
     private boolean isDialogDismissNeeded;
     private boolean isActivityOnForeground;
+    private View progressView;
 
     @Override
     public void onClick(View view) {
@@ -67,8 +68,8 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
 
     public void showDialog(DialogFragment dialogFragment, String tag) {
         if (isActivityOnForeground) {
-            if (dialogFragment != null && !dialogFragment.isAdded() && getFragmentManager().findFragmentByTag(tag) == null) {
-                dialogFragment.show(getFragmentManager(), tag);
+            if (dialogFragment != null && !dialogFragment.isAdded() && getSupportFragmentManager().findFragmentByTag(tag) == null) {
+                dialogFragment.show(getSupportFragmentManager(), tag);
             }
         } else {
             isDialogShowNeeded = true;
@@ -147,7 +148,7 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
     }
 
     public void onDisplayError(final String errorMessage) {
-        handler.post(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 ContextUtils.showToast(BaseActivity.this, errorMessage);
@@ -174,8 +175,34 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
         if (data != null) {
             ErrorDto errorDto = (ErrorDto) data.getSerializable(BaseIntentHandler.ERROR_EXTRA);
             if (errorDto != null && !TextUtils.isEmpty(errorDto.getErrorMessage())) {
-                ContextUtils.showToast(this,handler, errorDto.getErrorMessage());
+                ContextUtils.showToast(this, errorDto.getErrorMessage());
             }
+        }
+    }
+
+    @Override
+    public void setContentView(int layoutResID) {
+        super.setContentView(layoutResID);
+        progressView = findViewById(R.id.progress_view);
+        if(progressView != null) {
+            progressView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
+        }
+    }
+
+    protected void hideOverlayProgress() {
+        if (progressView != null) {
+            progressView.setVisibility(View.GONE);
+        }
+    }
+
+    protected void showOverlayProgress() {
+        if (progressView != null) {
+            progressView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -230,7 +257,7 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
         PHOTO_TYPE, USER_DTO, CHECK_ID, PHOTO_ID, FROM, REQUEST_TOKEN,
         TWITTER_URL, WAS_PHOTO_SENT, CHECK_LIST, OPEN_MODE, PHOTOS_LIST,
         SELECTED_PHOTO, ACTIVITY_REFERRER, LOAD_ON_START, SEARCH_TEXT,
-        VOTE_PHOTOS, POSITION, SIZE;
+        VOTE_PHOTOS, POSITION, SIZE, NEW_NEWS_COUNT;
     }
 
     @Override

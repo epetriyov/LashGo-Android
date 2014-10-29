@@ -5,23 +5,28 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
     <LinearLayout android:layout_width="match_parent" android:layout_height="78dp"
-            android:orientation="horizontal"
-            android:gravity="top"
-            android:padding="5dp"
-            android:background="@color/splash_top_color"
+                  android:orientation="horizontal"
+                  android:gravity="top"
+                  android:padding="5dp"
+                  android:background="@color/splash_top_color"
             >
         <ImageView
-                android:id="@+id/btn_search"
+                android:id="@+id/btn_back"
                 android:layout_width="48dp" android:layout_height="48dp"
-                android:src="@drawable/ic_action_search"
+                android:src="@drawable/ic_back"
                 />
-          <EditText
-                  android:id="@+id/edit_search"
-                  android:layout_width="0dp" android:layout_height="48dp"
-                  android:layout_weight="1"
-                  android:layout_marginLeft="20dp"
-                  android:layout_marginRight="20dp"
-                  />
+        <EditText
+                android:id="@+id/edit_search"
+                android:layout_width="0dp" android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:imeOptions="actionSearch"
+                android:hint="@string/search_with_points"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textSize="16sp"
+                />
         <ImageView
                 android:id="@+id/btn_close"
                 android:layout_width="48dp" android:layout_height="48dp"
@@ -35,9 +40,9 @@
             android:background="@android:color/white"
             />
 
-        <com.lashgo.android.ui.views.CustomViewPager
-                android:id="@+id/viewPager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
+    <com.lashgo.android.ui.views.CustomViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
 </LinearLayout>

@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.lashgo.android.LashgoConfig;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
@@ -25,7 +24,9 @@ import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.ImageAnimation;
 import com.lashgo.android.ui.auth.LoginActivity;
 import com.lashgo.android.ui.dialogs.ErrorDialog;
+import com.lashgo.android.ui.dialogs.MakePhotoDialog;
 import com.lashgo.android.ui.views.PagerContainer;
+import com.lashgo.android.utils.ContextUtils;
 import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.android.utils.UiUtils;
@@ -117,6 +118,16 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
+    @Override
+    public void startProgress() {
+        showOverlayProgress();
+    }
+
+    @Override
+    public void stopProgress() {
+        hideOverlayProgress();
+    }
+
     private void updateCheckInfo() {
         checkName.setText(checkDto.getName());
         checkDescription.setText(checkDto.getDescription());
@@ -178,7 +189,6 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void loadCheck() {
-        findViewById(R.id.lashgo_progress).setVisibility(View.GONE);
         bottomPanel.updatePeoplesCount(checkDto.getPlayersCount());
         LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
         if (LashgoConfig.CheckState.VOTE.equals(checkState)) {
@@ -218,7 +228,7 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
             if (!TextUtils.isEmpty(imgPath) && new File(imgPath).exists()) {
                 serviceHelper.sendPhoto(checkDto.getId(), imgPath);
             } else {
-                Toast.makeText(this, R.string.error_send_photo, Toast.LENGTH_LONG).show();
+                ContextUtils.showToast(this, R.string.error_send_photo);
             }
         }
     }
@@ -291,7 +301,7 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
                     imgPath = PhotoUtils.getPath(this, data.getData());
                     new AsyncProccessImage().execute();
                 } else {
-                    Toast.makeText(this, R.string.empty_image_was_chosen, Toast.LENGTH_LONG).show();
+                    ContextUtils.showToast(this, R.string.empty_image_was_chosen);
                 }
             } else if (requestCode == MakePhotoDialog.CAPTURE_IMAGE) {
                 new AsyncProccessImage().execute();
@@ -378,6 +388,7 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
             View winnerMedal = view.findViewById(R.id.winner_medal);
             TextView winnerName = (TextView) view.findViewById(R.id.winner_name);
             container.addView(view);
+            LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
             switch (position) {
                 case 0:
                     checkImage.setTag(TASK_PHOTO_TAG);
@@ -389,7 +400,6 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
                     }
                     break;
                 case 1:
-                    LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
                     if (LashgoConfig.CheckState.ACTIVE.equals(checkState)) {
                         this.btnSend = btnSend;
                         if (imgPath != null && !wasSent) {

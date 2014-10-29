@@ -61,12 +61,12 @@
                             android:duplicateParentState="true"
                             />
                     <com.lashgo.android.ui.views.RobotoTextView
+                            android:id="@+id/user_subscribes_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="14sp"
                             android:textColor="@drawable/profile_text_color"
                             app:fontName="@string/condensed_regular"
-                            android:text="@string/subscibes_count"
                             android:layout_marginLeft="5dp"
                             android:duplicateParentState="true"
                             />
@@ -94,6 +94,7 @@
                             android:duplicateParentState="true"
                             />
                     <com.lashgo.android.ui.views.RobotoTextView
+                            android:id="@+id/user_subscribers_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="14sp"

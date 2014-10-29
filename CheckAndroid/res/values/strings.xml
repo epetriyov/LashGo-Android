@@ -124,8 +124,33 @@
     <string name="peoples">ЛЮДЕЙ</string>
     <string name="checks">ЧЕКОВ</string>
     <string name="users">Пользователи</string>
+    <string name="search_with_points">Поиск...</string>
     <string-array name="make_photo_items">
         <item>Камера</item>
         <item>Галерея</item>
     </string-array>
+
+    <plurals name="number_of_checks">
+        <item quantity="one">1 чек</item>
+        <item quantity="few">2 чека</item>
+        <item quantity="other">%d чеков</item>
+    </plurals>
+
+    <plurals name="number_of_subscribes">
+        <item quantity="one">подписка</item>
+        <item quantity="few">подписки</item>
+        <item quantity="other">подписок</item>
+    </plurals>
+
+    <plurals name="number_of_subscribeкs">
+        <item quantity="one">подписчик</item>
+        <item quantity="few">подписчика</item>
+        <item quantity="other">подписчиков</item>
+    </plurals>
+
+    <plurals name="number_of_comments">
+        <item quantity="one">1 комментарий</item>
+        <item quantity="few">2 комментария</item>
+        <item quantity="other">%d комментариев</item>
+    </plurals>
 </resources>

@@ -4,8 +4,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.TextView;
 import com.lashgo.android.R;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.check.CheckListFragment;
@@ -44,18 +47,10 @@ public class SearchActivity extends BaseActivity {
     @Override
     public void onClick(View view) {
         super.onClick(view);
-        if (view.getId() == R.id.btn_search) {
-            int position = viewPager.getCurrentItem();
-            Fragment fragment = LashGoUtils.findFragmentByPosition(this, viewPager, pagerAdapter, position);
-            if (fragment != null) {
-                if (position == 0) {
-                    ((CheckListFragment) fragment).setSearchText(editSearch.getText().toString());
-                } else {
-                    ((SubscribesFragment) fragment).setSearchText(editSearch.getText().toString());
-                }
-            }
-        } else if (view.getId() == R.id.btn_close) {
+        if (view.getId() == R.id.btn_close) {
             editSearch.setText("");
+        } else if (view.getId() == R.id.btn_back) {
+            finish();
         }
     }
 
@@ -71,14 +66,31 @@ public class SearchActivity extends BaseActivity {
         initExtras(savedInstanceState);
         getActionBar().hide();
         setContentView(R.layout.act_search);
-        findViewById(R.id.btn_search).setOnClickListener(this);
-        findViewById(R.id.btn_close).setOnClickListener(this);
-        editSearch = (EditText) findViewById(R.id.edit_search);
         viewPager = (CustomViewPager) findViewById(R.id.viewPager);
         pagerAdapter = new MainStatePagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
         tabPageIndicator = (TabPageIndicator) findViewById(R.id.titles);
         tabPageIndicator.setViewPager(viewPager);
+        findViewById(R.id.btn_back).setOnClickListener(this);
+        findViewById(R.id.btn_close).setOnClickListener(this);
+        editSearch = (EditText) findViewById(R.id.edit_search);
+        editSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView arg0, int arg1, KeyEvent arg2) {
+                if (arg1 == EditorInfo.IME_ACTION_SEARCH) {
+                    int position = viewPager.getCurrentItem();
+                    Fragment fragment = LashGoUtils.findFragmentByPosition(SearchActivity.this, viewPager, pagerAdapter, position);
+                    if (fragment != null) {
+                        if (position == 0) {
+                            ((CheckListFragment) fragment).setSearchText(editSearch.getText().toString());
+                        } else {
+                            ((SubscribesFragment) fragment).setSearchText(editSearch.getText().toString());
+                        }
+                    }
+                }
+                return false;
+            }
+        });
     }
 
     private class MainStatePagerAdapter extends FragmentPagerAdapter {
@@ -104,9 +116,9 @@ public class SearchActivity extends BaseActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return CheckListFragment.newInstance(CheckListFragment.StartOptions.DONT_LOAD_ON_START,searchText);
+                    return CheckListFragment.newInstance(CheckListFragment.StartOptions.DONT_LOAD_ON_START, searchText);
                 case 1:
-                    return SubscribesFragment.newInstance(-1, SubscribesFragment.ScreenType.SEARCH_USERS,searchText);
+                    return SubscribesFragment.newInstance(-1, SubscribesFragment.ScreenType.SEARCH_USERS, searchText);
                 default:
                     return null;
             }

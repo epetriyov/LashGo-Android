@@ -29,6 +29,16 @@ public class PasswordRecoverActivity extends BaseActivity {
     }
 
     @Override
+    public void startProgress() {
+        showOverlayProgress();
+    }
+
+    @Override
+    public void stopProgress() {
+        hideOverlayProgress();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_recover_password, menu);
         ImageView applyBtn = (ImageView) menu.findItem(R.id.action_check).getActionView();

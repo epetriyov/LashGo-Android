@@ -32,9 +32,12 @@ public class ActivityAdapter extends ArrayAdapter<EventDto> {
 
     private SimpleDateFormat simpleDateFormat;
 
-    public ActivityAdapter(Context context) {
+    private int subscibesCount;
+
+    public ActivityAdapter(Context context, int subscibesCount) {
         super(context, -1);
         simpleDateFormat = new SimpleDateFormat(EVENT_DATE_PATTERN);
+        this.subscibesCount = subscibesCount;
     }
 
     private static class ViewHolder {
@@ -61,7 +64,7 @@ public class ActivityAdapter extends ArrayAdapter<EventDto> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         final EventDto eventDto = getItem(position);
-        if (position == 0) {
+        if (position < subscibesCount) {
             viewHolder.pointer.setImageResource(R.drawable.led_blue);
         } else {
             viewHolder.pointer.setImageResource(R.drawable.led_gray);

@@ -215,9 +215,11 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
             }
             ((TextView) findViewById(R.id.user_subscribes)).setText(String.valueOf(userDto.getUserSubscribes()));
             ((TextView) findViewById(R.id.user_subscribers)).setText(String.valueOf(userDto.getUserSubscribers()));
+            ((TextView) findViewById(R.id.user_subscribes_text)).setText(getResources().getQuantityString(R.plurals.number_of_subscribes, userDto.getUserSubscribes()));
+            ((TextView) findViewById(R.id.user_subscribers_text)).setText(getResources().getQuantityString(R.plurals.number_of_subscribeкs, userDto.getUserSubscribers()));
             ((TextView) findViewById(R.id.user_name)).setText(!TextUtils.isEmpty(userDto.getFio()) ? userDto.getFio() : userDto.getLogin());
-            ((TextView) findViewById(R.id.checks_count)).setText(String.format(getString(R.string.checks_count), userDto.getChecksCount()));
-            ((TextView) findViewById(R.id.comments_count)).setText(String.format(getString(R.string.comments_count), userDto.getCommentsCount()));
+            ((TextView) findViewById(R.id.checks_count)).setText(getResources().getQuantityString(R.plurals.number_of_checks, userDto.getChecksCount(), userDto.getChecksCount()));
+            ((TextView) findViewById(R.id.comments_count)).setText(getResources().getQuantityString(R.plurals.number_of_comments, userDto.getCommentsCount(), userDto.getCommentsCount()));
         }
     }
 

@@ -126,6 +126,16 @@ public class VoteFragment extends BaseFragment implements View.OnClickListener, 
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_VOTE.name());
     }
 
+    @Override
+    public void startProgress() {
+        showOverlayProgress();
+    }
+
+    @Override
+    public void stopProgress() {
+        hideOverlayProgress();
+    }
+
     private void initViews(final View view) {
         voteGallery = view.findViewById(R.id.vote_gallery_layout);
         voteDone = votePhotos.get(0).isShown();

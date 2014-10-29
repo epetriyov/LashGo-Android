@@ -1,4 +1,4 @@
-package com.lashgo.android.ui.check;
+package com.lashgo.android.ui.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

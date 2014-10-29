@@ -48,4 +48,5 @@
     <color name="darkening">#80000000</color>
     <color name="timeline_color">#A1000000</color>
     <color name="circle_color">#4C000000</color>
+    <color name="dialog_shadow">#77DDDDDD</color>
 </resources>

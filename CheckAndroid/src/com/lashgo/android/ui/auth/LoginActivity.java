@@ -2,10 +2,10 @@ package com.lashgo.android.ui.auth;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.Menu;
 import com.facebook.UiLifecycleHelper;
 import com.lashgo.android.R;
@@ -14,7 +14,6 @@ import com.lashgo.android.social.FacebookHelper;
 import com.lashgo.android.social.TwitterHelper;
 import com.lashgo.android.social.VkontakteListener;
 import com.lashgo.android.ui.BaseActivity;
-import com.lashgo.android.ui.dialogs.CustomProgressDialog;
 import com.lashgo.android.ui.main.MainActivity;
 import com.lashgo.model.dto.UserDto;
 import com.vk.sdk.VKSdk;
@@ -61,7 +60,6 @@ public class LoginActivity extends BaseActivity implements AuthController.AuthLi
         authController = new AuthController(this, serviceHelper, facebookHelper, twitterHelper, this);
         authController.setOpenMode(openMode);
         authController.initViews(getWindow().getDecorView().getRootView());
-        progressDialog = new CustomProgressDialog();
     }
 
     @Override
@@ -105,12 +103,12 @@ public class LoginActivity extends BaseActivity implements AuthController.AuthLi
 
     @Override
     public void startProgress() {
-        showDialog(progressDialog, PROGRESS_DIALOG);
+        showOverlayProgress();
     }
 
     @Override
     public void stopProgress() {
-        dismissDialog(progressDialog);
+        hideOverlayProgress();
     }
 
     @Override

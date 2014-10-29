@@ -12,12 +12,12 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
-import com.lashgo.android.ui.check.MakePhotoDialog;
+import com.lashgo.android.ui.dialogs.MakePhotoDialog;
 import com.lashgo.android.ui.main.MainActivity;
+import com.lashgo.android.utils.ContextUtils;
 import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.Md5Util;
 import com.lashgo.android.utils.PhotoUtils;
@@ -108,6 +108,16 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
     }
 
     @Override
+    public void startProgress() {
+        showOverlayProgress();
+    }
+
+    @Override
+    public void stopProgress() {
+        hideOverlayProgress();
+    }
+
+    @Override
     protected void unregisterActionsListener() {
         super.unregisterActionsListener();
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_SAVE_AVATAR.name());
@@ -174,7 +184,7 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
 
     private void profileSaved() {
         if (from.name().equals(FROM.PROFILE.name())) {
-            Toast.makeText(this, R.string.profile_saved, Toast.LENGTH_LONG).show();
+            ContextUtils.showToast(this, R.string.profile_saved);
             finish();
         } else {
             setResult(Activity.RESULT_OK);
@@ -258,7 +268,7 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
                     imgPath = PhotoUtils.getPath(this, data.getData());
                     addMinePhoto();
                 } else {
-                    Toast.makeText(this, R.string.empty_image_was_chosen, Toast.LENGTH_LONG).show();
+                    ContextUtils.showToast(this, R.string.empty_image_was_chosen);
                 }
             } else if (requestCode == MakePhotoDialog.CAPTURE_IMAGE) {
                 addMinePhoto();

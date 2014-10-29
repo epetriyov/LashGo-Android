@@ -12,11 +12,11 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.views.PagerContainer;
+import com.lashgo.android.utils.ContextUtils;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.android.utils.UiUtils;
 import com.lashgo.model.dto.CheckDto;
@@ -107,7 +107,7 @@ public class VoteProcessActivity extends BaseActivity implements ViewPager.OnPag
             }
         }
         if (checkDto == null) {
-            Toast.makeText(this, R.string.error_empty_check, Toast.LENGTH_LONG).show();
+            ContextUtils.showToast(this, R.string.error_empty_check);
             finish();
         }
     }

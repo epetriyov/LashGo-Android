@@ -13,24 +13,6 @@ public final class ContextUtils {
 
     }
 
-    public static void showToast(final Context context, Handler handler, final int stringId) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                showToast(context, stringId);
-            }
-        });
-    }
-
-    public static void showToast(final Context context, Handler handler, final String errorMessage) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                showToast(context, errorMessage);
-            }
-        });
-    }
-
     public static void showToast(Context context, int stringId) {
         Toast.makeText(context, context.getString(stringId), Toast.LENGTH_LONG).show();
     }

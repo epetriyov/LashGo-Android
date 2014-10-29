@@ -8,14 +8,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 import com.lashgo.android.R;
-import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.views.PagerContainer;
 import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.model.dto.CheckDto;
-
-import java.util.ArrayList;
 
 /**
  * Created by Eugene on 13.08.2014.
@@ -27,6 +25,8 @@ public class CheckPhotoActivity extends BaseActivity {
     private FragmentPagerAdapter pagerAdapter;
 
     private CheckDto checkDto;
+
+    private View rigthArrow;
 
     public static Intent buildIntent(Context context, CheckDto checkDto) {
         Intent intent = new Intent(context, CheckPhotoActivity.class);
@@ -50,6 +50,28 @@ public class CheckPhotoActivity extends BaseActivity {
         viewPager = mContainer.getViewPager();
         pagerAdapter = new CheckFinishedPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
+        rigthArrow = findViewById(R.id.right_arrow);
+        rigthArrow.setVisibility(View.VISIBLE);
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i2) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                if (i == 0) {
+                    rigthArrow.setVisibility(View.VISIBLE);
+                } else {
+                    rigthArrow.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
     }
 
     private void initExtras(Bundle savedInstanceState) {

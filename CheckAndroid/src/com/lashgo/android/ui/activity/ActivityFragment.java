@@ -1,6 +1,7 @@
 package com.lashgo.android.ui.activity;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ public class ActivityFragment extends BaseFragment {
     private ActivityAdapter adapter;
 
     private View noResults;
+    private int subscibesCount;
 
 
     @Override
@@ -32,7 +34,7 @@ public class ActivityFragment extends BaseFragment {
         noResults = view.findViewById(R.id.no_result);
         timeline = view.findViewById(R.id.timeline);
         ListView listView = (ListView) view.findViewById(R.id.list_view);
-        adapter = new ActivityAdapter(getActivity());
+        adapter = new ActivityAdapter(getActivity(),subscibesCount);
         listView.setAdapter(adapter);
         serviceHelper.getEvents();
         return view;
@@ -79,5 +81,30 @@ public class ActivityFragment extends BaseFragment {
 
     public void refresh() {
         serviceHelper.getEvents();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(BaseActivity.ExtraNames.NEW_NEWS_COUNT.name(), subscibesCount);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        if (savedInstanceState != null) {
+            subscibesCount = savedInstanceState.getInt(BaseActivity.ExtraNames.NEW_NEWS_COUNT.name());
+        } else if (args != null) {
+            subscibesCount = args.getInt(BaseActivity.ExtraNames.NEW_NEWS_COUNT.name());
+        }
+    }
+
+    public static Fragment newInstance(int subscribesCount) {
+        Fragment fragment = new ActivityFragment();
+        Bundle args = new Bundle();
+        args.putInt(BaseActivity.ExtraNames.NEW_NEWS_COUNT.name(), subscribesCount);
+        fragment.setArguments(args);
+        return fragment;
     }
 }
