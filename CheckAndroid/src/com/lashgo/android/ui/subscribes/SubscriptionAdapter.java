@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.lashgo.android.R;
 import com.lashgo.android.settings.SettingsHelper;
+import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.model.dto.SubscriptionDto;
 
@@ -58,7 +59,7 @@ public class SubscriptionAdapter extends ArrayAdapter<SubscriptionDto> {
         SubscriptionDto subscriptionDto = getItem(position);
         int photoSize = PhotoUtils.convertDpToPixels(40, getContext());
         if (!TextUtils.isEmpty(subscriptionDto.getUserAvatar())) {
-            PhotoUtils.displayImage(getContext(), viewHolder.userAvatar, subscriptionDto.getUserAvatar(), photoSize, R.drawable.ava, false);
+            PhotoUtils.displayImage(getContext(), viewHolder.userAvatar, LashGoUtils.getUserAvatarUrl(subscriptionDto.getUserAvatar()), photoSize, R.drawable.ava, false);
         }
         viewHolder.userName.setText(!TextUtils.isEmpty(subscriptionDto.getFio()) ? subscriptionDto.getFio() : subscriptionDto.getUserLogin());
         if (settingsHelper.isLoggedIn()) {
