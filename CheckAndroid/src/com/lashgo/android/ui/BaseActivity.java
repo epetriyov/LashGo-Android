@@ -273,14 +273,6 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
                 startActivity(new Intent(BaseActivity.this, SearchActivity.class));
             }
         });
-//        ImageView notificationsView = (ImageView) menu.findItem(R.id.action_notifications).getActionView();
-//        notificationsView.setImageResource(R.drawable.ic_action_notifications);
-//        notificationsView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
         return true;
     }
 

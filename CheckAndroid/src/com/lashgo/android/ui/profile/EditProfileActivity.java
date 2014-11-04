@@ -2,11 +2,11 @@ package com.lashgo.android.ui.profile;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.View;
@@ -58,6 +58,8 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
     private String imgPath;
 
     private FROM from;
+
+    private DialogFragment makePhotoFragment;
 
     public static Intent buildIntent(Context context, UserDto userDto, FROM from) {
         Intent intent = new Intent(context, EditProfileActivity.class);
@@ -254,8 +256,10 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
     public void onClick(View view) {
         super.onClick(view);
         if (view.getId() == R.id.make_photo) {
-            DialogFragment makePhotoFragment = new MakePhotoDialog(this);
-            makePhotoFragment.show(getFragmentManager(), MakePhotoDialog.TAG);
+            if (makePhotoFragment == null) {
+                makePhotoFragment = new MakePhotoDialog(this);
+            }
+            showDialog(makePhotoFragment, MakePhotoDialog.TAG);
         }
     }
 

@@ -322,4 +322,16 @@ public class ServiceHelper {
         bundle.putLong(BaseIntentHandler.ServiceExtraNames.PHOTO_ID.name(), photoId);
         runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_PHOTO.name(), bundle);
     }
+
+    public void getVoteUsers(long photoId) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(BaseIntentHandler.ServiceExtraNames.PHOTO_ID.name(), photoId);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_PHOTO_USERS.name(), bundle);
+    }
+
+    public void complainPhoto(long photoId) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(BaseIntentHandler.ServiceExtraNames.PHOTO_ID.name(), photoId);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_COMPLAIN_PHOTO.name(), bundle);
+    }
 }

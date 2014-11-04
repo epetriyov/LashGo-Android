@@ -2,12 +2,12 @@ package com.lashgo.android.ui.check;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -62,7 +62,7 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
     private CheckBottomPanelController bottomPanel;
     private TextView checkName;
     private TextView checkDescription;
-
+    private DialogFragment makePhotoFragment;
     public enum TO {to, FINISHED, VOTE}
 
     public static Intent buildIntent(Context context, int checkId) {
@@ -218,8 +218,10 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
                 startActivity(VoteProcessActivity.buildIntent(this, checkDto));
             } else {
                 if (settingsHelper.isLoggedIn()) {
-                    DialogFragment makePhotoFragment = new MakePhotoDialog(this);
-                    makePhotoFragment.show(getFragmentManager(), MakePhotoDialog.TAG);
+                    if(makePhotoFragment == null) {
+                        makePhotoFragment = new MakePhotoDialog(this);
+                    }
+                    showDialog(makePhotoFragment,MakePhotoDialog.TAG);
                 } else {
                     startActivity(new Intent(this, LoginActivity.class));
                 }

@@ -64,9 +64,9 @@ public class SubscriptionAdapter extends ArrayAdapter<SubscriptionDto> {
         if (settingsHelper.isLoggedIn()) {
             viewHolder.actionBtn.setVisibility(View.VISIBLE);
             if (!subscriptionDto.isAmISubscribed()) {
-                viewHolder.actionBtn.setImageResource(R.drawable.add_user);
+                viewHolder.actionBtn.setImageResource(R.drawable.btn_unsubscribe);
             } else {
-                viewHolder.actionBtn.setImageResource(R.drawable.follow_user);
+                viewHolder.actionBtn.setImageResource(R.drawable.btn_subscribe);
             }
         } else {
             viewHolder.actionBtn.setVisibility(View.GONE);

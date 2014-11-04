@@ -22,6 +22,8 @@ import java.util.ArrayList;
  */
 public class SubscribesFragment extends BaseFragment implements AdapterView.OnItemClickListener, SubscriptionAdapter.ActionBtnClickListener {
 
+    private long photoId;
+
     public static Fragment newInstance(int objectId, ScreenType screenType, String searchText) {
         Bundle args = new Bundle();
         args.putSerializable(SCREEN_TYPE, screenType);
@@ -33,7 +35,7 @@ public class SubscribesFragment extends BaseFragment implements AdapterView.OnIt
     }
 
     public static enum ScreenType {
-        SUBSCRIPTIONS, SUBSCRIBERS, CHECK_USERS, SEARCH_USERS
+        SUBSCRIPTIONS, SUBSCRIBERS, CHECK_USERS, VOTE_USERS, SEARCH_USERS
     }
 
     public static final String SCREEN_TYPE = "screen_type";
@@ -49,9 +51,10 @@ public class SubscribesFragment extends BaseFragment implements AdapterView.OnIt
         refresh();
     }
 
-    public static SubscribesFragment newInstance(int objectId, ScreenType screenType) {
+    public static SubscribesFragment newInstance(int objectId, long photoId, ScreenType screenType) {
         Bundle args = new Bundle();
         args.putSerializable(SCREEN_TYPE, screenType);
+        args.putLong(BaseActivity.ExtraNames.PHOTO_ID.name(), photoId);
         args.putInt(BaseActivity.ExtraNames.USER_ID.name(), objectId);
         SubscribesFragment fragment = new SubscribesFragment();
         fragment.setArguments(args);
@@ -62,6 +65,7 @@ public class SubscribesFragment extends BaseFragment implements AdapterView.OnIt
     public void onSaveInstanceState(Bundle outState) {
         outState.putSerializable(SCREEN_TYPE, screenType);
         outState.putInt(BaseActivity.ExtraNames.USER_ID.name(), objectId);
+        outState.putLong(BaseActivity.ExtraNames.PHOTO_ID.name(), photoId);
         outState.putString(BaseActivity.ExtraNames.SEARCH_TEXT.name(), searchText);
         super.onSaveInstanceState(outState);
     }
@@ -74,10 +78,12 @@ public class SubscribesFragment extends BaseFragment implements AdapterView.OnIt
             screenType = (ScreenType) savedInstanceState.getSerializable(SCREEN_TYPE);
             objectId = savedInstanceState.getInt(BaseActivity.ExtraNames.USER_ID.name());
             searchText = savedInstanceState.getString(BaseActivity.ExtraNames.SEARCH_TEXT.name());
+            photoId = savedInstanceState.getLong(BaseActivity.ExtraNames.PHOTO_ID.name());
         } else if (args != null) {
             screenType = (ScreenType) args.getSerializable(SCREEN_TYPE);
             objectId = args.getInt(BaseActivity.ExtraNames.USER_ID.name());
             searchText = args.getString(BaseActivity.ExtraNames.SEARCH_TEXT.name());
+            photoId = args.getLong(BaseActivity.ExtraNames.PHOTO_ID.name());
         }
     }
 
@@ -102,6 +108,8 @@ public class SubscribesFragment extends BaseFragment implements AdapterView.OnIt
             serviceHelper.getSubscriptions(objectId);
         } else if (ScreenType.CHECK_USERS.name().equals(screenType.name())) {
             serviceHelper.getCheckUsers(objectId);
+        } else if (ScreenType.VOTE_USERS.name().equals(screenType.name())) {
+            serviceHelper.getVoteUsers(photoId);
         } else {
             serviceHelper.searchUsers(searchText);
         }
@@ -119,7 +127,8 @@ public class SubscribesFragment extends BaseFragment implements AdapterView.OnIt
             if (action.equals(BaseIntentHandler.ServiceActionNames.ACTION_GET_SUBSCRIPTIONS.name())
                     || action.equals(BaseIntentHandler.ServiceActionNames.ACTION_GET_SUBSCRIBERS.name())
                     || action.equals(BaseIntentHandler.ServiceActionNames.ACTION_FIND_USERS.name())
-                    || action.equals(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_USERS.name())) {
+                    || action.equals(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_USERS.name())
+                    || action.equals(BaseIntentHandler.ServiceActionNames.ACTION_GET_PHOTO_USERS.name())) {
                 if (data != null) {
                     ArrayList<SubscriptionDto> subscriptionDtos = (ArrayList<SubscriptionDto>) data.getSerializable(BaseIntentHandler.ServiceExtraNames.USERS_DTO.name());
                     updateAdapter(subscriptionDtos);
@@ -156,6 +165,7 @@ public class SubscribesFragment extends BaseFragment implements AdapterView.OnIt
         addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_SUBSCRIBE.name());
         addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_UNSUBSCRIBE.name());
         addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_FIND_USERS.name());
+        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_PHOTO_USERS.name());
     }
 
     @Override
@@ -167,6 +177,7 @@ public class SubscribesFragment extends BaseFragment implements AdapterView.OnIt
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_SUBSCRIBE.name());
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_UNSUBSCRIBE.name());
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_FIND_USERS.name());
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_PHOTO_USERS.name());
     }
 
     @Override

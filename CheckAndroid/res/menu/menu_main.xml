@@ -6,21 +6,23 @@
           android:title="@string/search"
           android:actionLayout="@layout/view_action_button"
             />
-    <!--
+
     <item android:id="@+id/action_notifications"
           android:showAsAction="always"
           android:title="@string/notifications"
           android:actionLayout="@layout/view_action_button"
+          android:visible="false"
             />
-    <item android:id="@+id/action_settings"
-          android:title="@string/settings"
-          android:showAsAction="never"
-            />
-    <item android:id="@+id/action_help"
-          android:title="@string/help"
-          android:showAsAction="never"
-            />
-            -->
+    <!--
+<item android:id="@+id/action_settings"
+      android:title="@string/settings"
+      android:showAsAction="never"
+        />
+<item android:id="@+id/action_help"
+      android:title="@string/help"
+      android:showAsAction="never"
+        />
+        -->
     <item android:id="@+id/action_refresh"
           android:title="@string/refresh"
           android:showAsAction="never"

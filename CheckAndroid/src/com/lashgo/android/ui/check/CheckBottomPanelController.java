@@ -40,6 +40,8 @@ public class CheckBottomPanelController implements View.OnClickListener {
     private ImageView btnComments;
 
     private PhotoDto photoDto;
+    private TextView likesCount;
+    private ImageView likesComments;
 
     private void commonInit(final BaseActivity activity, final View view) {
         activity.inject(this);
@@ -50,6 +52,9 @@ public class CheckBottomPanelController implements View.OnClickListener {
         commentsCount = ((TextView) view.findViewById(R.id.comments_count));
         btnComments = (ImageView) view.findViewById(R.id.btn_comments);
         btnComments.setOnClickListener(this);
+        likesCount = ((TextView) view.findViewById(R.id.likes_count));
+        likesComments = (ImageView) view.findViewById(R.id.btn_likes);
+        likesComments.setOnClickListener(this);
     }
 
     public void updatePeoplesCount(int peoplesCount) {
@@ -65,6 +70,7 @@ public class CheckBottomPanelController implements View.OnClickListener {
         view.findViewById(R.id.time_layout).setVisibility(View.GONE);
         view.findViewById(R.id.peoples_layout).setVisibility(View.GONE);
         updateCommentsCount(photoDto.getCommentsCount());
+        updateLikesCount(photoDto.getLikesCount());
     }
 
     public void updateCommentsCount(int commentsCount) {
@@ -74,6 +80,7 @@ public class CheckBottomPanelController implements View.OnClickListener {
     public CheckBottomPanelController(final BaseActivity activity, final View view, final CheckDto checkDto) {
         commonInit(activity, view);
         this.checkDto = checkDto;
+        view.findViewById(R.id.likes_layout).setVisibility(View.GONE);
         if (checkDto == null) {
             throw new IllegalArgumentException("Check can't be empty!");
         }
@@ -127,9 +134,23 @@ public class CheckBottomPanelController implements View.OnClickListener {
                     throw new IllegalStateException("Photo can't be null at comments click");
                 }
             } else if (view.getId() == R.id.btn_peoples_count) {
-                activity.get().startActivity(SubscribesActivity.buildIntent(activity.get(), checkDto.getId(), SubscribesFragment.ScreenType.CHECK_USERS));
+                if (checkDto != null) {
+                    activity.get().startActivity(SubscribesActivity.buildIntent(activity.get(), checkDto.getId(), SubscribesFragment.ScreenType.CHECK_USERS));
+                } else {
+                    throw new IllegalStateException("Check can't be null at peoples count click");
+                }
+            } else if (view.getId() == R.id.btn_likes) {
+                if (photoDto != null) {
+                    activity.get().startActivity(SubscribesActivity.buildIntent(activity.get(), photoDto.getId(), SubscribesFragment.ScreenType.VOTE_USERS));
+                } else {
+                    throw new IllegalStateException("Photo can't be null at liked click");
+                }
             }
         }
+    }
+
+    public void updateLikesCount(int likesCount) {
+        this.likesCount.setText(String.valueOf(likesCount));
     }
 }
 

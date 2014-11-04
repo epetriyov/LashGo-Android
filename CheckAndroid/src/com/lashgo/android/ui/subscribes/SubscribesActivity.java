@@ -18,6 +18,7 @@ public class SubscribesActivity extends BaseActivity {
     private static final String SUBSCRIBES_TAG = "subscribes";
     private SubscribesFragment.ScreenType screenType;
     private int objectId;
+    private long photoId;
 
     public static Intent buildIntent(Context context, int objectId, SubscribesFragment.ScreenType screenType) {
         Intent intent = new Intent(context, SubscribesActivity.class);
@@ -30,6 +31,7 @@ public class SubscribesActivity extends BaseActivity {
     protected void onSaveInstanceState(Bundle outState) {
         outState.putSerializable(SubscribesFragment.SCREEN_TYPE, screenType);
         outState.putInt(ExtraNames.USER_ID.name(), objectId);
+        outState.putLong(ExtraNames.PHOTO_ID.name(),photoId);
         super.onSaveInstanceState(outState);
     }
 
@@ -40,9 +42,11 @@ public class SubscribesActivity extends BaseActivity {
         if (savedInstanceState != null) {
             screenType = (SubscribesFragment.ScreenType) savedInstanceState.getSerializable(SubscribesFragment.SCREEN_TYPE);
             objectId = savedInstanceState.getInt(ExtraNames.USER_ID.name());
+            photoId = savedInstanceState.getLong(ExtraNames.PHOTO_ID.name());
         } else if (intent != null) {
             screenType = (SubscribesFragment.ScreenType) intent.getSerializableExtra(SubscribesFragment.SCREEN_TYPE);
             objectId = intent.getIntExtra(ExtraNames.USER_ID.name(), -1);
+            photoId = intent.getLongExtra(ExtraNames.PHOTO_ID.name(), -1);
         }
         initCustomActionBar(ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_TITLE);
         setContentView(R.layout.act_container);
@@ -54,7 +58,7 @@ public class SubscribesActivity extends BaseActivity {
             setScreenTitle(R.string.users);
         }
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.container, SubscribesFragment.newInstance(objectId, screenType), SUBSCRIBES_TAG).commit();
+        fragmentTransaction.replace(R.id.container, SubscribesFragment.newInstance(objectId, photoId,screenType), SUBSCRIBES_TAG).commit();
     }
 
     @Override
@@ -76,5 +80,12 @@ public class SubscribesActivity extends BaseActivity {
                 ((BaseFragment) fragment).refresh();
             }
         }
+    }
+
+    public static Intent buildIntent(Context context, long photoId, SubscribesFragment.ScreenType screenType) {
+        Intent intent = new Intent(context, SubscribesActivity.class);
+        intent.putExtra(SubscribesFragment.SCREEN_TYPE, screenType);
+        intent.putExtra(ExtraNames.PHOTO_ID.name(), photoId);
+        return intent;
     }
 }

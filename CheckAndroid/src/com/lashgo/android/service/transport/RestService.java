@@ -116,4 +116,10 @@ public interface RestService {
 
     @GET(Path.Photos.PHOTO)
     ResponseObject<PhotoDto> getPhoto(@retrofit.http.Path("photoId") long photoId);
+
+    @GET(Path.Photos.VOTES)
+    ResponseList<SubscriptionDto> getVoteUsers(@retrofit.http.Path("photoId") long photoId);
+
+    @POST(Path.Photos.COMPLAIN)
+    ResponseObject comlainPhoto(@retrofit.http.Path("photoId") long photoId);
 }

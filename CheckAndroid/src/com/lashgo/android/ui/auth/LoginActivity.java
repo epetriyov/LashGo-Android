@@ -36,7 +36,6 @@ public class LoginActivity extends BaseActivity implements AuthController.AuthLi
     protected FacebookHelper facebookHelper;
 
     private AuthController authController;
-    private DialogFragment progressDialog;
 
     private OpenMode openMode;
 

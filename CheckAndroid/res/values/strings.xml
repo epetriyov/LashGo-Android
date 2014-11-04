@@ -116,15 +116,18 @@
     <string name="photo">Фото</string>
     <string name="subscribers_list">Подписчики</string>
     <string name="no_result">Список пуст</string>
-    <string name="signed_up">подписан на</string>
+    <string name="signed_up">подписан на вас</string>
     <string name="commented">прокомментировал фото</string>
-    <string name="won">выиграл в чеке</string>
-    <string name="you">Ты</string>
+    <string name="won">победили в чеке</string>
+    <string name="you">Вы</string>
     <string name="activity">Активность</string>
     <string name="peoples">ЛЮДЕЙ</string>
     <string name="checks">ЧЕКОВ</string>
     <string name="users">Пользователи</string>
     <string name="search_with_points">Поиск...</string>
+    <string name="vote_for">проголосовал за фото</string>
+    <string name="participate_check">принял участие в чеке</string>
+    <string name="complain_sent">Ваша заявка отправлена</string>
     <string-array name="make_photo_items">
         <item>Камера</item>
         <item>Галерея</item>

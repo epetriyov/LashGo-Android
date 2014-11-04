@@ -144,7 +144,10 @@ public class VoteProcessActivity extends BaseActivity implements ViewPager.OnPag
     }
 
     private void updateArrows(int currentPosition) {
-        if (currentPosition == 0 && pagerAdapter.getCount() > 1) {
+        if (pagerAdapter.getCount() < 2) {
+            leftArrow.setVisibility(View.GONE);
+            rightArrow.setVisibility(View.GONE);
+        } else if (currentPosition == 0 && pagerAdapter.getCount() > 1) {
             leftArrow.setVisibility(View.GONE);
             rightArrow.setVisibility(View.VISIBLE);
         } else if (currentPosition == pagerAdapter.getCount() - 1) {

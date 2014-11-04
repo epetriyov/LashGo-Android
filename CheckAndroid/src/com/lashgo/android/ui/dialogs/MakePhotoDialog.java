@@ -2,11 +2,11 @@ package com.lashgo.android.ui.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.DialogFragment;
 import android.view.View;
 import com.lashgo.android.R;
 import com.lashgo.android.utils.IntentUtils;

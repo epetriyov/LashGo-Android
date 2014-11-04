@@ -34,7 +34,7 @@ public class ActivityFragment extends BaseFragment {
         noResults = view.findViewById(R.id.no_result);
         timeline = view.findViewById(R.id.timeline);
         ListView listView = (ListView) view.findViewById(R.id.list_view);
-        adapter = new ActivityAdapter(getActivity(),subscibesCount);
+        adapter = new ActivityAdapter(getActivity(), subscibesCount, settingsHelper.getUserId());
         listView.setAdapter(adapter);
         serviceHelper.getEvents();
         return view;

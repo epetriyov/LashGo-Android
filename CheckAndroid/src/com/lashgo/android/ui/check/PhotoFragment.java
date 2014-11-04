@@ -99,6 +99,7 @@ public class PhotoFragment extends BaseFragment implements View.OnClickListener 
         if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE && data != null) {
             CheckCounters checkCounters = (CheckCounters) data.getSerializable(BaseIntentHandler.ServiceExtraNames.COUNTERS.name());
             bottomPanel.updateCommentsCount(checkCounters.getCommentsCount());
+            bottomPanel.updateLikesCount(checkCounters.getLikesCount());
         }
     }
 

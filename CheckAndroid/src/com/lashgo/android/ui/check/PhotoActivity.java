@@ -8,13 +8,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.BaseFragment;
 import com.lashgo.android.ui.dialogs.ErrorDialog;
 import com.lashgo.android.ui.views.PagerContainer;
+import com.lashgo.android.utils.ContextUtils;
 import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.model.dto.ErrorDto;
 import com.lashgo.model.dto.PhotoDto;
@@ -78,6 +82,22 @@ public class PhotoActivity extends BaseActivity implements ViewPager.OnPageChang
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuItem menuItem = menu.findItem(R.id.action_notifications);
+        menuItem.setVisible(true);
+        ImageView notificationsView = (ImageView) menuItem.getActionView();
+        notificationsView.setImageResource(R.drawable.banned_icon);
+        notificationsView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                serviceHelper.complainPhoto(photoDtos.get(viewPager.getCurrentItem()).getId());
+            }
+        });
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initCustomActionBar(ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_TITLE);
@@ -114,6 +134,10 @@ public class PhotoActivity extends BaseActivity implements ViewPager.OnPageChang
                 photoDtos.add((PhotoDto) data.getSerializable(BaseIntentHandler.ServiceExtraNames.PHOTO_DTO.name()));
                 pagerAdapter.notifyDataSetChanged();
             }
+            else
+            {
+                ContextUtils.showToast(this,R.string.complain_sent);
+            }
         } else {
             showDialog(ErrorDialog.newInstance(data != null ? (ErrorDto) data.getSerializable(BaseIntentHandler.ERROR_EXTRA) : null), ErrorDialog.TAG);
         }
@@ -123,12 +147,14 @@ public class PhotoActivity extends BaseActivity implements ViewPager.OnPageChang
     protected void registerActionsListener() {
         super.registerActionsListener();
         addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_PHOTO.name());
+        addActionListener(BaseIntentHandler.ServiceActionNames.ACTION_COMPLAIN_PHOTO.name());
     }
 
     @Override
     protected void unregisterActionsListener() {
         super.unregisterActionsListener();
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_PHOTO.name());
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_COMPLAIN_PHOTO.name());
     }
 
     @Override
@@ -142,8 +168,8 @@ public class PhotoActivity extends BaseActivity implements ViewPager.OnPageChang
 
     private void updateArrows(int currentPosition) {
         if (photoDtos == null || photoDtos.size() < 2) {
-            rightArrow.setVisibility(View.VISIBLE);
-            leftArrow.setVisibility(View.VISIBLE);
+            rightArrow.setVisibility(View.GONE);
+            leftArrow.setVisibility(View.GONE);
         } else if (currentPosition == 0) {
             rightArrow.setVisibility(View.VISIBLE);
             leftArrow.setVisibility(View.GONE);

@@ -12,7 +12,6 @@ import com.lashgo.android.service.transport.CheckInterceptor;
 import com.lashgo.android.service.transport.JacksonConverter;
 import com.lashgo.android.service.transport.RestService;
 import com.lashgo.android.settings.SettingsHelper;
-import com.lashgo.android.ui.auth.TwitterAuthActivity;
 import dagger.Module;
 import dagger.Provides;
 import retrofit.RestAdapter;
@@ -64,6 +63,8 @@ import java.text.SimpleDateFormat;
                 FindUserHandler.class,
                 GetCheckUsersHandler.class,
                 GetPhotoHandler.class,
+                GetPhotoUsersHandler.class,
+                ComplainPhotoHandler.class,
                 ServiceHelper.class,
                 CheckInterceptor.class
         },

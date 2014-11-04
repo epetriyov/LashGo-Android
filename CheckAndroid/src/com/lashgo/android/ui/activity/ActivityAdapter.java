@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.lashgo.android.R;
+import com.lashgo.android.settings.SettingsHelper;
 import com.lashgo.android.ui.check.CheckActivity;
 import com.lashgo.android.ui.check.PhotoActivity;
 import com.lashgo.android.ui.profile.ProfileActivity;
@@ -34,10 +35,13 @@ public class ActivityAdapter extends ArrayAdapter<EventDto> {
 
     private int subscibesCount;
 
-    public ActivityAdapter(Context context, int subscibesCount) {
+    private int userId;
+
+    public ActivityAdapter(Context context, int subscibesCount, int userId) {
         super(context, -1);
         simpleDateFormat = new SimpleDateFormat(EVENT_DATE_PATTERN);
         this.subscibesCount = subscibesCount;
+        this.userId = userId;
     }
 
     private static class ViewHolder {
@@ -129,7 +133,7 @@ public class ActivityAdapter extends ArrayAdapter<EventDto> {
 
     private SpannableStringBuilder buildEventText(final EventDto eventDto) {
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-        if (eventDto.getUser() != null) {
+        if (eventDto.getUser() != null && eventDto.getUser().getId() != userId) {
             if (!TextUtils.isEmpty(eventDto.getUser().getFio())) {
                 spannableStringBuilder.append(eventDto.getUser().getFio());
                 spannableStringBuilder.setSpan(new StyleSpan(Typeface.BOLD), 0, eventDto.getUser().getFio().length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
@@ -139,16 +143,23 @@ public class ActivityAdapter extends ArrayAdapter<EventDto> {
             }
         }
         if (eventDto.getAction().equals(DbCodes.EventActions.SUBSCRIBE.name())) {
-            spannableStringBuilder.append(" " + getContext().getString(R.string.signed_up) + " ");
+            spannableStringBuilder.append(" " + getContext().getString(R.string.signed_up));
         } else if (eventDto.getAction().equals(DbCodes.EventActions.COMMENT.name())) {
             spannableStringBuilder.append(" " + getContext().getString(R.string.commented) + " ");
-        } else if (eventDto.getAction().equals(DbCodes.EventActions.WIN.name())) {
+        }
+        else if (eventDto.getAction().equals(DbCodes.EventActions.VOTE.name())) {
+            spannableStringBuilder.append(" " + getContext().getString(R.string.vote_for) + " ");
+        }
+        else if (eventDto.getAction().equals(DbCodes.EventActions.CHECK.name())) {
+            spannableStringBuilder.append(" " + getContext().getString(R.string.participate_check) + " ");
+        }
+        else if (eventDto.getAction().equals(DbCodes.EventActions.WIN.name())) {
             if (eventDto.getUser() == null) {
                 spannableStringBuilder.append(getContext().getString(R.string.you));
             }
             spannableStringBuilder.append(" " + getContext().getString(R.string.won) + " ");
         }
-        if (eventDto.getObjectUser() != null) {
+        if (eventDto.getObjectUser() != null && eventDto.getObjectUser().getId() != userId) {
             int start = spannableStringBuilder.length();
             if (!TextUtils.isEmpty(eventDto.getObjectUser().getFio())) {
                 spannableStringBuilder.append(eventDto.getObjectUser().getFio());

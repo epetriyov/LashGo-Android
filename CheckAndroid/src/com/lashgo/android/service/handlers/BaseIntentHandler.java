@@ -101,8 +101,12 @@ public abstract class BaseIntentHandler {
             return new FindUserHandler();
         }  else if (ServiceActionNames.ACTION_GET_CHECK_USERS.name().equals(action)) {
             return new GetCheckUsersHandler();
+        }  else if (ServiceActionNames.ACTION_GET_PHOTO_USERS.name().equals(action)) {
+            return new GetPhotoUsersHandler();
         }  else if (ServiceActionNames.ACTION_GET_PHOTO.name().equals(action)) {
             return new GetPhotoHandler();
+        }  else if (ServiceActionNames.ACTION_COMPLAIN_PHOTO.name().equals(action)) {
+            return new ComplainPhotoHandler();
         } else {
             throw new IllegalArgumentException("illegal action - " + action);
         }
@@ -124,7 +128,8 @@ public abstract class BaseIntentHandler {
         ACTION_GET_PHOTO_COUNTERS, ACTION_LIKE_PHOTO,
         ACTION_GET_SUBSCRIPTIONS, ACTION_GET_SUBSCRIBERS,
         ACTION_SUBSCRIBE, ACTION_UNSUBSCRIBE, ACTION_GET_EVENTS,
-        ACTION_FIND_USERS, ACTION_GET_CHECK_USERS, ACTION_GET_PHOTO, ACTION_GET_CHECK_LIST
+        ACTION_FIND_USERS, ACTION_GET_CHECK_USERS, ACTION_GET_PHOTO,
+        ACTION_GET_PHOTO_USERS, ACTION_COMPLAIN_PHOTO, ACTION_GET_CHECK_LIST
     }
 
     public static enum ServiceExtraNames {
