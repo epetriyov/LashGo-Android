@@ -25,7 +25,7 @@
     </style>
 
     <style name="Widget.LashGo.ActionBar" parent="Widget.LashGo.ActionBar.Parent">
-        <item name="android:background">@color/splash_top_color</item>
+        <item name="android:background">@color/main_color</item>
     </style>
 
     <style name="Widget.LashGo.ActionBar.Parent" parent="@android:style/Widget.Holo.Light.ActionBar">

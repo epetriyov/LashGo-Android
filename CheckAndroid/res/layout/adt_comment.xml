@@ -25,7 +25,7 @@
             android:layout_weight="1"
             app:fontName="@string/medium"
             android:textSize="16sp"
-            android:textColor="@color/check_title_color"
+            android:textColor="@color/edit_text_color"
             />
     <com.lashgo.android.ui.views.RobotoTextView
             android:id="@+id/comment_date"
@@ -35,7 +35,7 @@
             android:singleLine="true"
             app:fontName="@string/regular"
             android:textSize="14sp"
-            android:textColor="@color/drawer_item_focused"
+            android:textColor="@color/gray"
             />
 
     </LinearLayout>
@@ -48,6 +48,6 @@
             android:layout_marginLeft="16dp"
             app:fontName="@string/regular"
             android:textSize="16sp"
-            android:textColor="@color/check_title_color"
+            android:textColor="@color/edit_text_color"
             />
 </RelativeLayout>

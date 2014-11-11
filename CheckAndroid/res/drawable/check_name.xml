@@ -4,11 +4,11 @@
     <item android:color="@color/check_name_color"
           android:state_focused="false" android:state_pressed="false"
             />
-    <item android:color="@color/drawer_item_focused"
+    <item android:color="@color/gray"
           android:state_focused="true"
           android:state_pressed="false"
             />
-    <item android:color="@color/splash_top_color"
+    <item android:color="@color/main_color"
           android:state_pressed="true"
             />
 </selector>

@@ -62,7 +62,7 @@ public class SubscriptionAdapter extends ArrayAdapter<SubscriptionDto> {
             PhotoUtils.displayImage(getContext(), viewHolder.userAvatar, LashGoUtils.getUserAvatarUrl(subscriptionDto.getUserAvatar()), photoSize, R.drawable.ava, false);
         }
         viewHolder.userName.setText(!TextUtils.isEmpty(subscriptionDto.getFio()) ? subscriptionDto.getFio() : subscriptionDto.getUserLogin());
-        if (settingsHelper.isLoggedIn()) {
+        if (settingsHelper.isLoggedIn() && subscriptionDto.getUserId() != settingsHelper.getUserId()) {
             viewHolder.actionBtn.setVisibility(View.VISIBLE);
             if (!subscriptionDto.isAmISubscribed()) {
                 viewHolder.actionBtn.setImageResource(R.drawable.btn_unsubscribe);

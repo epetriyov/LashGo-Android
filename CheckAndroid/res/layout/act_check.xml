@@ -13,11 +13,14 @@
             android:paddingTop="@dimen/action_bar_height"
             android:paddingBottom="16dp"
             >
+        <Space android:layout_width="match_parent"
+               android:layout_height="0dp"
+               android:layout_weight="1"
+                />
         <com.lashgo.android.ui.views.RobotoTextView
                 android:id="@+id/check_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
                 android:layout_gravity="center_horizontal"
                 app:fontName="@string/condensed_regular"
                 android:textSize="24sp"
@@ -25,40 +28,40 @@
                 android:ellipsize="end"
                 android:textColor="@color/check_name_color"
                 />
-            <FrameLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                         android:layout_marginTop="34dp"
-                         android:id="@+id/check_layout"
+        <FrameLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                     android:layout_marginTop="34dp"
+                     android:id="@+id/check_layout"
+                >
+            <com.lashgo.android.ui.views.PagerContainer
+                    android:id="@+id/pager_container"
+                    android:background="@android:color/transparent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     >
-                <com.lashgo.android.ui.views.PagerContainer
-                        android:id="@+id/pager_container"
+
+                <android.support.v4.view.ViewPager
+                        android:id="@+id/check_pager"
                         android:background="@android:color/transparent"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        >
-
-                    <android.support.v4.view.ViewPager
-                            android:id="@+id/check_pager"
-                            android:background="@android:color/transparent"
-                            android:layout_width="match_parent"
-                            android:layout_height="250dp"
-                            android:layout_marginLeft="65dp"
-                            android:layout_marginRight="65dp"
-                            android:layout_gravity="center_horizontal|top"/>
-                </com.lashgo.android.ui.views.PagerContainer>
-                <ImageView
-                        android:id="@+id/btn_action"
-                        android:layout_width="62dp" android:layout_height="62dp"
-                        android:layout_gravity="top|right"
-                        android:layout_marginRight="74dp"
-                        android:layout_marginTop="8dp"
-                        android:src="@drawable/btn_camera"
-                        />
+                        android:layout_height="250dp"
+                        android:layout_marginLeft="65dp"
+                        android:layout_marginRight="65dp"
+                        android:layout_gravity="center_horizontal|top"/>
+            </com.lashgo.android.ui.views.PagerContainer>
+            <ImageView
+                    android:id="@+id/btn_action"
+                    android:layout_width="62dp" android:layout_height="62dp"
+                    android:layout_gravity="top|right"
+                    android:layout_marginRight="74dp"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/btn_camera"
+                    />
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                           android:orientation="vertical"
                           android:id="@+id/vote_layout"
-                          android:layout_marginBottom="90dp"
                           android:layout_gravity="bottom"
                           android:gravity="center_horizontal"
+                          android:layout_marginBottom="50dp"
                     >
                 <com.lashgo.android.ui.views.RobotoTextView android:layout_width="wrap_content"
                                                             android:layout_height="wrap_content"
@@ -91,6 +94,9 @@
                 </LinearLayout>
             </LinearLayout>
         </FrameLayout>
+        <Space android:layout_width="1dp" android:layout_height="0dp"
+               android:layout_weight="1"
+                />
         <com.lashgo.android.ui.views.RobotoTextView
                 android:id="@+id/task_description"
                 android:layout_width="match_parent"

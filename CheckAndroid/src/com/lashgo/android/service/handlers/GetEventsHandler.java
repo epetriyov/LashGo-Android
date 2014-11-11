@@ -14,7 +14,7 @@ import java.io.IOException;
 public class GetEventsHandler extends BaseIntentHandler {
     @Override
     protected Bundle doExecute(Intent intent) throws IOException, RetrofitError {
-        ResponseList<EventDto> responseList = service.getEvents();
+        ResponseList<EventDto> responseList = service.getEvents(intent.getBooleanExtra(ServiceExtraNames.SUBSCRIPTION_EVENTS.name(), false));
         Bundle bundle = new Bundle();
         bundle.putSerializable(ServiceExtraNames.EVENTS_DTO.name(), responseList.getResultCollection());
         return bundle;

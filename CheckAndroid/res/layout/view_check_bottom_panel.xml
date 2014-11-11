@@ -95,7 +95,7 @@
                 android:layout_marginLeft="10dp"
                 app:fontName="@string/condensed_regular"
                 android:textSize="16sp"
-                android:textColor="@color/check_time_color_2"
+                android:textColor="@color/vote_stroke"
                 />
     </LinearLayout>
     <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"

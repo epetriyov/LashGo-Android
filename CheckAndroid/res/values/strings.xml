@@ -127,7 +127,7 @@
     <string name="search_with_points">Поиск...</string>
     <string name="vote_for">проголосовал за фото</string>
     <string name="participate_check">принял участие в чеке</string>
-    <string name="complain_sent">Ваша заявка отправлена</string>
+    <string name="complain_sent">Ваша жалоба отправлена</string>
     <string-array name="make_photo_items">
         <item>Камера</item>
         <item>Галерея</item>
@@ -135,7 +135,7 @@
 
     <plurals name="number_of_checks">
         <item quantity="one">1 чек</item>
-        <item quantity="few">2 чека</item>
+        <item quantity="few">%d чека</item>
         <item quantity="other">%d чеков</item>
     </plurals>
 
@@ -153,7 +153,7 @@
 
     <plurals name="number_of_comments">
         <item quantity="one">1 комментарий</item>
-        <item quantity="few">2 комментария</item>
+        <item quantity="few">%d комментария</item>
         <item quantity="other">%d комментариев</item>
     </plurals>
 </resources>

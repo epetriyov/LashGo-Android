@@ -13,7 +13,7 @@
             >
 
         <FrameLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                     android:background="@color/splash_top_color"
+                     android:background="@color/main_color"
                 >
 
             <ImageView android:layout_width="wrap_content" android:layout_height="52dp"

@@ -26,6 +26,7 @@ public class ActivityFragment extends BaseFragment {
     private View noResults;
     private int subscibesCount;
 
+    private boolean subscriptions;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,7 +37,7 @@ public class ActivityFragment extends BaseFragment {
         ListView listView = (ListView) view.findViewById(R.id.list_view);
         adapter = new ActivityAdapter(getActivity(), subscibesCount, settingsHelper.getUserId());
         listView.setAdapter(adapter);
-        serviceHelper.getEvents();
+        serviceHelper.getEvents(subscriptions);
         return view;
     }
 
@@ -80,12 +81,13 @@ public class ActivityFragment extends BaseFragment {
     }
 
     public void refresh() {
-        serviceHelper.getEvents();
+        serviceHelper.getEvents(subscriptions);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(BaseActivity.ExtraNames.NEW_NEWS_COUNT.name(), subscibesCount);
+        outState.putBoolean(BaseActivity.ExtraNames.SUBSCRIPTION_EVENTS.name(),subscriptions);
         super.onSaveInstanceState(outState);
     }
 
@@ -95,15 +97,18 @@ public class ActivityFragment extends BaseFragment {
         Bundle args = getArguments();
         if (savedInstanceState != null) {
             subscibesCount = savedInstanceState.getInt(BaseActivity.ExtraNames.NEW_NEWS_COUNT.name());
+            subscriptions = savedInstanceState.getBoolean(BaseActivity.ExtraNames.SUBSCRIPTION_EVENTS.name());
         } else if (args != null) {
             subscibesCount = args.getInt(BaseActivity.ExtraNames.NEW_NEWS_COUNT.name());
+            subscriptions = args.getBoolean(BaseActivity.ExtraNames.SUBSCRIPTION_EVENTS.name());
         }
     }
 
-    public static Fragment newInstance(int subscribesCount) {
+    public static Fragment newInstance(int subscribesCount,boolean subscriptions) {
         Fragment fragment = new ActivityFragment();
         Bundle args = new Bundle();
         args.putInt(BaseActivity.ExtraNames.NEW_NEWS_COUNT.name(), subscribesCount);
+        args.putBoolean(BaseActivity.ExtraNames.SUBSCRIPTION_EVENTS.name(),subscriptions);
         fragment.setArguments(args);
         return fragment;
     }

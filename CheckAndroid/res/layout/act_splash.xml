@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|bottom"
             android:layout_marginBottom="9dp"
-            app:fillColor="@color/splash_top_color"
+            app:fillColor="@color/main_color"
             app:pageColor="@color/circle_color"
             app:radius="3dp"
             app:strokeColor="@color/circle_color"

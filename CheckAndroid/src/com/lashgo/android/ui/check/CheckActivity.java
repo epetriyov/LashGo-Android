@@ -63,6 +63,7 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
     private TextView checkName;
     private TextView checkDescription;
     private DialogFragment makePhotoFragment;
+
     public enum TO {to, FINISHED, VOTE}
 
     public static Intent buildIntent(Context context, int checkId) {
@@ -218,10 +219,10 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
                 startActivity(VoteProcessActivity.buildIntent(this, checkDto));
             } else {
                 if (settingsHelper.isLoggedIn()) {
-                    if(makePhotoFragment == null) {
+                    if (makePhotoFragment == null) {
                         makePhotoFragment = new MakePhotoDialog(this);
                     }
-                    showDialog(makePhotoFragment,MakePhotoDialog.TAG);
+                    showDialog(makePhotoFragment, MakePhotoDialog.TAG);
                 } else {
                     startActivity(new Intent(this, LoginActivity.class));
                 }
@@ -510,6 +511,6 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     protected void refresh() {
-        serviceHelper.getCheck(checkId);
+        serviceHelper.getCheck(checkDto == null ? checkId : checkDto.getId());
     }
 }

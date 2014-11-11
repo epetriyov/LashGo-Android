@@ -133,10 +133,8 @@ public class PhotoActivity extends BaseActivity implements ViewPager.OnPageChang
                 photoDtos = new ArrayList<>(1);
                 photoDtos.add((PhotoDto) data.getSerializable(BaseIntentHandler.ServiceExtraNames.PHOTO_DTO.name()));
                 pagerAdapter.notifyDataSetChanged();
-            }
-            else
-            {
-                ContextUtils.showToast(this,R.string.complain_sent);
+            } else {
+                ContextUtils.showToast(this, R.string.complain_sent);
             }
         } else {
             showDialog(ErrorDialog.newInstance(data != null ? (ErrorDto) data.getSerializable(BaseIntentHandler.ERROR_EXTRA) : null), ErrorDialog.TAG);

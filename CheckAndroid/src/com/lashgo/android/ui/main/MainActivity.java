@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -15,6 +14,7 @@ import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.facebook.UiLifecycleHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -31,7 +31,6 @@ import com.lashgo.android.ui.auth.AuthController;
 import com.lashgo.android.ui.auth.LoginActivity;
 import com.lashgo.android.ui.auth.SuccessfulRegisterActivity;
 import com.lashgo.android.ui.check.CheckListFragment;
-import com.lashgo.android.ui.news.NewsFragment;
 import com.lashgo.android.ui.profile.ProfileActivity;
 import com.lashgo.android.utils.ContextUtils;
 import com.lashgo.android.utils.LashGoUtils;
@@ -304,7 +303,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (exitMenu != null) {
             exitMenu.setVisible(false);
         }
-        drawerTopView.setBackgroundColor(getResources().getColor(R.color.splash_top_color));
+        drawerTopView.setBackgroundColor(getResources().getColor(R.color.main_color));
         userName.setText(R.string.login_or_register);
         userAvatarView.setImageResource(R.drawable.ava);
         drawerLoginMenu.setVisibility(View.VISIBLE);
@@ -439,10 +438,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             fragment = CheckListFragment.newInstance(CheckListFragment.StartOptions.LOAD_ON_START);
             position = 0;
         } else if (view.getId() == R.id.item_news) {
-            fragment = NewsFragment.newInstance();
+            fragment = ActivityFragment.newInstance(subscribesCount, false);
             position = 1;
         } else if (view.getId() == R.id.item_subscribes) {
-            fragment = ActivityFragment.newInstance(subscribesCount);
+            fragment = ActivityFragment.newInstance(subscribesCount, true);
             position = 2;
         }
         showFragment(fragment);

@@ -8,7 +8,7 @@
                   android:orientation="horizontal"
                   android:gravity="top"
                   android:padding="5dp"
-                  android:background="@color/splash_top_color"
+                  android:background="@color/main_color"
             >
         <ImageView
                 android:id="@+id/btn_back"
@@ -26,6 +26,7 @@
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
                 android:textSize="16sp"
+                android:background="@drawable/edit_text_holo_light"
                 />
         <ImageView
                 android:id="@+id/btn_close"

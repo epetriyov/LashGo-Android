@@ -9,6 +9,7 @@
               android:paddingBottom="18dp"
               android:paddingRight="16dp"
               android:gravity="center_vertical"
+              android:id="@+id/activity_background"
         >
     <ImageView
             android:id="@+id/pointer"
@@ -33,7 +34,6 @@
                 android:id="@+id/action_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Бет Додсон выложил задание"
                 />
         <com.lashgo.android.ui.views.RobotoTextView
                 android:id="@+id/event_date"
@@ -43,7 +43,6 @@
                 app:fontName="@string/regular"
                 android:textSize="14sp"
                 android:textColor="@color/check_state_color"
-                android:text="15 мин"
                 />
     </LinearLayout>
     <ImageView

@@ -301,8 +301,10 @@ public class ServiceHelper {
         runRequest(BaseIntentHandler.ServiceActionNames.ACTION_UNSUBSCRIBE.name(), extras);
     }
 
-    public void getEvents() {
-        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_EVENTS.name(), new Bundle());
+    public void getEvents(boolean subscriptions) {
+        Bundle extras = new Bundle();
+        extras.putBoolean(BaseIntentHandler.ServiceExtraNames.SUBSCRIPTION_EVENTS.name(), subscriptions);
+        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_EVENTS.name(), extras);
     }
 
     public void searchUsers(String searchText) {

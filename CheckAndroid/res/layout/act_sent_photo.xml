@@ -8,7 +8,7 @@
               android:background="@color/username_normal"
         >
     <FrameLayout android:layout_width="match_parent" android:layout_height="56dp"
-                 android:background="@color/splash_top_color"
+                 android:background="@color/main_color"
             >
         <ImageView
                 android:id="@+id/close_btn"

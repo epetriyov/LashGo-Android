@@ -4,11 +4,11 @@
     <item android:color="@color/gray"
           android:state_focused="false" android:state_pressed="false"
             />
-    <item android:color="@color/recover_btn_focused"
+    <item android:color="@color/edit_text_color"
           android:state_focused="true"
           android:state_pressed="false"
             />
-    <item android:color="@color/recover_btn_pressed"
+    <item android:color="@color/main_color"
           android:state_pressed="true"
             />
 </selector>

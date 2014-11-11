@@ -106,7 +106,7 @@ public interface RestService {
     ResponseList<SubscriptionDto> getSubscribers(@retrofit.http.Path("userId") int userId);
 
     @GET(Path.Events.GET)
-    ResponseList<EventDto> getEvents();
+    ResponseList<EventDto> getEvents(@Query("subscriptions") boolean subscriptions);
 
     @GET(Path.Users.GET)
     ResponseList<SubscriptionDto> findUsers(@Query("search_text") String searchText);

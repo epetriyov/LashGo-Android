@@ -181,6 +181,7 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
             serviceHelper.saveProfile(userDto);
         } else {
             profileWontSave = true;
+            profileSaved();
         }
     }
 

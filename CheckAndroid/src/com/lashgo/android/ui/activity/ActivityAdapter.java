@@ -13,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.lashgo.android.R;
-import com.lashgo.android.settings.SettingsHelper;
 import com.lashgo.android.ui.check.CheckActivity;
 import com.lashgo.android.ui.check.PhotoActivity;
 import com.lashgo.android.ui.profile.ProfileActivity;
@@ -146,14 +145,11 @@ public class ActivityAdapter extends ArrayAdapter<EventDto> {
             spannableStringBuilder.append(" " + getContext().getString(R.string.signed_up));
         } else if (eventDto.getAction().equals(DbCodes.EventActions.COMMENT.name())) {
             spannableStringBuilder.append(" " + getContext().getString(R.string.commented) + " ");
-        }
-        else if (eventDto.getAction().equals(DbCodes.EventActions.VOTE.name())) {
+        } else if (eventDto.getAction().equals(DbCodes.EventActions.VOTE.name())) {
             spannableStringBuilder.append(" " + getContext().getString(R.string.vote_for) + " ");
-        }
-        else if (eventDto.getAction().equals(DbCodes.EventActions.CHECK.name())) {
+        } else if (eventDto.getAction().equals(DbCodes.EventActions.CHECK.name())) {
             spannableStringBuilder.append(" " + getContext().getString(R.string.participate_check) + " ");
-        }
-        else if (eventDto.getAction().equals(DbCodes.EventActions.WIN.name())) {
+        } else if (eventDto.getAction().equals(DbCodes.EventActions.WIN.name())) {
             if (eventDto.getUser() == null) {
                 spannableStringBuilder.append(getContext().getString(R.string.you));
             }
