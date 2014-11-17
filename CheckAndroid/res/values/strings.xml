@@ -8,24 +8,19 @@
     <string name="twitter_consumerKey">JjHQisFOu784Ag7HBAcJg</string>
     <string name="twitter_consumerSecret">pIkZnc7NJ8CW0WG5sCFLgPD5BOrak2Gtca3hmpy5dg</string>
     <string name="twitter_callback_url">check://twitter</string>
+    <string name="regular">Roboto-Regular</string>
+    <string name="medium">Roboto-Medium</string>
+    <string name="condensed_regular">RobotoCondensed-Regular</string>
 
 
     <!-- login screen strings -->
     <string name="login">ВХОД</string>
     <string name="register">РЕГИСТРАЦИЯ</string>
-    <string name="auth_vk">VK</string>
-    <string name="auth_facebook">F</string>
-    <string name="auth_twitter">T</string>
-    <string name="hint_login">Email</string>
     <string name="hint_password">Пароль</string>
     <string name="error_no_internet">Нет интернет соединения</string>
     <string name="hint_email">Email</string>
-    <string name="error_empty_field">Поле не может быть пустым</string>
     <string name="server_is_unavailable">Сервер недоступен</string>
-    <string name="auth_success">Пользователь авторизован</string>
     <string name="password_recover">ВСПОМНИТЬ</string>
-    <string name="remember_password">напомнить пароль</string>
-    <string name="wrong_response">Неверный ответ</string>
 
     <string-array name="menus_array">
         <item>Задания</item>
@@ -34,48 +29,29 @@
     </string-array>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
-    <string name="action_websearch">Web search</string>
-    <string name="app_not_available">Sorry, there\'s no web browser available</string>
     <string name="check_list">Задания</string>
     <string name="news_list">Новости</string>
     <string name="subscribes_list">Подписки</string>
-    <string name="start">Начать</string>
-    <string name="enter">Войти</string>
     <string name="social_login">Войти через соцсети</string>
     <string name="password_was_reset">Новый пароль отправлен вам на email</string>
-    <string name="email_for_recovery">Адрес для восстановления</string>
     <string name="ready">Готово</string>
     <string name="active_checks">Активные</string>
     <string name="finished_checks">Завершенные</string>
-    <string name="regular">Roboto-Regular</string>
-    <string name="medium">Roboto-Medium</string>
-    <string name="condensed_regular">RobotoCondensed-Regular</string>
     <string name="login_or_register">Войдите или зарегистрируйтесь</string>
-    <string name="tasks">Задания</string>
-    <string name="news">Новости</string>
-    <string name="subscribes">Подписки</string>
-    <string name="vote_checks">Идёт голосование</string>
     <string name="task">Чек</string>
-    <string name="make_photo">Выполнить задание с помощью...</string>
     <string name="empty_image_was_chosen">Выбрана пустая фотография</string>
     <string name="congratulations">Поздравляем!</string>
     <string name="now_you_are_with_us">Теперь вы с нами.</string>
-    <string name="subscibes_count">подписок</string>
-    <string name="subscibers_count">подписчиков</string>
     <string name="fill_profile">ЗАПОЛНИТЬ ПРОФИЛЬ</string>
     <string name="continue_register">ПРОДОЛЖИТЬ</string>
     <string name="error_empty_email">Введите email</string>
     <string name="error_empty_password">Введите пароль</string>
-    <string name="loading">Загрузка...</string>
     <string name="error_send_photo">Произошла ошибка. Сделайте фото ещё раз.</string>
     <string name="choose_photo">Выберите одну\nиз четырёх фото</string>
     <string name="error_empty_check">Пустой чек</string>
     <string name="now_this_button">Теперь эту кнопочку</string>
     <string name="go_to_next_partition">Перейти к\nследующей партии</string>
     <string name="vote_is_going">Идёт\nголосование</string>
-    <string name="checks_count">%d чеков</string>
-    <string name="comments_count">%d комментариев</string>
-    <string name="likes_count">%d лайков</string>
     <string name="cheers">Ура!</string>
     <string name="photo_sent">Ваше фото успешно отправлено.\n\nЖдите результат голосования</string>
     <string name="i_want">Я хочу:</string>
@@ -88,7 +64,6 @@
     <string name="profile_saved">Профиль успешно сохранён</string>
     <string name="edit">Редактировать</string>
     <string name="skip">ПРОПУСТИТЬ</string>
-    <string name="splash_enter">ВХОД</string>
     <string name="login_enter">Вход</string>
     <string name="comments">Комментарии</string>
     <string name="hint_comment">Оставьте комментарий</string>
@@ -128,6 +103,7 @@
     <string name="vote_for">проголосовал за фото</string>
     <string name="participate_check">принял участие в чеке</string>
     <string name="complain_sent">Ваша жалоба отправлена</string>
+    <string name="vote_started">Началось голосование</string>
     <string-array name="make_photo_items">
         <item>Камера</item>
         <item>Галерея</item>

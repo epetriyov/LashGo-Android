@@ -20,7 +20,7 @@
                 />
         <com.lashgo.android.ui.views.RobotoTextView android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
-                                                    android:text="@string/tasks"
+                                                    android:text="@string/check_list"
                                                     android:layout_marginLeft="32dp"
                                                     android:textSize="16sp"
                                                     app:fontName="@string/regular"
@@ -65,7 +65,7 @@
                 />
         <com.lashgo.android.ui.views.RobotoTextView android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
-                                                    android:text="@string/news"
+                                                    android:text="@string/news_list"
                                                     android:layout_marginLeft="32dp"
                                                     android:textSize="16sp"
                                                     app:fontName="@string/regular"
@@ -110,7 +110,7 @@
                 />
         <com.lashgo.android.ui.views.RobotoTextView android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
-                                                    android:text="@string/subscribes"
+                                                    android:text="@string/subscribes_list"
                                                     android:layout_marginLeft="32dp"
                                                     android:textSize="16sp"
                                                     app:fontName="@string/regular"

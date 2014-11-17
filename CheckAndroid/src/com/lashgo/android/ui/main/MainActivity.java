@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.facebook.UiLifecycleHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -32,6 +31,7 @@ import com.lashgo.android.ui.auth.LoginActivity;
 import com.lashgo.android.ui.auth.SuccessfulRegisterActivity;
 import com.lashgo.android.ui.check.CheckListFragment;
 import com.lashgo.android.ui.profile.ProfileActivity;
+import com.lashgo.android.ui.views.RobotoButton;
 import com.lashgo.android.utils.ContextUtils;
 import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.PhotoUtils;
@@ -75,7 +75,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private GoogleCloudMessaging gcm;
     private ImageView userAvatarView;
-    private TextView userName;
+    private RobotoButton userName;
     private View itemTasks;
     private TextView tasksCountView;
     private TextView newsCountView;
@@ -243,7 +243,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         drawerTopView = findViewById(R.id.drawer_top_view);
         userAvatarView = (ImageView) findViewById(R.id.drawer_ava);
         userAvatarView.setOnClickListener(this);
-        userName = (TextView) findViewById(R.id.drawer_text);
+        userName = (RobotoButton) findViewById(R.id.drawer_text);
         userName.setOnClickListener(this);
         ViewStub drawerMenuStub = (ViewStub) findViewById(R.id.view_login_stub);
         drawerLoginMenu = drawerMenuStub.inflate();

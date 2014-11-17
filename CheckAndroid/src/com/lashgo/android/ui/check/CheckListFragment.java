@@ -151,7 +151,7 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
                     if ((checkActiveCalendar.getTimeInMillis() > System.currentTimeMillis())) {
                         checkStatus = getString(R.string.active_checks);
                     } else if (checkVoteCalendar.getTimeInMillis() > System.currentTimeMillis()) {
-                        checkStatus = getString(R.string.vote_checks);
+                        checkStatus = getString(R.string.vote_is_going);
                     } else {
                         checkStatus = getString(R.string.finished_checks);
                     }

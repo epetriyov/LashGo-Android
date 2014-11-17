@@ -93,7 +93,7 @@
             android:text="@string/password_recover"
             app:fontName="@string/regular"
             android:textSize="14sp"
-            android:textColor="@drawable/btn_recover_color"
+            android:textColor="@drawable/user_name_color"
             android:background="@null"
             android:paddingRight="5dp"
             android:paddingTop="5dp"

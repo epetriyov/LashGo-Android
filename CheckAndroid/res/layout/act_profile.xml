@@ -100,7 +100,6 @@
                             android:textSize="14sp"
                             android:textColor="@drawable/profile_text_color"
                             app:fontName="@string/condensed_regular"
-                            android:text="@string/subscibers_count"
                             android:layout_marginLeft="5dp"
                             android:duplicateParentState="true"
                             />

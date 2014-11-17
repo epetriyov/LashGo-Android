@@ -28,8 +28,10 @@
                 android:ellipsize="end"
                 android:textColor="@color/check_name_color"
                 />
+        <Space android:layout_width="match_parent" android:layout_height="0dp"
+               android:layout_weight="1"
+                />
         <FrameLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                     android:layout_marginTop="34dp"
                      android:id="@+id/check_layout"
                 >
             <com.lashgo.android.ui.views.PagerContainer
@@ -94,14 +96,13 @@
                 </LinearLayout>
             </LinearLayout>
         </FrameLayout>
-        <Space android:layout_width="1dp" android:layout_height="0dp"
+        <Space android:layout_width="match_parent" android:layout_height="0dp"
                android:layout_weight="1"
                 />
         <com.lashgo.android.ui.views.RobotoTextView
                 android:id="@+id/task_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:paddingLeft="25dp"
                 android:paddingRight="25dp"
                 android:gravity="center_horizontal"
@@ -111,7 +112,7 @@
                 android:textSize="18sp"
                 android:textColor="@color/check_description_color_2"
                 />
-        <Space android:layout_width="1dp" android:layout_height="0dp"
+        <Space android:layout_width="match_parent" android:layout_height="0dp"
                android:layout_weight="1"
                 />
         <include layout="@layout/view_check_bottom_panel"/>

@@ -399,7 +399,7 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
                     winnerMedal.setVisibility(View.GONE);
                     winnerName.setVisibility(View.GONE);
                     if (!TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
-                        PhotoUtils.displayImage(CheckActivity.this, checkImage, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), imageSize, R.drawable.ava, false);
+                        PhotoUtils.displayImage(CheckActivity.this, checkImage, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), imageSize, R.drawable.ava, checkState.equals(LashgoConfig.CheckState.VOTE) ? true : false);
                     }
                     break;
                 case 1:

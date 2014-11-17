@@ -1,11 +1,9 @@
 package com.lashgo.android.ui.images;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapShader;
-import android.graphics.Canvas;
-import android.graphics.Paint;
+import android.graphics.*;
 import com.lashgo.android.R;
+import com.lashgo.android.utils.PhotoUtils;
 import com.squareup.picasso.Transformation;
 
 /**
@@ -31,10 +29,7 @@ public class CircleTransformation implements Transformation {
 
         int size = Math.min(source.getWidth(), source.getHeight());
 
-        int x = (source.getWidth() - size) / 2;
-        int y = (source.getHeight() - size) / 2;
-
-        Bitmap squaredBitmap = Bitmap.createBitmap(source, x, y, size, size);
+        Bitmap squaredBitmap = Bitmap.createBitmap(source, 0, 0, size, size);
         if (squaredBitmap != source) {
             source.recycle();
         }
@@ -55,6 +50,13 @@ public class CircleTransformation implements Transformation {
             shadow.setColor(context.getResources().getColor(R.color.darkening));
             canvas.drawCircle(r, r, r, shadow);
         }
+
+//        Paint arc = new Paint();
+//        arc.setStyle(Paint.Style.STROKE);
+//        arc.setShader(new SweepGradient(r, r, R.color.circle_gradient_start, R.color.circle_gradient_end));
+//        arc.setStrokeWidth(11);
+//        canvas.drawArc(new RectF(0, 0, source.getWidth(), source.getHeight()), 360, 360, false, arc);
+
         squaredBitmap.recycle();
         return bitmap;
     }

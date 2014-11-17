@@ -33,6 +33,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.lashgo.android.R;
 import com.lashgo.android.ui.check.CheckActivity;
 import com.lashgo.android.ui.main.MainActivity;
+import com.lashgo.model.GcmEventType;
 
 /**
  * This {@code IntentService} does the actual handling of the GCM message.
@@ -48,6 +49,8 @@ public class GcmIntentService extends IntentService {
     private static final String GCM_CHECK_NAME = "check_name";
 
     private static final String GCM_CHECK_ID = "check_id";
+
+    private static final String ACTION_TYPE = "action_type";
 
     public GcmIntentService() {
         super("GcmIntentService");
@@ -106,10 +109,9 @@ public class GcmIntentService extends IntentService {
         try {
             int checkIntId = Integer.parseInt(checkId);
             stackBuilder.addNextIntent(CheckActivity.buildIntent(this, checkIntId));
-        }catch (NumberFormatException e)
-        {
+        } catch (NumberFormatException e) {
             e.printStackTrace();
-            stackBuilder.addNextIntent(new Intent(this,MainActivity.class));
+            stackBuilder.addNextIntent(new Intent(this, MainActivity.class));
         }
 
         PendingIntent resultPendingIntent =
@@ -118,16 +120,23 @@ public class GcmIntentService extends IntentService {
                         PendingIntent.FLAG_UPDATE_CURRENT
                 );
         String checkName = bundle.getString(GCM_CHECK_NAME);
+        String actionType = bundle.getString(ACTION_TYPE);
+        int contentTitle;
+        if (actionType != null && actionType.equals(GcmEventType.VOTE_STARTED.name())) {
+            contentTitle = R.string.vote_started;
+        } else {
+            contentTitle = R.string.notification_title;
+        }
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_logo)
-                        .setContentTitle(getResources().getString(R.string.notification_title))
+                        .setContentTitle(getResources().getString(contentTitle))
                         .setContentText(checkName != null ? checkName : "");
 
         mBuilder.setContentIntent(resultPendingIntent);
         mBuilder.setAutoCancel(true);
         mBuilder.setLights(Color.BLUE, 500, 500);
-        long[] pattern = {0,100, 100, 100, 100,1000};
+        long[] pattern = {0, 100, 100, 100, 100, 1000};
         mBuilder.setVibrate(pattern);
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         mBuilder.setSound(alarmSound);

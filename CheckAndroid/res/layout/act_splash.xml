@@ -47,7 +47,7 @@
             <com.lashgo.android.ui.views.RobotoButton
                     android:layout_width="wrap_content" android:layout_height="match_parent"
                     android:id="@+id/btn_enter"
-                    android:text="@string/splash_enter"
+                    android:text="@string/login"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
                     android:gravity="center"
