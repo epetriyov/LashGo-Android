@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
@@ -264,6 +265,20 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
+    private class AsyncProccessImage extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            return PhotoUtils.compressImage(imgPath);
+        }
+
+        @Override
+        protected void onPostExecute(String fileName) {
+            imgPath = fileName;
+            addMinePhoto();
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -271,12 +286,12 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
             if (requestCode == MakePhotoDialog.PICK_IMAGE) {
                 if (data != null && data.getDataString() != null) {
                     imgPath = PhotoUtils.getPath(this, data.getData());
-                    addMinePhoto();
+                    new AsyncProccessImage().execute();
                 } else {
                     ContextUtils.showToast(this, R.string.empty_image_was_chosen);
                 }
             } else if (requestCode == MakePhotoDialog.CAPTURE_IMAGE) {
-                addMinePhoto();
+                new AsyncProccessImage().execute();
             }
         }
     }

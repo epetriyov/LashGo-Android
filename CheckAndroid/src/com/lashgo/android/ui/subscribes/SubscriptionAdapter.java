@@ -44,22 +44,24 @@ public class SubscriptionAdapter extends ArrayAdapter<SubscriptionDto> {
             viewHolder.userAvatar = (ImageView) convertView.findViewById(R.id.user_avatar);
             viewHolder.userName = (TextView) convertView.findViewById(R.id.user_name);
             viewHolder.actionBtn = (ImageView) convertView.findViewById(R.id.action_btn);
-            viewHolder.actionBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (listener != null) {
-                        listener.onActionBtnClicked(position);
-                    }
-                }
-            });
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
+        viewHolder.actionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listener != null) {
+                    listener.onActionBtnClicked(position);
+                }
+            }
+        });
         SubscriptionDto subscriptionDto = getItem(position);
         int photoSize = PhotoUtils.convertDpToPixels(40, getContext());
         if (!TextUtils.isEmpty(subscriptionDto.getUserAvatar())) {
             PhotoUtils.displayImage(getContext(), viewHolder.userAvatar, LashGoUtils.getUserAvatarUrl(subscriptionDto.getUserAvatar()), photoSize, R.drawable.ava, false);
+        } else {
+            viewHolder.userAvatar.setImageResource(R.drawable.ava);
         }
         viewHolder.userName.setText(!TextUtils.isEmpty(subscriptionDto.getFio()) ? subscriptionDto.getFio() : subscriptionDto.getUserLogin());
         if (settingsHelper.isLoggedIn() && subscriptionDto.getUserId() != settingsHelper.getUserId()) {
