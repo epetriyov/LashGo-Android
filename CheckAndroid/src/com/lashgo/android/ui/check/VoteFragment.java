@@ -265,6 +265,8 @@ public class VoteFragment extends BaseFragment implements View.OnClickListener, 
             position = savedInstanceState.getInt(BaseActivity.ExtraNames.POSITION.name());
             totalSize = savedInstanceState.getInt(BaseActivity.ExtraNames.SIZE.name());
             checkId = savedInstanceState.getInt(BaseActivity.ExtraNames.CHECK_ID.name());
+            voteDone = savedInstanceState.getBoolean(BaseActivity.ExtraNames.VOTE_DONE.name());
+            selectedPhoto = savedInstanceState.getInt(BaseActivity.ExtraNames.SELECTED_PHOTO.name());
         } else {
             Bundle args = getArguments();
             if (args != null) {
@@ -272,6 +274,8 @@ public class VoteFragment extends BaseFragment implements View.OnClickListener, 
                 position = args.getInt(BaseActivity.ExtraNames.POSITION.name());
                 totalSize = args.getInt(BaseActivity.ExtraNames.SIZE.name());
                 checkId = args.getInt(BaseActivity.ExtraNames.CHECK_ID.name());
+                voteDone = args.getBoolean(BaseActivity.ExtraNames.VOTE_DONE.name());
+                selectedPhoto = args.getInt(BaseActivity.ExtraNames.SELECTED_PHOTO.name());
             }
         }
     }
@@ -282,6 +286,8 @@ public class VoteFragment extends BaseFragment implements View.OnClickListener, 
         outState.putInt(BaseActivity.ExtraNames.POSITION.name(), position);
         outState.putInt(BaseActivity.ExtraNames.SIZE.name(), totalSize);
         outState.putInt(BaseActivity.ExtraNames.CHECK_ID.name(), checkId);
+        outState.putInt(BaseActivity.ExtraNames.SELECTED_PHOTO.name(),selectedPhoto);
+        outState.putBoolean(BaseActivity.ExtraNames.VOTE_DONE.name(),voteDone);
         super.onSaveInstanceState(outState);
     }
 
@@ -318,7 +324,9 @@ public class VoteFragment extends BaseFragment implements View.OnClickListener, 
             for (VotePhoto votePhoto : votePhotos) {
                 votePhoto.setShown(true);
             }
-            votePhotos.get(selectedPhoto - 1).setVoted(true);
+            if (selectedPhoto > 0) {
+                votePhotos.get(selectedPhoto - 1).setVoted(true);
+            }
         }
     }
 

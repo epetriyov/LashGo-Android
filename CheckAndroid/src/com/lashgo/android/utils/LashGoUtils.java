@@ -20,23 +20,26 @@ public final class LashGoUtils {
     }
 
     public static LashgoConfig.CheckState getCheckState(CheckDto checkDto) {
-        Calendar checkActiveCalendar = Calendar.getInstance();
-        Calendar checkVoteCalendar = Calendar.getInstance();
-        checkActiveCalendar.setTime(checkDto.getStartDate());
-        checkVoteCalendar.setTime(checkDto.getStartDate());
-        checkActiveCalendar.add(Calendar.HOUR_OF_DAY, checkDto.getDuration());
-        checkVoteCalendar.add(Calendar.HOUR_OF_DAY, checkDto.getDuration() + checkDto.getVoteDuration());
-        if ((checkActiveCalendar.getTimeInMillis() > System.currentTimeMillis())) {
-            return LashgoConfig.CheckState.ACTIVE;
-        } else if (checkVoteCalendar.getTimeInMillis() > System.currentTimeMillis()) {
-            return LashgoConfig.CheckState.VOTE;
-        } else {
-            return LashgoConfig.CheckState.FINISHED;
+        if (checkDto != null) {
+            Calendar checkActiveCalendar = Calendar.getInstance();
+            Calendar checkVoteCalendar = Calendar.getInstance();
+            checkActiveCalendar.setTime(checkDto.getStartDate());
+            checkVoteCalendar.setTime(checkDto.getStartDate());
+            checkActiveCalendar.add(Calendar.HOUR_OF_DAY, checkDto.getDuration());
+            checkVoteCalendar.add(Calendar.HOUR_OF_DAY, checkDto.getDuration() + checkDto.getVoteDuration());
+            if ((checkActiveCalendar.getTimeInMillis() > System.currentTimeMillis())) {
+                return LashgoConfig.CheckState.ACTIVE;
+            } else if (checkVoteCalendar.getTimeInMillis() > System.currentTimeMillis()) {
+                return LashgoConfig.CheckState.VOTE;
+            } else {
+                return LashgoConfig.CheckState.FINISHED;
+            }
         }
+        return null;
     }
 
     public static String getUserAvatarUrl(String avatar) {
-        if(!TextUtils.isEmpty(avatar)) {
+        if (!TextUtils.isEmpty(avatar)) {
             if (avatar.contains("http://") || avatar.contains("https://")) {
                 return avatar;
             }

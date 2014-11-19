@@ -277,7 +277,7 @@ public final class PhotoUtils {
             requestCreator.into(photoImg, new Callback() {
                 @Override
                 public void onSuccess() {
-
+                    Log.d("DEBUG_TAG","Success image load");
                 }
 
                 @Override
