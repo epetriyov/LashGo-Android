@@ -405,10 +405,10 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
                     winnerMedal.setVisibility(View.GONE);
                     winnerName.setVisibility(View.GONE);
                     if (!TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
-                        PhotoUtils.displayImage(CheckActivity.this, checkImage, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), imageSize, checkState.equals(LashgoConfig.CheckState.VOTE) ? true : false,new PhotoLoadListener() {
+                        PhotoUtils.displayImage(CheckActivity.this, checkImage, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), imageSize, true, checkState.equals(LashgoConfig.CheckState.VOTE) ? true : false, new PhotoLoadListener() {
                             @Override
                             public void onPhotoLoaded() {
-                                  view.setVisibility(View.VISIBLE);
+                                view.setVisibility(View.VISIBLE);
                             }
                         });
                     }
@@ -423,7 +423,7 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
                         }
                         if (!TextUtils.isEmpty(imgPath)) {
                             checkImage.setTag(MADE_PHOTO_TAG);
-                            PhotoUtils.displayImage(CheckActivity.this, checkImage, Uri.fromFile(new File(imgPath)), imageSize, false,new PhotoLoadListener() {
+                            PhotoUtils.displayImage(CheckActivity.this, checkImage, Uri.fromFile(new File(imgPath)), imageSize, true, false, new PhotoLoadListener() {
                                 @Override
                                 public void onPhotoLoaded() {
                                     view.setVisibility(View.VISIBLE);
@@ -432,7 +432,7 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
                         } else {
                             if (checkDto.getUserPhotoDto() != null && !TextUtils.isEmpty(checkDto.getUserPhotoDto().getUrl())) {
                                 checkImage.setTag(USER_PHOTO_TAG);
-                                PhotoUtils.displayImage(CheckActivity.this, checkImage, PhotoUtils.getFullPhotoUrl(checkDto.getUserPhotoDto().getUrl()), imageSize, false,new PhotoLoadListener() {
+                                PhotoUtils.displayImage(CheckActivity.this, checkImage, PhotoUtils.getFullPhotoUrl(checkDto.getUserPhotoDto().getUrl()), imageSize, true, false, new PhotoLoadListener() {
                                     @Override
                                     public void onPhotoLoaded() {
                                         view.setVisibility(View.VISIBLE);
@@ -449,7 +449,7 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
                         winnerName.setText(TextUtils.isEmpty(checkDto.getWinnerInfo().getFio()) ? checkDto.getWinnerInfo().getLogin() : checkDto.getWinnerInfo().getFio());
                         if (checkDto.getWinnerPhotoDto() != null && !TextUtils.isEmpty(checkDto.getWinnerPhotoDto().getUrl())) {
                             checkImage.setTag(WINNER_PHOTO_TAG);
-                            PhotoUtils.displayImage(CheckActivity.this, checkImage, PhotoUtils.getFullPhotoUrl(checkDto.getWinnerPhotoDto().getUrl()), imageSize, true,new PhotoLoadListener() {
+                            PhotoUtils.displayImage(CheckActivity.this, checkImage, PhotoUtils.getFullPhotoUrl(checkDto.getWinnerPhotoDto().getUrl()), imageSize, true, true, new PhotoLoadListener() {
                                 @Override
                                 public void onPhotoLoaded() {
                                     view.setVisibility(View.VISIBLE);

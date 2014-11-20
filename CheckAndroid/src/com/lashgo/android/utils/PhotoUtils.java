@@ -479,11 +479,11 @@ public final class PhotoUtils {
         displayImage(context, imageView, uri, imageSize, -1, transform);
     }
 
-    public static void displayImage(Context context, ImageView imageView, Uri uri, int imageSize, boolean transform, PhotoLoadListener photoLoadListener) {
-        displayImage(context, imageView, uri, imageSize, imageSize, -1, false, true, photoLoadListener);
+    public static void displayImage(Context context, ImageView imageView, Uri uri, int imageSize, boolean transform,boolean darkening,  PhotoLoadListener photoLoadListener) {
+        displayImage(context, imageView, uri, imageSize, imageSize, -1, darkening, transform, photoLoadListener);
     }
 
-    public static void displayImage(Context context, ImageView imageView, String photoUrl, int imageSize, boolean tranform, PhotoLoadListener photoLoadListener) {
-        displayImage(context, imageView, photoUrl, imageSize, imageSize, -1, false, true, photoLoadListener);
+    public static void displayImage(Context context, ImageView imageView, String photoUrl, int imageSize, boolean tranform, boolean darkening, PhotoLoadListener photoLoadListener) {
+        displayImage(context, imageView, photoUrl, imageSize, imageSize, -1, darkening, tranform, photoLoadListener);
     }
 }
