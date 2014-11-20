@@ -19,6 +19,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import com.lashgo.android.LashgoConfig;
 import com.lashgo.android.ui.check.CheckActivity;
+import com.lashgo.android.ui.check.PhotoLoadListener;
 import com.lashgo.android.ui.images.CircleTransformation;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -246,11 +247,11 @@ public final class PhotoUtils {
     }
 
     public static void displayImage(Context context, ImageView imageView, String imageSource, int imageSize, int placeHolderId, boolean displayStroke) {
-        displayImage(context, imageView, imageSource, imageSize, imageSize, placeHolderId, displayStroke, true);
+        displayImage(context, imageView, imageSource, imageSize, imageSize, placeHolderId, displayStroke, true, null);
     }
 
     public static void displayImage(Context context, ImageView imageView, Uri uri, int imageSize, int placeHolderId, boolean displayStroke) {
-        displayImage(context, imageView, uri, imageSize, imageSize, placeHolderId, displayStroke, true);
+        displayImage(context, imageView, uri, imageSize, imageSize, placeHolderId, displayStroke, true, null);
     }
 
     public static void displayFullImage(CheckActivity context, ImageView imageView, Uri uri) {
@@ -260,7 +261,7 @@ public final class PhotoUtils {
         }
     }
 
-    public static void displayImage(Context context, ImageView photoImg, String fullPhotoUrl, int imageWidth, int imageHeight, int placeHolder, boolean displayStroke, boolean useTransform) {
+    public static void displayImage(Context context, ImageView photoImg, String fullPhotoUrl, int imageWidth, int imageHeight, int placeHolder, boolean displayStroke, boolean useTransform, final PhotoLoadListener photoLoadListener) {
         if (!TextUtils.isEmpty(fullPhotoUrl)) {
             RequestCreator requestCreator =
                     Picasso.with(context)
@@ -277,7 +278,9 @@ public final class PhotoUtils {
             requestCreator.into(photoImg, new Callback() {
                 @Override
                 public void onSuccess() {
-                    Log.d("DEBUG_TAG","Success image load");
+                    if (photoLoadListener != null) {
+                        photoLoadListener.onPhotoLoaded();
+                    }
                 }
 
                 @Override
@@ -286,17 +289,18 @@ public final class PhotoUtils {
                 }
             });
         }
+
     }
 
     public static void displayImage(Context context, ImageView photoImg, String fullPhotoUrl, int imageWidth, int imageHeight) {
-        displayImage(context, photoImg, fullPhotoUrl, imageWidth, imageHeight, -1, false, false);
+        displayImage(context, photoImg, fullPhotoUrl, imageWidth, imageHeight, -1, false, false, null);
     }
 
     public static void displayImage(Context context, ImageView photoImg, Uri uri, int screenWidth, int imageHeight) {
-        displayImage(context, photoImg, uri, screenWidth, imageHeight, -1, false, false);
+        displayImage(context, photoImg, uri, screenWidth, imageHeight, -1, false, false, null);
     }
 
-    private static void displayImage(Context context, ImageView photoImg, Uri uri, int screenWidth, int imageHeight, int placeHolder, boolean displayStroke, boolean useTransform) {
+    private static void displayImage(Context context, ImageView photoImg, Uri uri, int screenWidth, int imageHeight, int placeHolder, boolean displayStroke, boolean useTransform, final PhotoLoadListener photoLoadListener) {
         if (uri != null) {
             RequestCreator requestCreator = Picasso.with(context).load(uri).centerCrop().
                     resize(screenWidth, imageHeight);
@@ -307,6 +311,19 @@ public final class PhotoUtils {
                 requestCreator.placeholder(placeHolder)
                         .error(placeHolder);
             }
+            requestCreator.into(photoImg, new Callback() {
+                @Override
+                public void onSuccess() {
+                    if (photoLoadListener != null) {
+                        photoLoadListener.onPhotoLoaded();
+                    }
+                }
+
+                @Override
+                public void onError() {
+
+                }
+            });
             requestCreator.into(photoImg);
         }
     }
@@ -443,5 +460,30 @@ public final class PhotoUtils {
         String uriSting = (file.getAbsolutePath() + "/" + System.currentTimeMillis() + ".jpg");
         return uriSting;
 
+    }
+
+    public static void displayImage(Context context, ImageView imageView, int imageResource, int imageSize, boolean transform) {
+        RequestCreator requestCreator = Picasso.with(context).load(imageResource).centerCrop().
+                resize(imageSize, imageSize);
+        if (transform) {
+            requestCreator.transform(new CircleTransformation(context, false));
+        }
+        requestCreator.into(imageView);
+    }
+
+    public static void displayImage(Context context, ImageView imageView, String photoUrl, int imageSize, boolean transform) {
+        displayImage(context, imageView, photoUrl, imageSize, -1, transform);
+    }
+
+    public static void displayImage(Context context, ImageView imageView, Uri uri, int imageSize, boolean transform) {
+        displayImage(context, imageView, uri, imageSize, -1, transform);
+    }
+
+    public static void displayImage(Context context, ImageView imageView, Uri uri, int imageSize, boolean transform, PhotoLoadListener photoLoadListener) {
+        displayImage(context, imageView, uri, imageSize, imageSize, -1, false, true, photoLoadListener);
+    }
+
+    public static void displayImage(Context context, ImageView imageView, String photoUrl, int imageSize, boolean tranform, PhotoLoadListener photoLoadListener) {
+        displayImage(context, imageView, photoUrl, imageSize, imageSize, -1, false, true, photoLoadListener);
     }
 }

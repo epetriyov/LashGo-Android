@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
+import com.lashgo.android.ui.profile.ProfileActivity;
 import com.lashgo.android.utils.UiUtils;
 import com.lashgo.model.dto.CommentDto;
 
@@ -19,7 +21,7 @@ import java.util.ArrayList;
 /**
  * Created by Eugene on 11.09.2014.
  */
-public class CommentsActivity extends BaseActivity implements View.OnClickListener {
+public class CommentsActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     private int checkId;
 
@@ -83,6 +85,7 @@ public class CommentsActivity extends BaseActivity implements View.OnClickListen
         ListView commentsListView = (ListView) findViewById(R.id.comments_list);
         commentsAdapter = new CommentsAdapter(this);
         commentsListView.setAdapter(commentsAdapter);
+        commentsListView.setOnItemClickListener(this);
         if (!settingsHelper.isLoggedIn()) {
             findViewById(R.id.add_comment_layout).setVisibility(View.GONE);
         } else {
@@ -168,5 +171,10 @@ public class CommentsActivity extends BaseActivity implements View.OnClickListen
                 editComment.setError(getString(R.string.error_empty_comment));
             }
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        startActivity(ProfileActivity.buildIntent(this, commentsAdapter.getItem(i).getUser().getId()));
     }
 }

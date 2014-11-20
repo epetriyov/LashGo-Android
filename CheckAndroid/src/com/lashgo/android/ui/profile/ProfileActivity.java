@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
+import com.lashgo.android.ui.ImageAnimation;
 import com.lashgo.android.ui.check.ActivityReferrer;
 import com.lashgo.android.ui.check.PhotoActivity;
 import com.lashgo.android.ui.subscribes.SubscribesActivity;
@@ -40,6 +41,9 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
     private ArrayList<PhotoDto> photosList;
 
     private int localUserSubscibersCount;
+
+    private ImageAnimation imageAnimation;
+    private ImageView expandedImageView;
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -85,6 +89,8 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
         initCustomActionBar(ActionBar.DISPLAY_HOME_AS_UP);
         initExtras(savedInstanceState);
         setContentView(R.layout.act_profile);
+        expandedImageView = (ImageView) findViewById(R.id.expanded_image);
+        imageAnimation = new ImageAnimation(this, findViewById(R.id.shadow), findViewById(R.id.container), expandedImageView);
         GridView photosGallery = (GridView) findViewById(R.id.photos_galley);
         int imageSize = (PhotoUtils.getScreenWidth(this) - 20) / 2;
         photosGallery.setOnItemClickListener(this);
@@ -209,9 +215,17 @@ public class ProfileActivity extends BaseActivity implements AdapterView.OnItemC
         findViewById(R.id.user_subscribes_layout).setOnClickListener(this);
         findViewById(R.id.user_subscribers_layout).setOnClickListener(this);
         if (userDto != null) {
-            int imageSize = PhotoUtils.convertDpToPixels(64, this);
+            final int imageSize = PhotoUtils.convertDpToPixels(64, this);
             if (!TextUtils.isEmpty(userDto.getAvatar())) {
-                PhotoUtils.displayImage(this, ((ImageView) findViewById(R.id.user_avatar)), LashGoUtils.getUserAvatarUrl(userDto.getAvatar()), imageSize, R.drawable.ava, false);
+                final ImageView avatar = (ImageView) findViewById(R.id.user_avatar);
+                PhotoUtils.displayImage(this, avatar, LashGoUtils.getUserAvatarUrl(userDto.getAvatar()), imageSize, R.drawable.ava, false);
+                avatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        PhotoUtils.displayFullImage(ProfileActivity.this, expandedImageView, LashGoUtils.getUserAvatarUrl(ProfileActivity.this.userDto.getAvatar()));
+                        imageAnimation.zoomImageFromThumb(avatar, getResources().getInteger(android.R.integer.config_shortAnimTime));
+                    }
+                });
             }
             ((TextView) findViewById(R.id.user_subscribes)).setText(String.valueOf(userDto.getUserSubscribes()));
             ((TextView) findViewById(R.id.user_subscribers)).setText(String.valueOf(userDto.getUserSubscribers()));
