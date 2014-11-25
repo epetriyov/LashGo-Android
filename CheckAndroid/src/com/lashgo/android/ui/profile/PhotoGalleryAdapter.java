@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import com.lashgo.android.R;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.model.dto.PhotoDto;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by Eugene on 27.08.2014.
@@ -17,7 +18,7 @@ import com.lashgo.model.dto.PhotoDto;
 public class PhotoGalleryAdapter extends ArrayAdapter<PhotoDto> {
 
     private static class ViewHolder {
-        private ImageView photoView;
+        private SquaredImageView photoView;
 
         private ImageView winnerIcon;
 
@@ -38,7 +39,7 @@ public class PhotoGalleryAdapter extends ArrayAdapter<PhotoDto> {
         if (convertView == null) {
             viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.adt_profile_photo, null);
-            viewHolder.photoView = (ImageView) convertView.findViewById(R.id.photo);
+            viewHolder.photoView = (SquaredImageView) convertView.findViewById(R.id.photo);
             viewHolder.winnerIcon = (ImageView) convertView.findViewById(R.id.winner_icon);
             viewHolder.bannedIcon = (ImageView) convertView.findViewById(R.id.banned_icon);
             convertView.setTag(viewHolder);
@@ -57,7 +58,8 @@ public class PhotoGalleryAdapter extends ArrayAdapter<PhotoDto> {
             viewHolder.winnerIcon.setVisibility(View.GONE);
         }
         if (!TextUtils.isEmpty(photoItem.getUrl())) {
-            PhotoUtils.displayImage(getContext(), viewHolder.photoView, PhotoUtils.getFullPhotoUrl(photoItem.getUrl()), imageSize);
+            Picasso.with(getContext()).load(PhotoUtils.getFullPhotoUrl(photoItem.getUrl())).resize(imageSize,imageSize).centerCrop().into(viewHolder.photoView);
+//            PhotoUtils.displayImage(getContext(), viewHolder.photoView, PhotoUtils.getFullPhotoUrl(photoItem.getUrl()), imageSize);
         }
         return convertView;
     }

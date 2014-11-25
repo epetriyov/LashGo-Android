@@ -228,7 +228,8 @@ public final class PhotoUtils {
 
     public static void displayFullImage(Context context, ImageView imageView, String imageSource) {
         if (!TextUtils.isEmpty(imageSource)) {
-            Picasso.with(context)
+            Picasso
+                    .with(context)
                     .load(imageSource)
                     .fit()
                     .centerInside()
@@ -256,18 +257,23 @@ public final class PhotoUtils {
 
     public static void displayFullImage(CheckActivity context, ImageView imageView, Uri uri) {
         if (uri != null) {
-            Picasso.with(context).load(uri).fit().centerInside().
-                    into(imageView);
+            Picasso
+                    .with(context)
+                    .load(uri)
+                    .fit()
+                    .centerInside()
+                    .into(imageView);
         }
     }
 
     public static void displayImage(Context context, ImageView photoImg, String fullPhotoUrl, int imageWidth, int imageHeight, int placeHolder, boolean displayStroke, boolean useTransform, final PhotoLoadListener photoLoadListener) {
         if (!TextUtils.isEmpty(fullPhotoUrl)) {
             RequestCreator requestCreator =
-                    Picasso.with(context)
+                    Picasso
+                            .with(context)
                             .load(fullPhotoUrl)
-                            .centerCrop()
-                            .resize(imageWidth, imageHeight);
+                            .resize(imageWidth, imageHeight)
+                            .centerCrop();
             if (useTransform) {
                 requestCreator.transform(new CircleTransformation(context, displayStroke));
             }
@@ -302,8 +308,12 @@ public final class PhotoUtils {
 
     private static void displayImage(Context context, ImageView photoImg, Uri uri, int screenWidth, int imageHeight, int placeHolder, boolean displayStroke, boolean useTransform, final PhotoLoadListener photoLoadListener) {
         if (uri != null) {
-            RequestCreator requestCreator = Picasso.with(context).load(uri).centerCrop().
-                    resize(screenWidth, imageHeight);
+            RequestCreator requestCreator =
+                    Picasso
+                            .with(context)
+                            .load(uri)
+                            .resize(screenWidth, imageHeight)
+                            .centerCrop();
             if (useTransform) {
                 requestCreator.transform(new CircleTransformation(context, displayStroke));
             }
@@ -324,7 +334,6 @@ public final class PhotoUtils {
 
                 }
             });
-            requestCreator.into(photoImg);
         }
     }
 
@@ -463,12 +472,26 @@ public final class PhotoUtils {
     }
 
     public static void displayImage(Context context, ImageView imageView, int imageResource, int imageSize, boolean transform) {
-        RequestCreator requestCreator = Picasso.with(context).load(imageResource).centerCrop().
-                resize(imageSize, imageSize);
+        RequestCreator requestCreator =
+                Picasso
+                        .with(context)
+                        .load(imageResource)
+                        .resize(imageSize, imageSize)
+                        .centerCrop();
         if (transform) {
             requestCreator.transform(new CircleTransformation(context, false));
         }
-        requestCreator.into(imageView);
+        requestCreator.into(imageView, new Callback() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
     }
 
     public static void displayImage(Context context, ImageView imageView, String photoUrl, int imageSize, boolean transform) {
