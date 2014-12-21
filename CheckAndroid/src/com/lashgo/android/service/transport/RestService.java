@@ -82,7 +82,7 @@ public interface RestService {
     ResponseObject<CommentDto> addPhotoComment(@retrofit.http.Path("photoId") long photoId, @Body String commentText);
 
     @PUT(Path.Users.RECOVER)
-    ResponseObject passwordRecover(@Body String email);
+    ResponseObject passwordRecover(@Body RecoverInfo email);
 
     @GET(Path.Photos.COUNTERS)
     ResponseObject<CheckCounters> getPhotoCounters(@retrofit.http.Path("photoId") long photoId);
