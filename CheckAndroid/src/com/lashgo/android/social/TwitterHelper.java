@@ -3,9 +3,12 @@ package com.lashgo.android.social;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import com.lashgo.android.R;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.auth.TwitterAuthActivity;
+import com.lashgo.android.ui.dialogs.ErrorDialog;
+import com.lashgo.model.dto.ErrorDto;
 import com.lashgo.model.dto.SocialInfo;
 import com.lashgo.model.dto.SocialNames;
 import twitter4j.Twitter;
@@ -27,6 +30,7 @@ public class TwitterHelper {
 
     public static final String KEY_REQUEST_TOKEN = "key_request_token";
     public static final int TWITTER_AUTH = 3;
+    private static final String ERROR_DIALOG = "error_dialog";
 
     private RequestToken requestToken;
 
@@ -62,10 +66,13 @@ public class TwitterHelper {
 
             @Override
             protected void onPostExecute(Void v) {
-                if (requestToken != null) {
+                if (requestToken != null && !TextUtils.isEmpty(requestToken.getAuthenticationURL())) {
                     loginActivity.startActivityForResult(
-                            TwitterAuthActivity.buildIntent(loginActivity, requestToken.getAuthenticationURL()), TWITTER_AUTH
-                    );
+                            TwitterAuthActivity.buildIntent(loginActivity, requestToken.getAuthenticationURL()), TWITTER_AUTH);
+                } else {
+                    ErrorDto errorDto = new ErrorDto();
+                    errorDto.setErrorMessage(loginActivity.getString(R.string.twitter_error));
+                    loginActivity.showDialog(ErrorDialog.newInstance(errorDto), ERROR_DIALOG);
                 }
             }
         }.execute();

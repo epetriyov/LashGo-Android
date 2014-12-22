@@ -28,6 +28,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.text.TextUtils;
 import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.lashgo.android.R;
@@ -65,7 +66,9 @@ public class GcmIntentService extends IntentService {
         // The getMessageType() intent parameter must be the intent you received
         // in your BroadcastReceiver.
         String messageType = gcm.getMessageType(intent);
-        Log.d("Message type", messageType);
+        if(!TextUtils.isEmpty(messageType)) {
+            Log.d("Message type", messageType);
+        }
         if (!extras.isEmpty()) {  // has effect of unparcelling Bundle
             /*
              * Filter messages based on message type. Since it is likely that GCM will be

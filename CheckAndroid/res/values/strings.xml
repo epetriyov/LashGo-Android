@@ -104,6 +104,7 @@
     <string name="participate_check">принял участие в чеке</string>
     <string name="complain_sent">Ваша жалоба отправлена</string>
     <string name="vote_started">Началось голосование</string>
+    <string name="twitter_error">Ошибка авторизации через Twitter</string>
     <string-array name="make_photo_items">
         <item>Камера</item>
         <item>Галерея</item>
