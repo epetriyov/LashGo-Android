@@ -14,6 +14,7 @@ import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.BaseFragment;
+import com.lashgo.android.ui.photo.PhotoActivity;
 import com.lashgo.android.ui.profile.PhotoGalleryAdapter;
 import com.lashgo.android.ui.views.RobotoTextView;
 import com.lashgo.android.utils.PhotoUtils;

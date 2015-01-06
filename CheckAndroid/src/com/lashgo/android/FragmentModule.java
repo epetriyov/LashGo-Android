@@ -3,9 +3,10 @@ package com.lashgo.android;
 import com.lashgo.android.service.ServiceBinder;
 import com.lashgo.android.ui.BaseFragment;
 import com.lashgo.android.ui.activity.ActivityFragment;
+import com.lashgo.android.ui.check.CheckFragment;
 import com.lashgo.android.ui.check.CheckListFragment;
 import com.lashgo.android.ui.check.CheckPhotosFragment;
-import com.lashgo.android.ui.check.PhotoFragment;
+import com.lashgo.android.ui.photo.PhotoFragment;
 import com.lashgo.android.ui.check.VoteFragment;
 import com.lashgo.android.ui.news.NewsFragment;
 import com.lashgo.android.ui.subscribes.SubscribesFragment;
@@ -23,6 +24,7 @@ import dagger.Provides;
                 ActivityFragment.class,
                 PhotoFragment.class,
                 VoteFragment.class,
+                CheckFragment.class,
                 SubscribesFragment.class,
                 CheckPhotosFragment.class,
                 ServiceBinder.class

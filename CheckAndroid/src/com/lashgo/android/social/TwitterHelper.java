@@ -70,9 +70,7 @@ public class TwitterHelper {
                     loginActivity.startActivityForResult(
                             TwitterAuthActivity.buildIntent(loginActivity, requestToken.getAuthenticationURL()), TWITTER_AUTH);
                 } else {
-                    ErrorDto errorDto = new ErrorDto();
-                    errorDto.setErrorMessage(loginActivity.getString(R.string.twitter_error));
-                    loginActivity.showDialog(ErrorDialog.newInstance(errorDto), ERROR_DIALOG);
+                    loginActivity.showDialog(ErrorDialog.newInstance(loginActivity.getString(R.string.twitter_error)), ERROR_DIALOG);
                 }
             }
         }.execute();

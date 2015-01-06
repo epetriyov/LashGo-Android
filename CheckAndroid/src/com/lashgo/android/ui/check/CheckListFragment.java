@@ -12,7 +12,7 @@ import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.BaseFragment;
-import com.lashgo.android.ui.adapters.MultyTypeAdapter;
+import com.lashgo.android.adapters.MultyTypeAdapter;
 import com.lashgo.model.dto.CheckDto;
 import com.lashgo.model.dto.ResponseList;
 
@@ -187,7 +187,7 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
         Object selectedItem = multyTypeAdapter.getItem(position);
         if (selectedItem instanceof CheckDto) {
             CheckDto selectedCheck = (CheckDto) selectedItem;
-            startActivity(CheckActivity.buildIntent(getActivity(), selectedCheck));
+            startActivity(CheckActivity.buildIntent(getActivity(), selectedCheck.getId()));
         } else {
             throw new IllegalStateException("Selected item is not CheckDto object");
         }

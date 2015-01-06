@@ -1,4 +1,4 @@
-package com.lashgo.android.ui.check;
+package com.lashgo.android.ui.photo;
 
 /**
  * Created by Eugene on 21.11.2014.

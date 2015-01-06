@@ -62,7 +62,7 @@ public class PasswordRecoverActivity extends BaseActivity {
         if (BaseIntentHandler.ServiceActionNames.ACTION_PASSWORD_RECOVER.name().equals(action)) {
             if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
                 ContextUtils.showToast(this, R.string.password_was_reset);
-                NavUtils.navigateUpFromSameTask(this);
+                finish();
             }
         }
     }

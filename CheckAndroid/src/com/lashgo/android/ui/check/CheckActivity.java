@@ -5,10 +5,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.view.PagerAdapter;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -19,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.lashgo.android.LashgoConfig;
 import com.lashgo.android.R;
+import com.lashgo.android.loaders.AsyncProccessImage;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.ImageAnimation;
@@ -32,39 +34,54 @@ import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.android.utils.UiUtils;
 import com.lashgo.model.dto.CheckDto;
 import com.lashgo.model.dto.ErrorDto;
+import com.lashgo.model.dto.PhotoDto;
 
 import java.io.File;
 
 /**
  * Created by Eugene on 16.06.2014.
  */
-public class CheckActivity extends BaseActivity implements View.OnClickListener, ViewPager.OnPageChangeListener, MakePhotoDialog.OnImageDoneListener {
+public class CheckActivity extends BaseActivity implements View.OnClickListener, MakePhotoDialog.OnImageDoneListener, AsyncProccessImage.OnPhotoProcessedListener, ICheckActivity {
 
-    private static final int CHECH_PHOTO_PADDINGS = 130;
-    private static final String TASK_PHOTO_TAG = "task_photo";
-    private static final String USER_PHOTO_TAG = "user_photo";
-    private static final String MADE_PHOTO_TAG = "made_photo";
-    private static final String WINNER_PHOTO_TAG = "winner_photo";
+    public static enum TO {to, FINISHED, VOTE}
+
+    private ImageAnimation imageAnimation;
     private String imgPath;
+    private String tempImgPath;
     private CheckPagerAdapter pagerAdapter;
-    private int imageSize;
     private ViewPager viewPager;
     private ImageView actionBtn;
-    private boolean wasSent;
     private int checkId;
     protected CheckDto checkDto;
     private boolean isResumed;
     private boolean timerFinished;
     private TO to;
     private int pagesCount;
-    private ImageAnimation imageAnimation;
     private ImageView expandedImageView;
     private CheckBottomPanelController bottomPanel;
     private TextView checkName;
     private TextView checkDescription;
     private DialogFragment makePhotoFragment;
+    private View voteLayout;
 
-    public enum TO {to, FINISHED, VOTE}
+    @Override
+    public void onPhotoProcessed(String imgPath) {
+        this.imgPath = imgPath;
+        this.tempImgPath = null;
+        actionBtn.setImageResource(R.drawable.btn_pink_camera);
+        if (pagesCount == 1) {
+            pagesCount = 2;
+            pagerAdapter.notifyDataSetChanged();
+            viewPager.setCurrentItem(1);
+        } else if (pagesCount == 2) {
+            ((ICheckFragment) LashGoUtils.findFragmentByPosition(this, viewPager, pagerAdapter, 1)).updateImage(imgPath);
+        }
+    }
+
+    @Override
+    public void onErrorOccured() {
+        showDialog(ErrorDialog.newInstance(getString(R.string.error_load_photo)), ErrorDialog.TAG);
+    }
 
     public static Intent buildIntent(Context context, int checkId) {
         Intent intent = new Intent(context, CheckActivity.class);
@@ -72,17 +89,10 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
         return intent;
     }
 
-    public static Intent buildIntent(Context context, CheckDto checkDto) {
-        Intent intent = new Intent(context, CheckActivity.class);
-        intent.putExtra(ExtraNames.CHECK_DTO.name(), checkDto);
-        return intent;
-    }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(ExtraNames.CHECK_DTO.name(), checkDto);
+        outState.putString(ExtraNames.TEMP_IMG_PATH.name(),tempImgPath);
         outState.putString(ExtraNames.PHOTO_URL.name(), imgPath);
-        outState.putBoolean(ExtraNames.WAS_PHOTO_SENT.name(), wasSent);
         outState.putInt(ExtraNames.CHECK_ID.name(), checkId);
         super.onSaveInstanceState(outState);
     }
@@ -97,8 +107,8 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void unregisterActionsListener() {
         super.unregisterActionsListener();
-        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_SEND_PHOTO.name());
         removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK.name());
+        removeActionListener(BaseIntentHandler.ServiceActionNames.ACTION_SEND_PHOTO.name());
     }
 
     @Override
@@ -107,16 +117,7 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
         initCustomActionBar(ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_TITLE);
         initCheckDto(savedInstanceState);
         setContentView(R.layout.act_check);
-        expandedImageView = (ImageView) findViewById(R.id.expanded_image);
-        imageAnimation = new ImageAnimation(this, findViewById(R.id.shadow), findViewById(R.id.container), expandedImageView);
         initViews();
-        if (checkDto == null) {
-            serviceHelper.getCheck(checkId);
-        } else {
-            bottomPanel = new CheckBottomPanelController(this, getWindow().getDecorView(), checkDto);
-            updateCheckInfo();
-            loadCheck();
-        }
     }
 
     @Override
@@ -129,46 +130,40 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
         hideOverlayProgress();
     }
 
-    private void updateCheckInfo() {
-        checkName.setText(checkDto.getName());
-        checkDescription.setText(checkDto.getDescription());
-        updatePagesCount();
-    }
-
     private void initCheckDto(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            checkDto = (CheckDto) savedInstanceState.getSerializable(ExtraNames.CHECK_DTO.name());
+            tempImgPath = savedInstanceState.getString(ExtraNames.TEMP_IMG_PATH.name());
             imgPath = savedInstanceState.getString(ExtraNames.PHOTO_URL.name());
-            wasSent = savedInstanceState.getBoolean(ExtraNames.WAS_PHOTO_SENT.name(), false);
             checkId = savedInstanceState.getInt(ExtraNames.CHECK_ID.name());
         } else {
             Intent intent = getIntent();
             if (intent != null) {
-                checkDto = (CheckDto) intent.getSerializableExtra(ExtraNames.CHECK_DTO.name());
+                tempImgPath = intent.getStringExtra(ExtraNames.TEMP_IMG_PATH.name());
                 imgPath = intent.getStringExtra(ExtraNames.PHOTO_URL.name());
-                wasSent = intent.getBooleanExtra(ExtraNames.WAS_PHOTO_SENT.name(), false);
                 checkId = intent.getIntExtra(ExtraNames.CHECK_ID.name(), 0);
             }
         }
     }
 
     private void updatePagesCount() {
-        if (checkDto == null) {
-            pagesCount = 0;
+        LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
+        if ((LashgoConfig.CheckState.ACTIVE.equals(checkState) &&
+                (checkDto.getUserPhotoDto() != null || !TextUtils.isEmpty(imgPath)))
+                || (LashgoConfig.CheckState.FINISHED.equals(checkState) && checkDto.getWinnerPhotoDto() != null)) {
+            pagesCount = 2;
         } else {
-            LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
-            if ((LashgoConfig.CheckState.ACTIVE.equals(checkState) &&
-                    (checkDto.getUserPhotoDto() != null || !TextUtils.isEmpty(imgPath)))
-                    || (LashgoConfig.CheckState.FINISHED.equals(checkState) && checkDto.getWinnerPhotoDto() != null)) {
-                pagesCount = 2;
-            } else {
-                pagesCount = 1;
-            }
+            pagesCount = 1;
+        }
+        pagerAdapter.notifyDataSetChanged();
+        if (pagesCount == 2) {
+            viewPager.setCurrentItem(1);
         }
     }
 
     private void initViews() {
-        imageSize = PhotoUtils.getScreenWidth(this) - CHECH_PHOTO_PADDINGS;
+        voteLayout = findViewById(R.id.vote_layout);
+        expandedImageView = (ImageView) findViewById(R.id.expanded_image);
+        imageAnimation = new ImageAnimation(this, findViewById(R.id.shadow), findViewById(R.id.container), expandedImageView);
         actionBtn = (ImageView) findViewById(R.id.btn_action);
         actionBtn.setOnClickListener(this);
         checkName = ((TextView) findViewById(R.id.check_name));
@@ -177,19 +172,20 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
         viewPager = mContainer.getViewPager();
         viewPager.setPageMargin(50);
         viewPager.setClipChildren(false);
-        mContainer.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, imageSize));
+        mContainer.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, PhotoUtils.getScreenWidth(this) - CheckFragment.CHECH_PHOTO_PADDINGS));
         mContainer.requestLayout();
-        mContainer.setOnPageChangeListener(this);
-        updatePagesCount();
-        pagerAdapter = new CheckPagerAdapter();
+        pagerAdapter = new CheckPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
         viewPager.setOffscreenPageLimit(pagerAdapter.getCount());
-        if (pagerAdapter.getCount() > 1) {
-            viewPager.setCurrentItem(1);
-        }
+        pagerAdapter.notifyDataSetChanged();
+        serviceHelper.getCheck(checkId);
     }
 
-    private void loadCheck() {
+    private void initCheckData() {
+        updatePagesCount();
+        bottomPanel = new CheckBottomPanelController(this, getWindow().getDecorView(), checkDto);
+        checkName.setText(checkDto.getName());
+        checkDescription.setText(checkDto.getDescription());
         bottomPanel.updatePeoplesCount(checkDto.getPlayersCount());
         LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
         if (LashgoConfig.CheckState.VOTE.equals(checkState)) {
@@ -202,9 +198,13 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void openActivePerspective() {
-        findViewById(R.id.vote_layout).setVisibility(View.GONE);
-        actionBtn.setImageResource(R.drawable.btn_camera);
-        if (checkDto.getUserPhotoDto() != null || wasSent) {
+        voteLayout.setVisibility(View.GONE);
+        if (TextUtils.isEmpty(imgPath)) {
+            actionBtn.setImageResource(R.drawable.btn_camera);
+        } else {
+            actionBtn.setImageResource(R.drawable.btn_pink_camera);
+        }
+        if (checkDto.getUserPhotoDto() != null) {
             actionBtn.setVisibility(View.GONE);
         } else {
             actionBtn.setVisibility(View.VISIBLE);
@@ -216,7 +216,11 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
         super.onClick(view);
         if (view.getId() == R.id.btn_action) {
             if (LashGoUtils.getCheckState(checkDto).equals(LashgoConfig.CheckState.VOTE)) {
-                startActivity(VoteProcessActivity.buildIntent(this, checkDto));
+                if (settingsHelper.isLoggedIn()) {
+                    startActivity(VoteProcessActivity.buildIntent(this, checkDto));
+                } else {
+                    startActivity(new Intent(this, LoginActivity.class));
+                }
             } else {
                 if (settingsHelper.isLoggedIn()) {
                     if (makePhotoFragment == null) {
@@ -227,47 +231,42 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
                     startActivity(new Intent(this, LoginActivity.class));
                 }
             }
-        } else if (view.getId() == R.id.btn_send_photo) {
-            if (!TextUtils.isEmpty(imgPath) && new File(imgPath).exists()) {
-                serviceHelper.sendPhoto(checkDto.getId(), imgPath);
-            } else {
-                ContextUtils.showToast(this, R.string.error_send_photo);
-            }
         }
     }
 
     @Override
     public void processServerResult(String action, int resultCode, Bundle data) {
         stopProgress();
-        if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
-            if (BaseIntentHandler.ServiceActionNames.ACTION_SEND_PHOTO.name().equals(action)) {
-                startActivity(PhotoSentActivity.buildIntent(this, new String(imgPath)));
-                wasSent = true;
-                actionBtn.setVisibility(View.GONE);
-                pagerAdapter.hideSendPhotoBtn();
-            } else if (BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK.name().equals(action)) {
-                if (data != null) {
+        if (data != null) {
+            if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
+                if (BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK.name().equals(action)) {
                     checkDto = (com.lashgo.model.dto.CheckDto) data.getSerializable(BaseIntentHandler.ServiceExtraNames.CHECK_DTO.name());
-                    if (bottomPanel == null) {
-                        bottomPanel = new CheckBottomPanelController(this, getWindow().getDecorView(), checkDto);
+                    if (pagesCount == 2) {
+                        ((ICheckFragment) LashGoUtils.findFragmentByPosition(this, viewPager, pagerAdapter, 1)).updateCheckDto(checkDto);
                     }
-                    updateCheckInfo();
-                    loadCheck();
-                    pagerAdapter.notifyDataSetChanged();
+                    initCheckData();
+                } else if (BaseIntentHandler.ServiceActionNames.ACTION_SEND_PHOTO.name().equals(action)) {
+                    PhotoDto photoDto = new PhotoDto();
+                    photoDto.setUrl(data.getString(BaseIntentHandler.ServiceExtraNames.PHOTO_PATH.name()));
+                    checkDto.setUserPhotoDto(photoDto);
+                    startActivity(PhotoSentActivity.buildIntent(this, new String(imgPath.toCharArray())));
+                    tempImgPath = imgPath = null;
+                    actionBtn.setVisibility(View.GONE);
+                    ((ICheckFragment) LashGoUtils.findFragmentByPosition(this, viewPager, pagerAdapter, 1)).hideSendPhotoBtn();
                 }
+            } else {
+                    showDialog(ErrorDialog.newInstance(((ErrorDto) data.getSerializable(BaseIntentHandler.ERROR_EXTRA)).getErrorMessage()), ErrorDialog.TAG);
             }
-        } else {
-            showDialog(ErrorDialog.newInstance(data != null ? (ErrorDto) data.getSerializable(BaseIntentHandler.ERROR_EXTRA) : null), ErrorDialog.TAG);
         }
     }
 
     private void openFinishedPerspective() {
-        findViewById(R.id.vote_layout).setVisibility(View.GONE);
+        voteLayout.setVisibility(View.GONE);
         actionBtn.setVisibility(View.GONE);
     }
 
     private void openVotePerspective() {
-        findViewById(R.id.vote_layout).setVisibility(View.VISIBLE);
+        voteLayout.setVisibility(View.VISIBLE);
         actionBtn.setVisibility(View.VISIBLE);
         actionBtn.setImageResource(R.drawable.btn_like);
         final TextView voteCheckTime = ((TextView) findViewById(R.id.vote_check_time));
@@ -278,22 +277,6 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
                 CheckActivity.this.onTimerFinished(TO.FINISHED);
             }
         });
-        updatePagesCount();
-        pagerAdapter.notifyDataSetChanged();
-    }
-
-    private class AsyncProccessImage extends AsyncTask<Void, Void, String> {
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            return PhotoUtils.compressImage(imgPath);
-        }
-
-        @Override
-        protected void onPostExecute(String fileName) {
-            imgPath = fileName;
-            addMinePhoto();
-        }
     }
 
     @Override
@@ -302,63 +285,31 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
         if (resultCode != Activity.RESULT_CANCELED) {
             if (requestCode == MakePhotoDialog.PICK_IMAGE) {
                 if (data != null) {
-                    imgPath = PhotoUtils.getPath(this, data.getData());
-                    new AsyncProccessImage().execute();
+                    tempImgPath = PhotoUtils.getPath(this, data.getData());
+                    new AsyncProccessImage(tempImgPath, this).execute();
                 } else {
                     ContextUtils.showToast(this, R.string.empty_image_was_chosen);
                 }
             } else if (requestCode == MakePhotoDialog.CAPTURE_IMAGE) {
-                new AsyncProccessImage().execute();
+                new AsyncProccessImage(tempImgPath, this).execute();
             }
-        } else {
-            imgPath = null;
         }
-    }
-
-    /**
-     * check photo done
-     */
-    private void addMinePhoto() {
-        actionBtn.setImageResource(R.drawable.btn_pink_camera);
-        pagerAdapter.photoAdded();
-        viewPager.setCurrentItem(1);
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        if (position == 1 && imgPath != null && !wasSent) {
-            pagerAdapter.showSendPhotoBtn();
-        } else {
-            pagerAdapter.hideSendPhotoBtn();
-        }
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
     }
 
     @Override
     public void imageDone(String imagePath) {
-        this.imgPath = imagePath;
+        this.tempImgPath = imagePath;
     }
 
-    private class CheckPagerAdapter extends PagerAdapter {
+    private class CheckPagerAdapter extends FragmentPagerAdapter {
 
-        private View btnSend;
-
-        public void photoAdded() {
-            pagesCount = 2;
-            notifyDataSetChanged();
+        public CheckPagerAdapter(FragmentManager fm) {
+            super(fm);
         }
 
         @Override
-        public void destroyItem(View container, int position, Object object) {
-            ((ViewPager) container).removeView((View) object);
+        public int getItemPosition(Object object) {
+            return -1;
         }
 
         @Override
@@ -367,108 +318,8 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
         }
 
         @Override
-        public int getItemPosition(Object object) {
-            return POSITION_NONE;
-        }
-
-        @Override
-        public Object instantiateItem(final ViewGroup container, final int position) {
-            final View view = getLayoutInflater().inflate(R.layout.adt_check_pager, null);
-            final ImageView checkImage = (ImageView) view.findViewById(R.id.check_photo);
-            checkImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (position == 1 && checkDto.getWinnerPhotoDto() != null) {
-                        checkDto.getWinnerPhotoDto().setUser(checkDto.getWinnerInfo());
-                        startActivity(CheckPhotoActivity.buildIntent(CheckActivity.this, checkDto));
-                    } else {
-                        loadExpandedImage();
-                        imageAnimation.zoomImageFromThumb(checkImage, getResources().getInteger(android.R.integer.config_shortAnimTime));
-                    }
-                }
-            });
-            View btnSend = view.findViewById(R.id.btn_send_photo);
-            btnSend.setOnClickListener(CheckActivity.this);
-            View winnerMedal = view.findViewById(R.id.winner_medal);
-            TextView winnerName = (TextView) view.findViewById(R.id.winner_name);
-            container.addView(view);
-            LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
-            switch (position) {
-                case 0:
-                    checkImage.setTag(TASK_PHOTO_TAG);
-                    btnSend.setVisibility(View.GONE);
-                    winnerMedal.setVisibility(View.GONE);
-                    winnerName.setVisibility(View.GONE);
-                    if (!TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
-                        PhotoUtils.displayImage(CheckActivity.this, checkImage, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), imageSize, true, checkState.equals(LashgoConfig.CheckState.VOTE) ? true : false,null);
-                    }
-                    break;
-                case 1:
-                    if (LashgoConfig.CheckState.ACTIVE.equals(checkState)) {
-                        this.btnSend = btnSend;
-                        if (imgPath != null && !wasSent) {
-                            btnSend.setVisibility(View.VISIBLE);
-                        } else {
-                            btnSend.setVisibility(View.GONE);
-                        }
-                        if (!TextUtils.isEmpty(imgPath)) {
-                            checkImage.setTag(MADE_PHOTO_TAG);
-                            PhotoUtils.displayImage(CheckActivity.this, checkImage, Uri.fromFile(new File(imgPath)), imageSize, true, false,null);
-                        } else {
-                            if (checkDto.getUserPhotoDto() != null && !TextUtils.isEmpty(checkDto.getUserPhotoDto().getUrl())) {
-                                checkImage.setTag(USER_PHOTO_TAG);
-                                PhotoUtils.displayImage(CheckActivity.this, checkImage, PhotoUtils.getFullPhotoUrl(checkDto.getUserPhotoDto().getUrl()), imageSize, true, false, null);
-                            }
-                        }
-                        winnerMedal.setVisibility(View.GONE);
-                        winnerName.setVisibility(View.GONE);
-                    } else if (LashgoConfig.CheckState.FINISHED.equals(checkState)) {
-                        winnerMedal.setVisibility(View.VISIBLE);
-                        winnerName.setVisibility(View.VISIBLE);
-                        btnSend.setVisibility(View.GONE);
-                        winnerName.setText(TextUtils.isEmpty(checkDto.getWinnerInfo().getFio()) ? checkDto.getWinnerInfo().getLogin() : checkDto.getWinnerInfo().getFio());
-                        if (checkDto.getWinnerPhotoDto() != null && !TextUtils.isEmpty(checkDto.getWinnerPhotoDto().getUrl())) {
-                            checkImage.setTag(WINNER_PHOTO_TAG);
-                            PhotoUtils.displayImage(CheckActivity.this, checkImage, PhotoUtils.getFullPhotoUrl(checkDto.getWinnerPhotoDto().getUrl()), imageSize, true, true, null);
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-            return view;
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object o) {
-            return view == o;
-        }
-
-        public void showSendPhotoBtn() {
-            if (btnSend != null) {
-                btnSend.setVisibility(View.VISIBLE);
-            }
-        }
-
-        public void hideSendPhotoBtn() {
-            if (btnSend != null) {
-                btnSend.setVisibility(View.GONE);
-            }
-        }
-    }
-
-    private void loadExpandedImage() {
-        int position = viewPager.getCurrentItem();
-        if (position == 0) {
-            if (!TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
-                PhotoUtils.displayFullImage(CheckActivity.this, expandedImageView, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()));
-            }
-        } else {
-            if (!TextUtils.isEmpty(imgPath)) {
-                PhotoUtils.displayFullImage(CheckActivity.this, expandedImageView, Uri.fromFile(new File(imgPath)));
-            } else if (checkDto.getUserPhotoDto() != null && !TextUtils.isEmpty(checkDto.getUserPhotoDto().getUrl())) {
-                PhotoUtils.displayFullImage(CheckActivity.this, expandedImageView, PhotoUtils.getFullPhotoUrl(checkDto.getUserPhotoDto().getUrl()));
-            }
+        public Fragment getItem(int position) {
+            return CheckFragment.newInstance(checkDto, position, imgPath);
         }
     }
 
@@ -493,7 +344,6 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
     public void onTimerFinished(TO to) {
         this.to = to;
         if (isResumed) {
-            finish();
             if (to.equals(TO.VOTE)) {
                 openVotePerspective();
             } else {
@@ -513,5 +363,20 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void refresh() {
         serviceHelper.getCheck(checkDto == null ? checkId : checkDto.getId());
+    }
+
+    public void loadExpandedImage(final int position, final ImageView imageView) {
+        if (position == 0) {
+            if (!TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
+                PhotoUtils.displayFullImage(this, expandedImageView, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()));
+            }
+        } else {
+            if (checkDto.getUserPhotoDto() != null && !TextUtils.isEmpty(checkDto.getUserPhotoDto().getUrl())) {
+                PhotoUtils.displayFullImage(this, expandedImageView, PhotoUtils.getFullPhotoUrl(checkDto.getUserPhotoDto().getUrl()));
+            } else if (!TextUtils.isEmpty(imgPath)) {
+                PhotoUtils.displayFullImage(this, expandedImageView, Uri.fromFile(new File(imgPath)));
+            }
+        }
+        imageAnimation.zoomImageFromThumb(imageView, getResources().getInteger(android.R.integer.config_shortAnimTime));
     }
 }

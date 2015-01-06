@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.lashgo.android.R;
 import com.lashgo.android.ui.check.CheckActivity;
-import com.lashgo.android.ui.check.PhotoActivity;
+import com.lashgo.android.ui.photo.PhotoActivity;
 import com.lashgo.android.ui.profile.ProfileActivity;
 import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.PhotoUtils;

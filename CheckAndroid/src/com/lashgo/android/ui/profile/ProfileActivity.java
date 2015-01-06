@@ -17,7 +17,7 @@ import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.ImageAnimation;
 import com.lashgo.android.ui.check.ActivityReferrer;
-import com.lashgo.android.ui.check.PhotoActivity;
+import com.lashgo.android.ui.photo.PhotoActivity;
 import com.lashgo.android.ui.subscribes.SubscribesActivity;
 import com.lashgo.android.ui.subscribes.SubscribesFragment;
 import com.lashgo.android.utils.LashGoUtils;

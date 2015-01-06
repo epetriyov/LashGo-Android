@@ -1,4 +1,4 @@
-package com.lashgo.android.ui.adapters;
+package com.lashgo.android.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;

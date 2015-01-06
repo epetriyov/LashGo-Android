@@ -33,7 +33,7 @@ public interface RestService {
 
     @Multipart
     @POST(Path.Checks.PHOTOS)
-    ResponseObject saveCheckPhoto(@retrofit.http.Path("checkId") int checkId, @Part("photo") TypedFile photo);
+    ResponseObject<PhotoPath> saveCheckPhoto(@retrofit.http.Path("checkId") int checkId, @Part("photo") TypedFile photo);
 
     @GET(Path.Checks.VOTE_PHOTOS)
     ResponseList<VotePhoto> getVotePhotos(@retrofit.http.Path("checkId") int checkId);

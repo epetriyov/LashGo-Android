@@ -102,8 +102,8 @@ public class CheckBottomPanelController implements View.OnClickListener {
                         @Override
                         public void onTimerFinished() {
                             view.findViewById(R.id.time_layout).setVisibility(View.GONE);
-                            if (CheckBottomPanelController.this.activity.get() != null && CheckBottomPanelController.this.activity.get() instanceof CheckActivity) {
-                                ((CheckActivity) CheckBottomPanelController.this.activity.get()).onTimerFinished(CheckActivity.TO.VOTE);
+                            if (CheckBottomPanelController.this.activity.get() != null && CheckBottomPanelController.this.activity.get() instanceof ICheckActivity) {
+                                ((ICheckActivity) CheckBottomPanelController.this.activity.get()).onTimerFinished(CheckActivity.TO.VOTE);
                             }
 
                         }

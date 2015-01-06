@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
@@ -14,8 +13,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import com.lashgo.android.R;
+import com.lashgo.android.loaders.AsyncProccessImage;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
+import com.lashgo.android.ui.dialogs.ErrorDialog;
 import com.lashgo.android.ui.dialogs.MakePhotoDialog;
 import com.lashgo.android.ui.main.MainActivity;
 import com.lashgo.android.utils.ContextUtils;
@@ -29,11 +30,22 @@ import java.io.File;
 /**
  * Created by Eugene on 10.09.2014.
  */
-public class EditProfileActivity extends BaseActivity implements View.OnClickListener, MakePhotoDialog.OnImageDoneListener {
+public class EditProfileActivity extends BaseActivity implements View.OnClickListener, MakePhotoDialog.OnImageDoneListener, AsyncProccessImage.OnPhotoProcessedListener {
 
     private EditText editLogin;
     private boolean avatarWontSave;
     private boolean profileWontSave;
+
+    @Override
+    public void onPhotoProcessed(String imgPath) {
+        this.imgPath = imgPath;
+        addMinePhoto();
+    }
+
+    @Override
+    public void onErrorOccured() {
+        showDialog(ErrorDialog.newInstance(getString(R.string.error_load_photo)), ErrorDialog.TAG);
+    }
 
     public static enum FROM {REGISTER, PROFILE}
 
@@ -129,7 +141,6 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void processServerResult(String action, int resultCode, Bundle data) {
-        super.processServerResult(action, resultCode, data);
         if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
             if (BaseIntentHandler.ServiceActionNames.ACTION_SAVE_PROFILE.name().equals(action)) {
                 profileSaved = true;
@@ -142,6 +153,8 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
                     profileSaved();
                 }
             }
+        } else {
+            showErrorToast(data);
         }
     }
 
@@ -265,19 +278,6 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
-    private class AsyncProccessImage extends AsyncTask<Void, Void, String> {
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            return PhotoUtils.compressImage(imgPath);
-        }
-
-        @Override
-        protected void onPostExecute(String fileName) {
-            imgPath = fileName;
-            addMinePhoto();
-        }
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -286,12 +286,12 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
             if (requestCode == MakePhotoDialog.PICK_IMAGE) {
                 if (data != null && data.getDataString() != null) {
                     imgPath = PhotoUtils.getPath(this, data.getData());
-                    new AsyncProccessImage().execute();
+                    new AsyncProccessImage(imgPath, this).execute();
                 } else {
                     ContextUtils.showToast(this, R.string.empty_image_was_chosen);
                 }
             } else if (requestCode == MakePhotoDialog.CAPTURE_IMAGE) {
-                new AsyncProccessImage().execute();
+                new AsyncProccessImage(imgPath, this).execute();
             }
         }
     }

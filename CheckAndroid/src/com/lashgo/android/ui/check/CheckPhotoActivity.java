@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import com.lashgo.android.R;
 import com.lashgo.android.ui.BaseActivity;
+import com.lashgo.android.ui.photo.PhotoFragment;
 import com.lashgo.android.ui.views.PagerContainer;
 import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.model.dto.CheckDto;

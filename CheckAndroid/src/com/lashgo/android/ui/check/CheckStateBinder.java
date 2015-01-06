@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.lashgo.android.R;
-import com.lashgo.android.ui.adapters.AdapterBinder;
+import com.lashgo.android.adapters.AdapterBinder;
 
 /**
  * Created by Eugene on 14.07.2014.

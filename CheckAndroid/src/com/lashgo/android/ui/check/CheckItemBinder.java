@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.lashgo.android.LashgoConfig;
 import com.lashgo.android.R;
-import com.lashgo.android.ui.adapters.AdapterBinder;
+import com.lashgo.android.adapters.AdapterBinder;
 import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.android.utils.UiUtils;

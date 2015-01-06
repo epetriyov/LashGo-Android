@@ -19,8 +19,8 @@ import android.util.Log;
 import android.widget.ImageView;
 import com.lashgo.android.LashgoConfig;
 import com.lashgo.android.ui.check.CheckActivity;
-import com.lashgo.android.ui.check.PhotoLoadListener;
 import com.lashgo.android.ui.images.CircleTransformation;
+import com.lashgo.android.ui.photo.PhotoLoadListener;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
@@ -343,10 +343,12 @@ public final class PhotoUtils {
 
     public static String compressImage(String filePath) {
         Bitmap scaledBitmap = null;
-
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         Bitmap bmp = BitmapFactory.decodeFile(filePath, options);
+        if (options.outHeight == 0 || options.outWidth == 0) {
+            throw new IllegalArgumentException("Wrong filePath: " + filePath);
+        }
 
         int actualHeight = options.outHeight;
         int actualWidth = options.outWidth;
@@ -502,7 +504,7 @@ public final class PhotoUtils {
         displayImage(context, imageView, uri, imageSize, -1, transform);
     }
 
-    public static void displayImage(Context context, ImageView imageView, Uri uri, int imageSize, boolean transform,boolean darkening,  PhotoLoadListener photoLoadListener) {
+    public static void displayImage(Context context, ImageView imageView, Uri uri, int imageSize, boolean transform, boolean darkening, PhotoLoadListener photoLoadListener) {
         displayImage(context, imageView, uri, imageSize, imageSize, -1, darkening, transform, photoLoadListener);
     }
 

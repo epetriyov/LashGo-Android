@@ -1,4 +1,4 @@
-package com.lashgo.android.ui.check;
+package com.lashgo.android.ui.photo;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +12,9 @@ import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.BaseFragment;
+import com.lashgo.android.ui.check.ActivityReferrer;
+import com.lashgo.android.ui.check.CheckActivity;
+import com.lashgo.android.ui.check.CheckBottomPanelController;
 import com.lashgo.android.ui.profile.ProfileActivity;
 import com.lashgo.android.ui.views.RobotoTextView;
 import com.lashgo.android.utils.LashGoUtils;

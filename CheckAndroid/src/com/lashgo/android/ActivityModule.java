@@ -14,6 +14,8 @@ import com.lashgo.android.ui.auth.TwitterAuthActivity;
 import com.lashgo.android.ui.check.*;
 import com.lashgo.android.ui.comments.CommentsActivity;
 import com.lashgo.android.ui.main.MainActivity;
+import com.lashgo.android.ui.photo.PhotoActivity;
+import com.lashgo.android.ui.photo.PhotoFragment;
 import com.lashgo.android.ui.profile.EditProfileActivity;
 import com.lashgo.android.ui.profile.ProfileActivity;
 import com.lashgo.android.ui.search.SearchActivity;

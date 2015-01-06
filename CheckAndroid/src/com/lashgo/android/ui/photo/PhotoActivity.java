@@ -1,4 +1,4 @@
-package com.lashgo.android.ui.check;
+package com.lashgo.android.ui.photo;
 
 import android.app.ActionBar;
 import android.content.Context;
@@ -137,7 +137,9 @@ public class PhotoActivity extends BaseActivity implements ViewPager.OnPageChang
                 ContextUtils.showToast(this, R.string.complain_sent);
             }
         } else {
-            showDialog(ErrorDialog.newInstance(data != null ? (ErrorDto) data.getSerializable(BaseIntentHandler.ERROR_EXTRA) : null), ErrorDialog.TAG);
+            if (data != null) {
+                showDialog(ErrorDialog.newInstance(((ErrorDto) data.getSerializable(BaseIntentHandler.ERROR_EXTRA)).getErrorMessage()), ErrorDialog.TAG);
+            }
         }
     }
 

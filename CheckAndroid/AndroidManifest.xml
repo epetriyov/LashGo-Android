@@ -123,7 +123,7 @@
                   android:screenOrientation="portrait"
                 />
 
-        <activity android:name=".ui.check.PhotoActivity"
+        <activity android:name=".ui.photo.PhotoActivity"
                   android:label="@string/photo"
                   android:screenOrientation="portrait"
                   android:theme="@style/Theme.LashGo.TransparentActionBar"
