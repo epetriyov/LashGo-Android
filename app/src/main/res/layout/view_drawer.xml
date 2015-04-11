@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/white"
+              android:paddingTop="@dimen/action_bar_height"
+        >
+    <LinearLayout
+            android:id="@+id/drawer_top_view"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+        <ImageView
+                android:id="@+id/drawer_ava"
+                android:layout_width="64dp" android:layout_height="64dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/ava"
+                />
+        <com.lashgo.android.ui.views.RobotoButton
+                android:id="@+id/drawer_text"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:paddingBottom="15dp"
+                android:paddingTop="15dp"
+                android:paddingLeft="15dp"
+                android:textSize="16sp"
+                android:textColor="@drawable/user_name_color"
+                android:background="@null"
+                app:fontName="@string/regular"
+                />
+    </LinearLayout>
+    <ViewStub
+            android:id="@+id/view_login_stub"
+            android:layout_width="match_parent" android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout="@layout/view_login"
+            />
+    <ViewStub
+            android:id="@+id/view_auth_stub"
+            android:layout_width="match_parent" android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout="@layout/view_auth_drawer"
+            />
+</LinearLayout>

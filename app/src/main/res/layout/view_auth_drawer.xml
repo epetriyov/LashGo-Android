@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+        >
+    <LinearLayout android:layout_width="match_parent" android:layout_height="48dp"
+                  android:orientation="horizontal"
+                  android:id="@+id/item_tasks"
+                  android:paddingLeft="16dp"
+                  android:paddingRight="4dp"
+                  android:gravity="center_vertical"
+                  android:layout_marginTop="16dp"
+                  android:background="@drawable/btn_gray_bg"
+            >
+        <ImageView android:layout_width="24dp" android:layout_height="24dp"
+                   android:src="@drawable/tasks"
+                />
+        <com.lashgo.android.ui.views.RobotoTextView android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:text="@string/check_list"
+                                                    android:layout_marginLeft="32dp"
+                                                    android:textSize="16sp"
+                                                    app:fontName="@string/regular"
+                                                    android:duplicateParentState="true"
+                                                    android:textColor="@drawable/drawer_item_color"
+                />
+        <Space android:layout_width="0dp" android:layout_height="1dp"
+               android:layout_weight="1"
+                />
+        <FrameLayout
+                android:id="@+id/tasks_count"
+                android:layout_width="48dp" android:layout_height="match_parent"
+                android:duplicateParentState="true"
+                >
+            <ImageView
+                    android:id="@+id/tasks_count_bg"
+                    android:layout_width="wrap_content" android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:layout_gravity="center"
+                    />
+            <com.lashgo.android.ui.views.RobotoTextView android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:id="@+id/tasks_count_value"
+                                                        android:layout_gravity="center"
+                                                        android:textSize="14sp"
+                                                        app:fontName="@string/regular"
+                                                        android:duplicateParentState="true"
+                                                        android:textColor="@drawable/drawer_item_counter"
+                    />
+        </FrameLayout>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="48dp"
+                  android:orientation="horizontal"
+                  android:id="@+id/item_news"
+                  android:paddingLeft="16dp"
+                  android:paddingRight="4dp"
+                  android:gravity="center_vertical"
+                  android:background="@drawable/btn_gray_bg"
+            >
+        <ImageView android:layout_width="24dp" android:layout_height="24dp"
+                   android:src="@drawable/news"
+                />
+        <com.lashgo.android.ui.views.RobotoTextView android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:text="@string/news_list"
+                                                    android:layout_marginLeft="32dp"
+                                                    android:textSize="16sp"
+                                                    app:fontName="@string/regular"
+                                                    android:duplicateParentState="true"
+                                                    android:textColor="@drawable/drawer_item_color"
+                />
+        <Space android:layout_width="0dp" android:layout_height="1dp"
+               android:layout_weight="1"
+                />
+        <FrameLayout
+                android:id="@+id/news_count"
+                android:layout_width="48dp" android:layout_height="match_parent"
+                android:duplicateParentState="true"
+                >
+            <ImageView
+                    android:id="@+id/news_count_bg"
+                    android:layout_width="wrap_content" android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:layout_gravity="center"
+                    />
+            <com.lashgo.android.ui.views.RobotoTextView android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:id="@+id/news_count_value"
+                                                        android:duplicateParentState="true"
+                                                        android:layout_gravity="center"
+                                                        android:textSize="14sp"
+                                                        app:fontName="@string/regular"
+                                                        android:textColor="@drawable/drawer_item_counter"
+                    />
+        </FrameLayout>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="48dp"
+                  android:orientation="horizontal"
+                  android:id="@+id/item_subscribes"
+                  android:paddingLeft="16dp"
+                  android:paddingRight="4dp"
+                  android:gravity="center_vertical"
+                  android:background="@drawable/btn_gray_bg"
+            >
+        <ImageView android:layout_width="24dp" android:layout_height="24dp"
+                   android:src="@drawable/follow"
+                />
+        <com.lashgo.android.ui.views.RobotoTextView android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:text="@string/subscribes_list"
+                                                    android:layout_marginLeft="32dp"
+                                                    android:textSize="16sp"
+                                                    app:fontName="@string/regular"
+                                                    android:duplicateParentState="true"
+                                                    android:textColor="@drawable/drawer_item_color"
+                />
+        <Space android:layout_width="0dp" android:layout_height="1dp"
+               android:layout_weight="1"
+                />
+        <FrameLayout
+                android:id="@+id/subscribes_count"
+                android:layout_width="48dp" android:layout_height="match_parent"
+                android:duplicateParentState="true"
+                >
+            <ImageView
+                    android:id="@+id/subscribes_count_bg"
+                    android:layout_width="wrap_content" android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:layout_gravity="center"
+                    />
+            <com.lashgo.android.ui.views.RobotoTextView android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:id="@+id/subscribes_count_value"
+                                                        android:text="2"
+                                                        android:layout_gravity="center"
+                                                        android:textSize="14sp"
+                                                        app:fontName="@string/regular"
+                                                        android:duplicateParentState="true"
+                                                        android:textColor="@drawable/drawer_item_counter"
+                    />
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>
