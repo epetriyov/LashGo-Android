@@ -1,5 +1,6 @@
 package com.lashgo.android.service.handlers;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import com.lashgo.android.ui.BaseActivity;
@@ -13,6 +14,10 @@ import java.io.IOException;
  * Created by Eugene on 30.10.2014.
  */
 public class GetPhotoUsersHandler extends BaseIntentHandler {
+    public GetPhotoUsersHandler(Context context) {
+        super(context);
+    }
+
     @Override
     protected Bundle doExecute(Intent intent) throws IOException, RetrofitError {
         ResponseList<SubscriptionDto> responseList = service.getVoteUsers(intent.getLongExtra(BaseActivity.ExtraNames.PHOTO_ID.name(), -1));

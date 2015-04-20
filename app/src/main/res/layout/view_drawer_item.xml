@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/btn_gray_bg"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:gravity="center_vertical"
+        >
+    <ImageView
+            android:id="@+id/item_icon"
+            android:layout_width="24dp" android:layout_height="24dp"
+            />
+    <com.lashgo.android.ui.views.RobotoTextView
+            android:id="@+id/item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"
+            android:textSize="16sp"
+            app:fontName="@string/regular"
+            android:duplicateParentState="true"
+            android:textColor="@drawable/drawer_item_color"
+            />
+    <Space android:layout_width="0dp" android:layout_height="1dp"
+           android:layout_weight="1"
+            />
+    <FrameLayout
+            android:id="@+id/item_counter"
+            android:layout_width="48dp" android:layout_height="match_parent"
+            android:duplicateParentState="true"
+            >
+        <ImageView
+                android:id="@+id/item_counter_bg"
+                android:layout_width="wrap_content" android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:layout_gravity="center"
+                />
+        <com.lashgo.android.ui.views.RobotoTextView android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:id="@+id/item_counter_value"
+                                                    android:layout_gravity="center"
+                                                    android:textSize="14sp"
+                                                    app:fontName="@string/regular"
+                                                    android:duplicateParentState="true"
+                                                    android:textColor="@drawable/drawer_item_counter"
+                />
+    </FrameLayout>
+</LinearLayout>

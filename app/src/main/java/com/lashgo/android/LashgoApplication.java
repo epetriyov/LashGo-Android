@@ -1,20 +1,25 @@
 package com.lashgo.android;
 
 
+import android.app.Application;
 import android.os.StrictMode;
-import android.support.multidex.MultiDexApplication;
 import com.facebook.FacebookSdk;
-import dagger.ObjectGraph;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lashgo.android.service.ServiceHelper;
+import com.lashgo.android.service.transport.CheckErrorHandler;
+import com.lashgo.android.service.transport.CheckInterceptor;
+import com.lashgo.android.service.transport.JacksonConverter;
+import com.lashgo.android.service.transport.RestService;
+import com.lashgo.android.settings.SettingsHelper;
+import retrofit.RestAdapter;
 
-import java.util.Arrays;
-import java.util.List;
+import java.text.SimpleDateFormat;
 
 /**
  * Created by Eugene on 18.02.14.
  */
-public class LashgoApplication extends MultiDexApplication {
-
-    private ObjectGraph graph;
+public class LashgoApplication extends Application {
 
     private static LashgoApplication instance;
 
@@ -43,14 +48,19 @@ public class LashgoApplication extends MultiDexApplication {
 
     private boolean wasSent;
 
-    protected List<Object> getModules() {
-        return Arrays.<Object>asList(
-                new LashgoModule(this));
+    private volatile RestService restService;
+
+    public ServiceHelper getServiceHelper() {
+        return serviceHelper;
     }
 
-    public void inject(Object object) {
-        graph.inject(object);
+    private ServiceHelper serviceHelper;
+
+    public SettingsHelper getSettingsHelper() {
+        return settingsHelper;
     }
+
+    private SettingsHelper settingsHelper;
 
     @Override
     public void onCreate() {
@@ -61,16 +71,34 @@ public class LashgoApplication extends MultiDexApplication {
                     .penaltyLog().build());
             StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects().penaltyLog().penaltyDeath().build());
         }
-        graph = ObjectGraph.create(getModules().toArray());
         FacebookSdk.sdkInitialize(getApplicationContext());
-    }
-
-    public ObjectGraph getApplicationGraph() {
-        return graph;
+        settingsHelper = SettingsHelper.getInstance(this);
+        serviceHelper = ServiceHelper.getInstance(this);
     }
 
     public void clearHackData() {
         imgPath = null;
         wasSent = false;
+    }
+
+    public RestService getRestService() {
+        if (restService == null) {
+            synchronized (RestService.class) {
+                if (restService == null) {
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+                    objectMapper.setDateFormat(new SimpleDateFormat(LashgoConfig.DATE_FORMAT));
+                    RestAdapter restAdapter = new RestAdapter.Builder()
+                            .setEndpoint(LashgoConfig.BASE_URL)
+                            .setConverter(new JacksonConverter(objectMapper))
+                            .setErrorHandler(new CheckErrorHandler())
+                            .setLogLevel(RestAdapter.LogLevel.FULL)
+                            .setRequestInterceptor(new CheckInterceptor(settingsHelper))
+                            .build();
+                    restService = restAdapter.create(RestService.class);
+                }
+            }
+        }
+        return restService;
     }
 }

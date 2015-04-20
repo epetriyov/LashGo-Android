@@ -16,8 +16,6 @@ import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
-import javax.inject.Inject;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Eugene
@@ -35,10 +33,8 @@ public class TwitterHelper {
 
     private BaseActivity loginActivity;
 
-    @Inject
     public TwitterHelper(BaseActivity baseActivity) {
         this.loginActivity = baseActivity;
-        loginActivity.inject(this);
     }
 
     public void onCreate(Bundle requestTokenBundle) {

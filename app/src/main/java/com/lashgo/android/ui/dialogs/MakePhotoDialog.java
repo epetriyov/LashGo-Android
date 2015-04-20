@@ -12,6 +12,7 @@ import com.lashgo.android.R;
 import com.lashgo.android.utils.IntentUtils;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -21,19 +22,29 @@ public class MakePhotoDialog extends DialogFragment {
     public static final String TAG = "MAKE_PHOTO_DIALOG_FRAGMENT";
     final public static int PICK_IMAGE = 1;
     final public static int CAPTURE_IMAGE = 2;
+    private static final String KEY_LISTENER = "listener";
 
     private OnImageDoneListener listener;
 
-    public interface OnImageDoneListener {
+    public interface OnImageDoneListener extends Serializable {
         void imageDone(String imagePath);
     }
 
-    public MakePhotoDialog() {
-        super();
+    public static MakePhotoDialog newInstance(OnImageDoneListener listener) {
+        MakePhotoDialog dialog = new MakePhotoDialog();
+        Bundle args = new Bundle();
+        args.putSerializable(KEY_LISTENER, listener);
+        dialog.setArguments(args);
+        return dialog;
     }
 
-    public MakePhotoDialog(OnImageDoneListener listener) {
-        this.listener = listener;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        if (args != null) {
+            listener = (OnImageDoneListener) args.getSerializable(KEY_LISTENER);
+        }
     }
 
     @Override

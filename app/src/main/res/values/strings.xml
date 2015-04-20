@@ -29,7 +29,8 @@
     </string-array>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
-    <string name="check_list">Задания</string>
+    <string name="check_list">Чеки</string>
+    <string name="actions_list">Акции</string>
     <string name="news_list">Новости</string>
     <string name="subscribes_list">Подписки</string>
     <string name="social_login">Войти через соцсети</string>
@@ -106,6 +107,8 @@
     <string name="vote_started">Началось голосование</string>
     <string name="error_load_photo">Ошибка загрузки фотографии. Попробуйте загрузить ещё раз</string>
     <string name="twitter_error">Ошибка авторизации через Twitter</string>
+    <string name="active">Активные</string>
+    <string name="win">ПОБЕДА!</string>
     <string-array name="make_photo_items">
         <item>Камера</item>
         <item>Галерея</item>

@@ -1,5 +1,6 @@
 package com.lashgo.android.service.handlers;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import com.lashgo.model.dto.LoginInfo;
@@ -16,8 +17,8 @@ import java.io.IOException;
  */
 public class LoginHandler extends BaseIntentHandler {
 
-    public LoginHandler() {
-        super();
+    public LoginHandler(Context context) {
+        super(context);
     }
 
     @Override

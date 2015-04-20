@@ -12,6 +12,4 @@ public interface ServiceReceiver {
     void stopProgress();
 
     void startProgress();
-
-    void inject(Object serviceBinder);
 }

@@ -114,6 +114,21 @@
                 android:textSize="18sp"
                 android:textColor="@color/check_description_color_2"
                 />
+
+        <com.lashgo.android.ui.views.RobotoTextView
+                android:id="@+id/win"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp"
+                android:gravity="center_horizontal"
+                app:fontName="@string/condensed_regular"
+                android:textSize="24sp"
+                android:textColor="@color/drawer_item_counter_pressed"
+                android:text="@string/win"
+                android:visibility="gone"
+                />
         <Space android:layout_width="match_parent" android:layout_height="0dp"
                android:layout_weight="1"
                 />

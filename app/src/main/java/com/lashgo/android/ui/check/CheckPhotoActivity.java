@@ -116,11 +116,11 @@ public class CheckPhotoActivity extends BaseActivity {
 
     @Override
     protected void refresh() {
-        PhotoFragment photoFragment = (PhotoFragment) LashGoUtils.findFragmentByPosition(this, viewPager, pagerAdapter, 0);
+        PhotoFragment photoFragment = (PhotoFragment) LashGoUtils.findFragmentByPosition(getSupportFragmentManager(), viewPager, pagerAdapter, 0);
         if (photoFragment != null) {
             photoFragment.refresh();
         }
-        CheckPhotosFragment checkPhotosFragment = (CheckPhotosFragment) LashGoUtils.findFragmentByPosition(this, viewPager, pagerAdapter, 1);
+        CheckPhotosFragment checkPhotosFragment = (CheckPhotosFragment) LashGoUtils.findFragmentByPosition(getSupportFragmentManager(), viewPager, pagerAdapter, 1);
         if (checkPhotosFragment != null) {
             checkPhotosFragment.refresh();
         }

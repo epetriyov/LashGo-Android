@@ -17,16 +17,12 @@ import com.lashgo.model.dto.UserDto;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.VKUIHelper;
 
-import javax.inject.Inject;
-
 /**
  * Created by Eugene on 18.02.14.
  */
 public class LoginActivity extends BaseActivity implements AuthController.AuthListener {
-    @Inject
-    protected TwitterHelper twitterHelper;
-    @Inject
-    protected VkontakteListener vkSdkListener;
+    private TwitterHelper twitterHelper;
+    private VkontakteListener vkSdkListener;
 
     private AuthController authController;
 
@@ -44,6 +40,8 @@ public class LoginActivity extends BaseActivity implements AuthController.AuthLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        twitterHelper = new TwitterHelper(this);
+        vkSdkListener = new VkontakteListener(this);
         setContentView(R.layout.act_login);
         callbackManager = CallbackManager.Factory.create();
         VKSdk.initialize(vkSdkListener, getString(R.string.vkontakte_app_id), null);

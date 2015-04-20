@@ -1,7 +1,6 @@
 package com.lashgo.android.service.transport;
 
 import android.text.TextUtils;
-import com.lashgo.android.LashgoApplication;
 import com.lashgo.android.LashgoConfig;
 import com.lashgo.android.settings.SettingsHelper;
 import com.lashgo.model.CheckApiHeaders;
@@ -23,17 +22,16 @@ public class CheckInterceptor implements RequestInterceptor {
 
     public CheckInterceptor(SettingsHelper settingsHelper) {
         this.settingsHelper = settingsHelper;
-        LashgoApplication.getInstance().inject(this);
     }
 
 
     @Override
     public void intercept(RequestFacade requestFacade) {
-        requestFacade.addHeader(CheckApiHeaders.UUID, UUID.randomUUID().toString());
-        requestFacade.addHeader(CheckApiHeaders.CLIENT_TYPE, LashgoConfig.CLIENT_TYPE);
+        requestFacade.addHeader(CheckApiHeaders.uuid.name(), UUID.randomUUID().toString());
+        requestFacade.addHeader(CheckApiHeaders.client_type.name(), LashgoConfig.CLIENT_TYPE);
         SessionInfo session = settingsHelper.getSessionInfo();
         if (session != null && !TextUtils.isEmpty(session.getSessionId())) {
-            requestFacade.addHeader(CheckApiHeaders.SESSION_ID, session.getSessionId());
+            requestFacade.addHeader(CheckApiHeaders.session_id.name(), session.getSessionId());
         }
     }
 

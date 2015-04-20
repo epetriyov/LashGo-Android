@@ -1,5 +1,6 @@
 package com.lashgo.android.service.handlers;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import com.lashgo.model.dto.SessionInfo;
@@ -13,6 +14,10 @@ import java.io.IOException;
  * Created by Eugene on 18.08.2014.
  */
 public class SendPhotoHandler extends BaseIntentHandler {
+
+    public SendPhotoHandler(Context context) {
+        super(context);
+    }
 
     @Override
     protected Bundle doExecute(Intent intent) throws IOException, RetrofitError {

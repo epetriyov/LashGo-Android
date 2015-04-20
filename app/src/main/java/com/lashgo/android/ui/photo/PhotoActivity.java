@@ -119,7 +119,7 @@ public class PhotoActivity extends BaseActivity implements ViewPager.OnPageChang
 
     @Override
     protected void refresh() {
-        Fragment fragment = LashGoUtils.findFragmentByPosition(this, viewPager, pagerAdapter, viewPager.getCurrentItem());
+        Fragment fragment = LashGoUtils.findFragmentByPosition(getSupportFragmentManager(), viewPager, pagerAdapter, viewPager.getCurrentItem());
         if (fragment != null) {
             ((BaseFragment) fragment).refresh();
         }

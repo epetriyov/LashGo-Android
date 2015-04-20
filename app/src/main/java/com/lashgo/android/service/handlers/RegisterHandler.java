@@ -1,5 +1,6 @@
 package com.lashgo.android.service.handlers;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import com.lashgo.model.dto.LoginInfo;
@@ -18,8 +19,8 @@ import java.io.IOException;
  */
 public class RegisterHandler extends BaseIntentHandler {
 
-    public RegisterHandler() {
-        super();
+    public RegisterHandler(Context context) {
+        super(context);
     }
 
     @Override

@@ -79,7 +79,7 @@ public class SearchActivity extends BaseActivity {
             public boolean onEditorAction(TextView arg0, int arg1, KeyEvent arg2) {
                 if (arg1 == EditorInfo.IME_ACTION_SEARCH) {
                     int position = viewPager.getCurrentItem();
-                    Fragment fragment = LashGoUtils.findFragmentByPosition(SearchActivity.this, viewPager, pagerAdapter, position);
+                    Fragment fragment = LashGoUtils.findFragmentByPosition(getSupportFragmentManager(), viewPager, pagerAdapter, position);
                     if (fragment != null) {
                         if (position == 0) {
                             ((CheckListFragment) fragment).setSearchText(editSearch.getText().toString());

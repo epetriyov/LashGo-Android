@@ -1,5 +1,6 @@
 package com.lashgo.android.service.handlers;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import com.lashgo.model.dto.ResponseObject;
@@ -11,6 +12,10 @@ import java.io.IOException;
  * Created by Eugene on 15.09.2014.
  */
 public class PhotoLikeHandler extends BaseIntentHandler {
+    public PhotoLikeHandler(Context context) {
+        super(context);
+    }
+
     @Override
     protected Bundle doExecute(Intent intent) throws IOException, RetrofitError {
         ResponseObject<Boolean> isLikeAdded = service.likePhoto(intent.getLongExtra(ServiceExtraNames.PHOTO_ID.name(),-1));

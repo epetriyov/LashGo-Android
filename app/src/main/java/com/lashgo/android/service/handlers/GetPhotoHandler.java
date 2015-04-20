@@ -1,5 +1,6 @@
 package com.lashgo.android.service.handlers;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import com.lashgo.model.dto.PhotoDto;
@@ -12,6 +13,10 @@ import java.io.IOException;
  * Created by Eugene on 27.10.2014.
  */
 public class GetPhotoHandler extends BaseIntentHandler {
+    public GetPhotoHandler(Context context) {
+        super(context);
+    }
+
     @Override
     protected Bundle doExecute(Intent intent) throws IOException, RetrofitError {
         ResponseObject<PhotoDto> responseObject = service.getPhoto(intent.getLongExtra(ServiceExtraNames.PHOTO_ID.name(), -1));

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.ResultReceiver;
 import android.text.TextUtils;
 import com.lashgo.android.LashgoApplication;
@@ -16,7 +17,6 @@ import com.lashgo.model.dto.ErrorDto;
 import com.lashgo.model.dto.ResponseObject;
 import retrofit.RetrofitError;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,80 +34,82 @@ public abstract class BaseIntentHandler {
 
     private Map<String, String> messagesMap;
 
-    public static BaseIntentHandler getIntentHandler(String action) {
+    public static BaseIntentHandler getIntentHandler(Context context,String action) {
         if (ServiceActionNames.ACTION_LOGIN.name().equals(action)) {
-            return new LoginHandler();
+            return new LoginHandler(context);
         } else if (ServiceActionNames.ACTION_REGISTER.name().equals(action)) {
-            return new RegisterHandler();
+            return new RegisterHandler(context);
         } else if (ServiceActionNames.ACTION_SOCIAL_SIGN_IN.name().equals(action)) {
-            return new SocialSignInHandler();
+            return new SocialSignInHandler(context);
         } else if (ServiceActionNames.ACTION_GCM_REGISTER_ID.name().equals(action)) {
-            return new GcmRegisterHandler();
+            return new GcmRegisterHandler(context);
         } else if (ServiceActionNames.ACTION_GET_MAIN_SCREEN_INFO.name().equals(action)) {
-            return new GetMainScreenHandler();
-        } else if (ServiceActionNames.ACTION_GET_CHECK_LIST.name().equals(action)) {
-            return new GetCheckListHandler();
+            return new GetMainScreenHandler(context);
+        } else if (ServiceActionNames.ACTION_GET_CHECK_LIST.name().equals(action)
+                || ServiceActionNames.ACTION_GET_ACTIONS_LIST.name().equals(action)) {
+            return new GetCheckListHandler(context);
         } else if (ServiceActionNames.ACTION_SEND_PHOTO.name().equals(action)) {
-            return new SendPhotoHandler();
+            return new SendPhotoHandler(context);
         } else if (ServiceActionNames.ACTION_GET_VOTE_PHOTOS.name().equals(action)) {
-            return new GetVotePhotosHandler();
+            return new GetVotePhotosHandler(context);
         } else if (ServiceActionNames.ACTION_VOTE.name().equals(action)) {
-            return new VoteHandler();
+            return new VoteHandler(context);
         } else if (ServiceActionNames.ACTION_LIKE_CHECK.name().equals(action)) {
-            return new CheckLikeHandler();
+            return new CheckLikeHandler(context);
         } else if (ServiceActionNames.ACTION_LIKE_PHOTO.name().equals(action)) {
-            return new PhotoLikeHandler();
+            return new PhotoLikeHandler(context);
         } else if (ServiceActionNames.ACTION_GET_USER_PROFILE.name().equals(action)) {
-            return new GetUserProfileHandler();
+            return new GetUserProfileHandler(context);
         } else if (ServiceActionNames.ACTION_GET_MY_USER_PROFILE.name().equals(action)) {
-            return new GetMyUserProfileHandler();
+            return new GetMyUserProfileHandler(context);
         } else if (ServiceActionNames.ACTION_GET_CHECK_PHOTOS.name().equals(action)) {
-            return new GetCheckPhotosHandler();
+            return new GetCheckPhotosHandler(context);
         } else if (ServiceActionNames.ACTION_GET_USER_PHOTOS.name().equals(action)) {
-            return new GetUserPhotosHandler();
+            return new GetUserPhotosHandler(context);
         } else if (ServiceActionNames.ACTION_GET_MY_PHOTOS.name().equals(action)) {
-            return new GetMyPhotosHandler();
+            return new GetMyPhotosHandler(context);
         } else if (ServiceActionNames.ACTION_GET_CHECK.name().equals(action)) {
-            return new GetCheckHandler();
+            return new GetCheckHandler(context);
         } else if (ServiceActionNames.ACTION_SAVE_AVATAR.name().equals(action)) {
-            return new SaveAvatarHandler();
+            return new SaveAvatarHandler(context);
         } else if (ServiceActionNames.ACTION_SAVE_PROFILE.name().equals(action)) {
-            return new SaveProfileHandler();
+            return new SaveProfileHandler(context);
         } else if (ServiceActionNames.ACTION_GET_CHECK_COMMENTS.name().equals(action)) {
-            return new GetCheckCommentsHandler();
+            return new GetCheckCommentsHandler(context);
         } else if (ServiceActionNames.ACTION_GET_PHOTO_COMMENTS.name().equals(action)) {
-            return new GetPhotoCommentsHandler();
+            return new GetPhotoCommentsHandler(context);
         } else if (ServiceActionNames.ACTION_ADD_CHECK_COMMENT.name().equals(action)) {
-            return new AddCheckCommentHandler();
+            return new AddCheckCommentHandler(context);
         } else if (ServiceActionNames.ACTION_ADD_PHOTO_COMMENT.name().equals(action)) {
-            return new AddPhotoCommentHandler();
+            return new AddPhotoCommentHandler(context);
         } else if (ServiceActionNames.ACTION_PASSWORD_RECOVER.name().equals(action)) {
-            return new PasswordRecoverHandler();
+            return new PasswordRecoverHandler(context);
         } else if (ServiceActionNames.ACTION_GET_CHECK_COUNTERS.name().equals(action)) {
-            return new GetCheckCountersHandler();
+            return new GetCheckCountersHandler(context);
         } else if (ServiceActionNames.ACTION_GET_PHOTO_COUNTERS.name().equals(action)) {
-            return new GetPhotoCountersHandler();
+            return new GetPhotoCountersHandler(context);
         } else if (ServiceActionNames.ACTION_GET_SUBSCRIPTIONS.name().equals(action)) {
-            return new GetSubscrptionsHandler();
+            return new GetSubscrptionsHandler(context);
         } else if (ServiceActionNames.ACTION_GET_SUBSCRIBERS.name().equals(action)) {
-            return new GetSubscribersHandler();
+            return new GetSubscribersHandler(context);
         } else if (ServiceActionNames.ACTION_SUBSCRIBE.name().equals(action)) {
-            return new SubscribeHandler();
+            return new SubscribeHandler(context);
         } else if (ServiceActionNames.ACTION_UNSUBSCRIBE.name().equals(action)) {
-            return new UnsubscribeHandler();
+            return new UnsubscribeHandler(context);
         } else if (ServiceActionNames.ACTION_GET_EVENTS.name().equals(action)) {
-            return new GetEventsHandler();
+            return new GetEventsHandler(context);
         }  else if (ServiceActionNames.ACTION_FIND_USERS.name().equals(action)) {
-            return new FindUserHandler();
+            return new FindUserHandler(context);
         }  else if (ServiceActionNames.ACTION_GET_CHECK_USERS.name().equals(action)) {
-            return new GetCheckUsersHandler();
+            return new GetCheckUsersHandler(context);
         }  else if (ServiceActionNames.ACTION_GET_PHOTO_USERS.name().equals(action)) {
-            return new GetPhotoUsersHandler();
+            return new GetPhotoUsersHandler(context);
         }  else if (ServiceActionNames.ACTION_GET_PHOTO.name().equals(action)) {
-            return new GetPhotoHandler();
+            return new GetPhotoHandler(context);
         }  else if (ServiceActionNames.ACTION_COMPLAIN_PHOTO.name().equals(action)) {
-            return new ComplainPhotoHandler();
-        } else {
+            return new ComplainPhotoHandler(context);
+        }
+        else {
             throw new IllegalArgumentException("illegal action - " + action);
         }
     }
@@ -129,7 +131,7 @@ public abstract class BaseIntentHandler {
         ACTION_GET_SUBSCRIPTIONS, ACTION_GET_SUBSCRIBERS,
         ACTION_SUBSCRIBE, ACTION_UNSUBSCRIBE, ACTION_GET_EVENTS,
         ACTION_FIND_USERS, ACTION_GET_CHECK_USERS, ACTION_GET_PHOTO,
-        ACTION_GET_PHOTO_USERS, ACTION_COMPLAIN_PHOTO, ACTION_GET_CHECK_LIST
+        ACTION_GET_PHOTO_USERS, ACTION_COMPLAIN_PHOTO, ACTION_GET_CHECK_LIST,ACTION_GET_ACTIONS_LIST;
     }
 
     public static enum ServiceExtraNames {
@@ -143,33 +145,25 @@ public abstract class BaseIntentHandler {
         AVATAR_PATH, PHOTO_ID, COMMENTS_LIST, COMMENT_TEXT,
         COMMENT, EMAIL, COUNTERS, SUBSCRIPTION_DTO, SUBSCRIPTIONS_DTO,
         SUBSCRIBERS_DTO, EVENTS_DTO, SEARCH_TEXT, USERS_DTO,
-        PHOTO_DTO, SUBSCRIPTION_EVENTS, IS_PHOTOS_COUNT_INCLUDED
+        PHOTO_DTO, SUBSCRIPTION_EVENTS, IS_PHOTOS_COUNT_INCLUDED,CHECK_TYPE
     }
 
     public static final String ERROR_EXTRA = "error_extra";
     public static final int SUCCESS_RESPONSE = 1;
     public static final int FAILURE_RESPONSE = 2;
-    @Inject
+
     protected RestService service;
-    @Inject
     protected Context context;
-    @Inject
     protected Handler handler;
-    @Inject
     protected SettingsHelper settingsHelper;
 
-    public BaseIntentHandler() {
-        LashgoApplication.getInstance().inject(this);
+    public BaseIntentHandler(Context context) {
+        this.context = context;
+        this.handler = new Handler(Looper.getMainLooper());
+        this.settingsHelper = LashgoApplication.getInstance().getSettingsHelper();
+        this.service = LashgoApplication.getInstance().getRestService();
         initMessagesMap();
 
-    }
-
-    public BaseIntentHandler(Context context, Handler handler, SettingsHelper settingsHelper, RestService service) {
-        this.context = context;
-        this.handler = handler;
-        this.settingsHelper = settingsHelper;
-        this.service = service;
-        LashgoApplication.getInstance().inject(this);
     }
 
     public final void execute(Intent intent, ResultReceiver callback) {
@@ -185,7 +179,7 @@ public abstract class BaseIntentHandler {
                 throw new IOException();
             }
         } catch (RetrofitError e) {
-            if (!e.isNetworkError()) {
+            if (e.getKind() != RetrofitError.Kind.NETWORK) {
                 try {
                     errorDto = ((ResponseObject) e.getBodyAs(ResponseObject.class)).getError();
                     bindMessage(errorDto);

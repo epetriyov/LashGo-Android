@@ -33,10 +33,22 @@ public class SettingsHelper {
     private static final String KEY_ALREADY_VOTED = "already_voted";
     private SessionInfo sessionInfo;
     private SharedPreferences preferences;
+    private static volatile SettingsHelper instance;
 
-    public SettingsHelper(Context context) {
+    private SettingsHelper(Context context) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         initSessionInfo();
+    }
+
+    public static SettingsHelper getInstance(Context context) {
+        if (instance == null) {
+            synchronized (SettingsHelper.class) {
+                if (instance == null) {
+                    instance = new SettingsHelper(context);
+                }
+            }
+        }
+        return instance;
     }
 
 

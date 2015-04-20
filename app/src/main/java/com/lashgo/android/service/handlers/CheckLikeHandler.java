@@ -1,5 +1,6 @@
 package com.lashgo.android.service.handlers;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import com.lashgo.model.dto.ResponseObject;
@@ -11,6 +12,10 @@ import java.io.IOException;
  * Created by Eugene on 02.09.2014.
  */
 public class CheckLikeHandler extends BaseIntentHandler {
+    public CheckLikeHandler(Context context) {
+        super(context);
+    }
+
     @Override
     protected Bundle doExecute(Intent intent) throws IOException, RetrofitError {
         ResponseObject<Boolean> isLikeAdded = service.likeCheck(intent.getIntExtra(ServiceExtraNames.CHECK_ID.name(), -1));

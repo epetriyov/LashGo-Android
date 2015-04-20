@@ -1,7 +1,7 @@
 package com.lashgo.android.utils;
 
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -48,14 +48,17 @@ public final class LashGoUtils {
         return avatar;
     }
 
-    public static Fragment findFragmentByPosition(FragmentActivity activity, ViewPager viewPager, FragmentPagerAdapter pagerAdapter, int position) {
+    public static Fragment findFragmentByPosition(FragmentManager fragmentManager, ViewPager viewPager, FragmentPagerAdapter pagerAdapter, int position) {
         if (viewPager == null) {
             throw new IllegalArgumentException("ViewPager can't be null");
         }
         if (pagerAdapter == null) {
             throw new IllegalArgumentException("PagerAdapter can't be null");
         }
-        return activity.getSupportFragmentManager().findFragmentByTag(
+        if (fragmentManager == null) {
+            return null;
+        }
+        return fragmentManager.findFragmentByTag(
                 "android:switcher:" + viewPager.getId() + ":"
                         + pagerAdapter.getItemId(position));
     }

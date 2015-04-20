@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
@@ -11,7 +12,10 @@ import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.crittercism.app.Crittercism;
-import com.lashgo.android.*;
+import com.lashgo.android.BuildConfig;
+import com.lashgo.android.LashgoApplication;
+import com.lashgo.android.LashgoConfig;
+import com.lashgo.android.R;
 import com.lashgo.android.service.ServiceBinder;
 import com.lashgo.android.service.ServiceHelper;
 import com.lashgo.android.service.ServiceReceiver;
@@ -21,11 +25,6 @@ import com.lashgo.android.ui.search.SearchActivity;
 import com.lashgo.android.utils.ContextUtils;
 import com.lashgo.model.dto.ErrorDto;
 import com.lashgo.model.dto.SocialInfo;
-import dagger.ObjectGraph;
-
-import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by Eugene on 18.02.14.
@@ -39,19 +38,14 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
                     ActionBar.DISPLAY_HOME_AS_UP |
                     ActionBar.DISPLAY_SHOW_CUSTOM |
                     ActionBar.DISPLAY_SHOW_TITLE;
-    @Inject
     protected ServiceHelper serviceHelper;
-    @Inject
     protected SettingsHelper settingsHelper;
-    @Inject
     protected Handler handler;
-    @Inject
-    ServiceBinder serviceBinder;
+    protected ServiceBinder serviceBinder;
     protected MenuItem exitMenu;
     private View customActionBarView;
     private View homeBtn;
     private TextView actionBarTitle;
-    private ObjectGraph loginGraph;
     private DialogFragment dialogFragment;
     private boolean isDialogShowNeeded;
     private String tag;
@@ -95,9 +89,11 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
         if (!BuildConfig.DEBUG) {
             Crittercism.initialize(getApplicationContext(), LashgoConfig.CRITTERCISM_APP_ID);
         }
-        loginGraph = LashgoApplication.getInstance().getApplicationGraph().plus(getModules().toArray());
-        loginGraph.inject(this);
         super.onCreate(savedInstanceState);
+        settingsHelper = LashgoApplication.getInstance().getSettingsHelper();
+        serviceHelper = LashgoApplication.getInstance().getServiceHelper();
+        serviceBinder = new ServiceBinder(this);
+        handler = new Handler(Looper.getMainLooper());
         registerActionsListener();
     }
 
@@ -115,7 +111,6 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
 
     @Override
     protected void onDestroy() {
-        loginGraph = null;
         super.onDestroy();
         unregisterActionsListener();
     }
@@ -158,17 +153,6 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
 
     public void onSocialLogin(SocialInfo socialInfo) {
         serviceHelper.socialSignIn(socialInfo);
-    }
-
-    /**
-     * Inject the supplied {@code object} using the activity-specific graph.
-     */
-    public void inject(Object object) {
-        loginGraph.inject(object);
-    }
-
-    private List<Object> getModules() {
-        return Arrays.<Object>asList(new ActivityModule(this));
     }
 
     public void showErrorToast(Bundle data) {

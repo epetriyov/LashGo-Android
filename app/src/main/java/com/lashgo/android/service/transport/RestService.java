@@ -29,7 +29,7 @@ public interface RestService {
     ResponseObject<MainScreenInfoDto> getUserMainScreenInfo(@Query("news_last_view") String newsLastView, @Query("subscriptions_last_view") String subscriptionsLastView);
 
     @GET(Path.Checks.GET)
-    ResponseList<CheckDto> getChecks(@Query("search_text") String searchText);
+    ResponseList<CheckDto> getChecks(@Query("search_text") String searchText, @Query("check_type") String checkType);
 
     @Multipart
     @POST(Path.Checks.PHOTOS)

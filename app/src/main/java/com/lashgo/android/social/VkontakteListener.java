@@ -9,8 +9,6 @@ import com.vk.sdk.VKSdkListener;
 import com.vk.sdk.api.VKError;
 import com.vk.sdk.dialogs.VKCaptchaDialog;
 
-import javax.inject.Inject;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Eugene
@@ -22,10 +20,8 @@ public class VkontakteListener extends VKSdkListener {
 
     private BaseActivity loginActivity;
 
-    @Inject
     public VkontakteListener(BaseActivity baseActivity) {
         this.loginActivity = baseActivity;
-        baseActivity.inject(this);
     }
 
     @Override

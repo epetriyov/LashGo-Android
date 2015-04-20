@@ -1,5 +1,6 @@
 package com.lashgo.android.service.handlers;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import com.lashgo.model.dto.EventDto;
@@ -12,6 +13,10 @@ import java.io.IOException;
  * Created by Eugene on 20.10.2014.
  */
 public class GetEventsHandler extends BaseIntentHandler {
+    public GetEventsHandler(Context context) {
+        super(context);
+    }
+
     @Override
     protected Bundle doExecute(Intent intent) throws IOException, RetrofitError {
         ResponseList<EventDto> responseList = service.getEvents(intent.getBooleanExtra(ServiceExtraNames.SUBSCRIPTION_EVENTS.name(), false));

@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.lashgo.android.FragmentModule;
 import com.lashgo.android.LashgoApplication;
 import com.lashgo.android.R;
 import com.lashgo.android.service.ServiceBinder;
@@ -14,34 +13,26 @@ import com.lashgo.android.service.ServiceHelper;
 import com.lashgo.android.service.ServiceReceiver;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.settings.SettingsHelper;
-import dagger.ObjectGraph;
-
-import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by Eugene on 15.07.2014.
  */
 public abstract class BaseFragment extends Fragment implements ServiceReceiver {
 
-    @Inject
-    ServiceBinder serviceBinder;
+    protected ServiceBinder serviceBinder;
 
-    @Inject
     protected ServiceHelper serviceHelper;
 
-    @Inject
     protected SettingsHelper settingsHelper;
 
-    private ObjectGraph fragmentGraph;
     private View progressView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fragmentGraph = LashgoApplication.getInstance().getApplicationGraph().plus(getModules().toArray());
-        fragmentGraph.inject(this);
+        settingsHelper = LashgoApplication.getInstance().getSettingsHelper();
+        serviceHelper = LashgoApplication.getInstance().getServiceHelper();
+        serviceBinder = new ServiceBinder(this);
         registerActionsListener();
     }
 
@@ -69,7 +60,6 @@ public abstract class BaseFragment extends Fragment implements ServiceReceiver {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        fragmentGraph = null;
         unregisterActionsListener();
     }
 
@@ -104,14 +94,6 @@ public abstract class BaseFragment extends Fragment implements ServiceReceiver {
     @Override
     public void startProgress() {
         ((BaseActivity) getActivity()).startProgress();
-    }
-
-    public void inject(Object object) {
-        fragmentGraph.inject(object);
-    }
-
-    private List<Object> getModules() {
-        return Arrays.<Object>asList(new FragmentModule(this));
     }
 
     @Override

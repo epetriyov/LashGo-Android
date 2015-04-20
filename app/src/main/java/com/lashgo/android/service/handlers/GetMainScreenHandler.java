@@ -1,5 +1,6 @@
 package com.lashgo.android.service.handlers;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import com.lashgo.model.dto.MainScreenInfoDto;
@@ -12,6 +13,10 @@ import java.io.IOException;
  * Created by Eugene on 09.07.2014.
  */
 public class GetMainScreenHandler extends BaseIntentHandler {
+
+    public GetMainScreenHandler(Context context) {
+        super(context);
+    }
 
     @Override
     protected Bundle doExecute(Intent intent)

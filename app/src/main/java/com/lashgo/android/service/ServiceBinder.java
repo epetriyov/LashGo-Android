@@ -19,7 +19,6 @@ public class ServiceBinder implements ServiceCallbackListener {
 
     public ServiceBinder(ServiceReceiver serviceReceiver) {
         this.serviceReceiver = serviceReceiver;
-        serviceReceiver.inject(this);
     }
 
     private void deliverServiceResults() {

@@ -5,12 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import com.lashgo.android.LashgoApplication;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
-import com.lashgo.android.settings.SettingsHelper;
+import com.lashgo.model.CheckType;
 import com.lashgo.model.dto.*;
 
-import javax.inject.Inject;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,22 +22,27 @@ import java.util.Map;
  */
 public class ServiceHelper {
 
-    private SettingsHelper settingsHelper;
-
     private Map<String, Intent> pendingActivities = new HashMap<>();
 
     private Map<String, WeakReference<ServiceCallbackListener>> serviceCallbackListenerMap = new HashMap<>();
 
     private Context context;
 
-    private String expiredActionName;
-    private Bundle expiredExtras;
+    private static volatile ServiceHelper instance;
 
-    @Inject
-    public ServiceHelper(Context context, SettingsHelper settingsHelper) {
+    private ServiceHelper(Context context) {
         this.context = context;
-        this.settingsHelper = settingsHelper;
-        LashgoApplication.getInstance().inject(this);
+    }
+
+    public static ServiceHelper getInstance(Context context) {
+        if (instance == null) {
+            synchronized (ServiceHelper.class) {
+                if (instance == null) {
+                    instance = new ServiceHelper(context);
+                }
+            }
+        }
+        return instance;
     }
 
     public void addActionListener(String action, ServiceCallbackListener serviceCallbackListener) {
@@ -59,30 +62,6 @@ public class ServiceHelper {
         i.putExtra(CheckService.EXTRA_STATUS_RECEIVER, new ResultReceiver(new Handler()) {
                     @Override
                     protected void onReceiveResult(int resultCode, Bundle resultData) {
-//                        ErrorDto errorDto = (ErrorDto) resultData.getSerializable(BaseIntentHandler.ERROR_EXTRA);
-//                        if (errorDto != null && (ErrorCodes.WRONG_SESSION.equals(errorDto.getErrorCode()) || ErrorCodes.SESSION_EXPIRED.equals(errorDto.getErrorCode()) || ErrorCodes.SESSION_IS_EMPTY.equals(errorDto.getErrorCode()))) {
-//                            /**
-//                             * handle session expiration
-//                             */
-//                            expiredActionName = actionName;
-//                            Intent expiredIntent = pendingActivities.get(expiredActionName);
-//                            if (expiredIntent != null) {
-//                                expiredExtras = expiredIntent.getExtras();
-//                            }
-//                            if (isPending(actionName)) {
-//                                pendingActivities.remove(actionName);
-//                            }
-//                            LoginInfo loginInfo = settingsHelper.getLoginInfo();
-//                            if (loginInfo != null) {
-//                                login(loginInfo);
-//                            } else {
-//                                socialSignIn(settingsHelper.getSocialInfo());
-//                            }
-//                        } else {
-//                            if (expiredActionName != null) {
-//                                runRequest(expiredActionName, expiredExtras);
-//                                expiredActionName = null;
-//                            }
                         if (isPending(actionName)) {
                             pendingActivities.remove(actionName);
                         }
@@ -159,10 +138,19 @@ public class ServiceHelper {
         runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_MAIN_SCREEN_INFO.name(), extras);
     }
 
-    public void getChecks(String searchText) {
+    private void getChecks(String searchText, String checkType, String actionName) {
         Bundle bundle = new Bundle();
-        bundle.putString(BaseIntentHandler.ServiceExtraNames.SEARCH_TEXT.name(),searchText);
-        runRequest(BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_LIST.name(), bundle);
+        bundle.putString(BaseIntentHandler.ServiceExtraNames.SEARCH_TEXT.name(), searchText);
+        bundle.putString(BaseIntentHandler.ServiceExtraNames.CHECK_TYPE.name(), checkType);
+        runRequest(actionName, bundle);
+    }
+
+    public void getSelfies(String searchText) {
+        getChecks(searchText, CheckType.SELFIE.name(), BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK_LIST.name());
+    }
+
+    public void getActions(String searchText) {
+        getChecks(searchText, CheckType.ACTION.name(), BaseIntentHandler.ServiceActionNames.ACTION_GET_ACTIONS_LIST.name());
     }
 
     public void getVotePhotos(int checkId) {

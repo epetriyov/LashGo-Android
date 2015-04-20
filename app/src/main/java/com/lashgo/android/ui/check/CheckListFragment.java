@@ -9,27 +9,29 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import com.lashgo.android.R;
+import com.lashgo.android.adapters.MultyTypeAdapter;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.BaseFragment;
-import com.lashgo.android.adapters.MultyTypeAdapter;
 import com.lashgo.model.dto.CheckDto;
 import com.lashgo.model.dto.ResponseList;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by Eugene on 19.06.2014.
  */
 public class CheckListFragment extends BaseFragment implements AdapterView.OnItemClickListener, CheckItemBinder.OnCheckStateChangeListener {
 
+    private ArrayList<CheckDto> resultCollection;
+
     public static Fragment newInstance(StartOptions loadOnStart, String searchText) {
         Fragment fragment = new CheckListFragment();
         Bundle args = new Bundle();
         args.putSerializable(BaseActivity.ExtraNames.LOAD_ON_START.name(), loadOnStart);
-        args.putString(BaseActivity.ExtraNames.SEARCH_TEXT.name(),searchText);
+        args.putString(BaseActivity.ExtraNames.SEARCH_TEXT.name(), searchText);
         fragment.setArguments(args);
         return fragment;
     }
@@ -41,8 +43,6 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
     private ListView checkListView;
 
     private MultyTypeAdapter multyTypeAdapter;
-
-    private Collection<CheckDto> resultCollection;
 
     private StartOptions loadOnStart;
 
@@ -98,7 +98,7 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
 
     @Override
     public void refresh() {
-        serviceHelper.getChecks(searchText);
+        serviceHelper.getSelfies(searchText);
     }
 
     @Override
@@ -120,11 +120,41 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
                 ResponseList<CheckDto> checkDtoResponseList = (ResponseList<CheckDto>) data.getSerializable(BaseIntentHandler.ServiceExtraNames.KEY_CHECK_DTO_LIST.name());
                 if (checkDtoResponseList != null) {
                     if (checkDtoResponseList.getResultCollection() != null) {
-                        this.resultCollection = new ArrayList<>(checkDtoResponseList.getResultCollection());
-                        onCheckListLoaded();
+                        onCheckListLoaded(checkDtoResponseList.getResultCollection());
                     }
                 }
             }
+        }
+    }
+
+    public void onCheckListLoaded(List<CheckDto> resultCollection) {
+        this.resultCollection = new ArrayList<>(resultCollection);
+        onCheckListLoaded();
+    }
+
+    public static Fragment newInstance(StartOptions loadOnStart) {
+        Fragment fragment = new CheckListFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(BaseActivity.ExtraNames.LOAD_ON_START.name(), loadOnStart);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Object selectedItem = multyTypeAdapter.getItem(position);
+        if (selectedItem instanceof CheckDto) {
+            CheckDto selectedCheck = (CheckDto) selectedItem;
+            startActivity(CheckActivity.buildIntent(getActivity(), selectedCheck.getId()));
+        } else {
+            throw new IllegalStateException("Selected item is not CheckDto object");
+        }
+    }
+
+    @Override
+    public void onCheckStateChanged() {
+        if (getActivity() != null && !isDetached()) {
+            onCheckListLoaded();
         }
     }
 
@@ -171,32 +201,6 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
                 isFirstIteration = false;
             }
             multyTypeAdapter.notifyDataSetChanged();
-        }
-    }
-
-    public static Fragment newInstance(StartOptions loadOnStart) {
-        Fragment fragment = new CheckListFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(BaseActivity.ExtraNames.LOAD_ON_START.name(), loadOnStart);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Object selectedItem = multyTypeAdapter.getItem(position);
-        if (selectedItem instanceof CheckDto) {
-            CheckDto selectedCheck = (CheckDto) selectedItem;
-            startActivity(CheckActivity.buildIntent(getActivity(), selectedCheck.getId()));
-        } else {
-            throw new IllegalStateException("Selected item is not CheckDto object");
-        }
-    }
-
-    @Override
-    public void onCheckStateChanged() {
-        if (getActivity() != null && !isDetached()) {
-            onCheckListLoaded();
         }
     }
 }

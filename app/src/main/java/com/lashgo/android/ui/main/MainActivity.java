@@ -11,9 +11,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.ImageView;
-import android.widget.TextView;
 import com.facebook.CallbackManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -24,7 +24,7 @@ import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.social.TwitterHelper;
 import com.lashgo.android.social.VkontakteListener;
 import com.lashgo.android.ui.BaseActivity;
-import com.lashgo.android.ui.activity.ActivityFragment;
+import com.lashgo.android.ui.BaseFragment;
 import com.lashgo.android.ui.auth.AuthController;
 import com.lashgo.android.ui.auth.LoginActivity;
 import com.lashgo.android.ui.auth.SuccessfulRegisterActivity;
@@ -40,25 +40,23 @@ import com.lashgo.model.dto.UserDto;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.VKUIHelper;
 
-import javax.inject.Inject;
 import java.io.IOException;
 
 /**
  * Created by Eugene on 17.06.2014.
  */
-public class MainActivity extends BaseActivity implements View.OnClickListener, AuthController.AuthListener {
-    @Inject
-    protected TwitterHelper twitterHelper;
-    @Inject
-    protected VkontakteListener vkSdkListener;
+public class MainActivity extends BaseActivity implements View.OnClickListener, AuthController.AuthListener, DrawerController.DrawerOnClickListener {
+    private TwitterHelper twitterHelper;
+
+    private VkontakteListener vkSdkListener;
 
     private CallbackManager callbackManager;
+
+    private DrawerController drawerController;
 
     private View drawerLoginMenu;
 
     private View drawerAuthMenu;
-
-    private int subscribesCount;
 
     private String[] menuItems;
     private DrawerLayout drawerLayout;
@@ -72,23 +70,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private GoogleCloudMessaging gcm;
     private ImageView userAvatarView;
     private RobotoButton userName;
-    private View itemTasks;
-    private TextView tasksCountView;
-    private TextView newsCountView;
-    private TextView subscribesCountView;
     private View drawerMenu;
-    private ImageView taskCountBg;
-    private ImageView newsCountBg;
-    private ImageView subscribesCountBg;
-    private View tasksCountRoot;
-    private View newsCountRoot;
-    private View subscribesCountRoot;
     private View drawerTopView;
     private int avaSize;
-
     private int position;
-    private View itemEvents;
-    private View itemNews;
 
     @Override
     protected void registerActionsListener() {
@@ -104,7 +89,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
-        VKUIHelper.onActivityResult(this,requestCode, resultCode, data);
+        VKUIHelper.onActivityResult(this, requestCode, resultCode, data);
         if (requestCode == TwitterHelper.TWITTER_AUTH) {
             if (resultCode == Activity.RESULT_OK) {
                 twitterHelper.handleCallbackUrl(data.getData());
@@ -133,35 +118,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             if (!TextUtils.isEmpty(userAvatar)) {
                 PhotoUtils.displayImage(this, userAvatarView, LashGoUtils.getUserAvatarUrl(userAvatar), avaSize, R.drawable.ava, false);
             }
-            int tasksCount = mainScreenInfoDto.getTasksCount();
-            tasksCountView.setText(String.valueOf(tasksCount));
-            if (tasksCount > 9) {
-                taskCountBg.setImageResource(R.drawable.ic_notification_big);
-            } else if (tasksCount > 0 && tasksCount <= 9) {
-                taskCountBg.setImageResource(R.drawable.ic_notification_small);
-            } else {
-                tasksCountRoot.setVisibility(View.GONE);
-            }
-
-            int newsCount = mainScreenInfoDto.getNewsCount();
-            newsCountView.setText(String.valueOf(newsCount));
-            if (newsCount > 9) {
-                newsCountBg.setImageResource(R.drawable.ic_notification_big);
-            } else if (newsCount > 0 && newsCount <= 9) {
-                newsCountBg.setImageResource(R.drawable.ic_notification_small);
-            } else {
-                newsCountRoot.setVisibility(View.GONE);
-            }
-
-            subscribesCount = mainScreenInfoDto.getSubscribesCount();
-            subscribesCountView.setText(String.valueOf(subscribesCount));
-            if (subscribesCount > 9) {
-                subscribesCountBg.setImageResource(R.drawable.ic_notification_big);
-            } else if (subscribesCount > 0 && subscribesCount <= 9) {
-                subscribesCountBg.setImageResource(R.drawable.ic_notification_small);
-            } else {
-                subscribesCountRoot.setVisibility(View.GONE);
-            }
+            drawerController.updateCounters(mainScreenInfoDto);
         }
     }
 
@@ -193,6 +150,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        twitterHelper = new TwitterHelper(this);
+        vkSdkListener = new VkontakteListener(this);
         initExtras(savedInstanceState);
         setContentView(R.layout.act_main);
         callbackManager = CallbackManager.Factory.create();
@@ -244,21 +203,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         authController.initViews(drawerLoginMenu);
         ViewStub drawerAuthMenuStub = (ViewStub) findViewById(R.id.view_auth_stub);
         drawerAuthMenu = drawerAuthMenuStub.inflate();
-        itemTasks = drawerAuthMenu.findViewById(R.id.item_tasks);
-        itemTasks.setOnClickListener(this);
-        itemNews = drawerAuthMenu.findViewById(R.id.item_news);
-        itemEvents = drawerAuthMenu.findViewById(R.id.item_subscribes);
-        taskCountBg = (ImageView) drawerAuthMenu.findViewById(R.id.tasks_count_bg);
-        tasksCountRoot = drawerAuthMenu.findViewById(R.id.tasks_count);
-        tasksCountView = (TextView) drawerAuthMenu.findViewById(R.id.tasks_count_value);
-        drawerAuthMenu.findViewById(R.id.item_news).setOnClickListener(this);
-        newsCountRoot = drawerAuthMenu.findViewById(R.id.news_count);
-        newsCountView = (TextView) drawerAuthMenu.findViewById(R.id.news_count_value);
-        newsCountBg = (ImageView) drawerAuthMenu.findViewById(R.id.news_count_bg);
-        drawerAuthMenu.findViewById(R.id.item_subscribes).setOnClickListener(this);
-        subscribesCountRoot = drawerAuthMenu.findViewById(R.id.subscribes_count);
-        subscribesCountBg = (ImageView) drawerAuthMenu.findViewById(R.id.subscribes_count_bg);
-        subscribesCountView = (TextView) drawerAuthMenu.findViewById(R.id.subscribes_count_value);
+        drawerController = new DrawerController((ViewGroup) drawerAuthMenu.findViewById(R.id.root_drawer_view), this);
+        drawerController.init();
         updateDrawer();
 
         // Set the adapter for the list view
@@ -317,23 +263,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (drawerLoginMenu != null) {
             drawerLoginMenu.setVisibility(View.GONE);
         }
-        View view = null;
-        switch (position) {
-            case 0:
-                view = itemTasks;
-                break;
-            case 1:
-                view = itemNews;
-                break;
-            case 2:
-                view = itemEvents;
-                break;
-            default:
-                view = itemTasks;
-                break;
-        }
-        selectItem(view);
-
+        drawerController.selectItem(position);
     }
 
     private void initExtras(Bundle savedInstanceState) {
@@ -412,35 +342,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.item_tasks || v.getId() == R.id.item_news || v.getId() == R.id.item_subscribes) {
-            selectItem(v);
-        } else if (settingsHelper.isLoggedIn() && (v.getId() == R.id.drawer_text || v.getId() == R.id.drawer_ava)) {
+        if (settingsHelper.isLoggedIn() && (v.getId() == R.id.drawer_text || v.getId() == R.id.drawer_ava)) {
             startActivity(ProfileActivity.buildIntent(this, settingsHelper.getUserId()));
         }
-    }
-
-
-    /**
-     * Swaps fragments in the main content view
-     */
-    private void selectItem(View view) {
-        // Create a new fragment and specify the planet to show based on position
-        Fragment fragment = null;
-        position = 0;
-        if (view.getId() == R.id.item_tasks) {
-            fragment = CheckListFragment.newInstance(CheckListFragment.StartOptions.LOAD_ON_START);
-            position = 0;
-        } else if (view.getId() == R.id.item_news) {
-            fragment = ActivityFragment.newInstance(subscribesCount, false);
-            position = 1;
-        } else if (view.getId() == R.id.item_subscribes) {
-            fragment = ActivityFragment.newInstance(subscribesCount, true);
-            position = 2;
-        }
-        showFragment(fragment);
-
-        setTitle(menuItems[position]);
-        drawerLayout.closeDrawer(drawerMenu);
     }
 
     private void showFragment(Fragment fragment) {
@@ -485,9 +389,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     protected void refresh() {
         serviceHelper.getMainScreenInfo(settingsHelper.getLastNewsView(), settingsHelper.getLastSubscriptionsView());
         if (position == 0) {
-            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+            BaseFragment fragment = (BaseFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
             if (fragment != null) {
-                ((CheckListFragment) fragment).refresh();
+                fragment.refresh();
             }
         }
     }
@@ -525,5 +429,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             }
         }, 100l);
 
+    }
+
+    @Override
+    public void onClick(int position, Fragment fragment) {
+        this.position = position;
+        showFragment(fragment);
+        setTitle(menuItems[position]);
+        drawerLayout.closeDrawer(drawerMenu);
     }
 }

@@ -35,7 +35,7 @@ public class CheckService extends IntentService {
         String action = intent.getAction();
         if (!TextUtils.isEmpty(action)) {
             final ResultReceiver receiver = intent.getParcelableExtra(EXTRA_STATUS_RECEIVER);
-            BaseIntentHandler.getIntentHandler(action).execute(intent, receiver);
+            BaseIntentHandler.getIntentHandler(this,action).execute(intent, receiver);
         }
     }
 }

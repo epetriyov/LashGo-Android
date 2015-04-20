@@ -272,7 +272,7 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
         super.onClick(view);
         if (view.getId() == R.id.make_photo) {
             if (makePhotoFragment == null) {
-                makePhotoFragment = new MakePhotoDialog(this);
+                makePhotoFragment = MakePhotoDialog.newInstance(this);
             }
             showDialog(makePhotoFragment, MakePhotoDialog.TAG);
         }

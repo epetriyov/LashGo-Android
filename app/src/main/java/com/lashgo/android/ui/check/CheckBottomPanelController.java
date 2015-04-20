@@ -6,7 +6,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.lashgo.android.LashgoConfig;
 import com.lashgo.android.R;
-import com.lashgo.android.settings.SettingsHelper;
 import com.lashgo.android.ui.BaseActivity;
 import com.lashgo.android.ui.comments.CommentsActivity;
 import com.lashgo.android.ui.subscribes.SubscribesActivity;
@@ -16,16 +15,13 @@ import com.lashgo.android.utils.UiUtils;
 import com.lashgo.model.dto.CheckDto;
 import com.lashgo.model.dto.PhotoDto;
 
-import javax.inject.Inject;
 import java.lang.ref.WeakReference;
+import java.text.DateFormat;
 
 /**
  * Created by Eugene on 20.08.2014.
  */
 public class CheckBottomPanelController implements View.OnClickListener {
-
-    @Inject
-    SettingsHelper settingsHelper;
 
     private CheckDto checkDto;
 
@@ -44,7 +40,6 @@ public class CheckBottomPanelController implements View.OnClickListener {
     private ImageView likesComments;
 
     private void commonInit(final BaseActivity activity, final View view) {
-        activity.inject(this);
         this.activity = new WeakReference<BaseActivity>(activity);
         btnPeoplesCount = (ImageView) view.findViewById(R.id.btn_peoples_count);
         btnPeoplesCount.setOnClickListener(this);
@@ -81,6 +76,7 @@ public class CheckBottomPanelController implements View.OnClickListener {
         commonInit(activity, view);
         this.checkDto = checkDto;
         view.findViewById(R.id.likes_layout).setVisibility(View.GONE);
+        ((TextView)view.findViewById(R.id.start_date)).setText(DateFormat.getDateTimeInstance().format(checkDto.getStartDate()));
         if (checkDto == null) {
             throw new IllegalArgumentException("Check can't be empty!");
         }
