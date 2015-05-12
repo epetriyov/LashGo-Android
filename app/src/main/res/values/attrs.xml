@@ -13,4 +13,8 @@
     <declare-styleable name="RobotoCheckBox">
         <attr name="fontName"/>
     </declare-styleable>
+    <declare-styleable name="GradientImageView">
+        <attr name="gradStrokeWidth" format="dimension"/>
+        <attr name="showFinishedBorder" format="boolean"/>
+    </declare-styleable>
 </resources>

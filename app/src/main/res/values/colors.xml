@@ -34,6 +34,8 @@
     <color name="timeline_color">#A1000000</color>
     <color name="circle_color">#4C000000</color>
     <color name="dialog_shadow">#77DDDDDD</color>
-    <color name="circle_gradient_start">#ED2539</color>
-    <color name="circle_gradient_end">#F6BC57</color>
+    <color name="circle_gradient_end">#FF3CBD</color>
+    <color name="circle_gradient_start">#F6BC57</color>
+    <color name="circle_vote">#FF5E7C</color>
+    <color name="finished_circle">#26FFFFFF</color>
 </resources>

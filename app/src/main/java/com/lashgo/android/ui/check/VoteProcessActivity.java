@@ -12,9 +12,11 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.lashgo.android.LashgoConfig;
 import com.lashgo.android.R;
 import com.lashgo.android.service.handlers.BaseIntentHandler;
 import com.lashgo.android.ui.BaseActivity;
+import com.lashgo.android.ui.views.GradientImageView;
 import com.lashgo.android.ui.views.PagerContainer;
 import com.lashgo.android.utils.ContextUtils;
 import com.lashgo.android.utils.PhotoUtils;
@@ -71,10 +73,12 @@ public class VoteProcessActivity extends BaseActivity implements ViewPager.OnPag
         initCheckDto(savedInstanceState);
         setContentView(R.layout.act_first_vote);
         if (!TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
-            int taskImageSize = PhotoUtils.convertDpToPixels(48, this);
+            int taskImageSize = PhotoUtils.convertDpToPixels(40, this);
             PhotoUtils.displayImage(this, (ImageView) findViewById(R.id.task_photo), PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), taskImageSize, R.drawable.ava, false);
         }
         final TextView voteTime = (TextView) findViewById(R.id.vote_time);
+        GradientImageView checkGradient = (GradientImageView) findViewById(R.id.check_gradient);
+        checkGradient.updateImage(LashgoConfig.CheckState.VOTE, 1f);
         Calendar checkVoteCalendar = Calendar.getInstance();
         checkVoteCalendar.setTime(checkDto.getStartDate());
         checkVoteCalendar.add(Calendar.HOUR_OF_DAY, checkDto.getDuration() + checkDto.getVoteDuration());

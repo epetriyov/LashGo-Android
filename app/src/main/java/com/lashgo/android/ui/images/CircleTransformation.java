@@ -28,37 +28,39 @@ public class CircleTransformation implements Transformation {
 
     @Override
     public Bitmap transform(Bitmap source) {
-
+        /**
+         * init canvas
+         */
         int size = Math.min(source.getWidth(), source.getHeight());
+        float r = size / 2f;
+        Bitmap bitmap = Bitmap.createBitmap(size, size, source.getConfig());
+        Canvas canvas = new Canvas(bitmap);
 
+        /**
+         * draw image
+         */
         Bitmap squaredBitmap = Bitmap.createBitmap(source, 0, 0, size, size);
         if (squaredBitmap != source) {
             source.recycle();
         }
-
-        Bitmap bitmap = Bitmap.createBitmap(size, size, source.getConfig());
-
-        Canvas canvas = new Canvas(bitmap);
         Paint paint = new Paint();
         BitmapShader shader = new BitmapShader(squaredBitmap, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP);
         paint.setShader(shader);
         paint.setAntiAlias(true);
-
-        float r = size / 2f;
         canvas.drawCircle(r, r, r, paint);
 
+        /**
+         * draw darkening
+         */
         if (useDarkening) {
             Paint shadow = new Paint();
             shadow.setColor(context.getResources().getColor(R.color.darkening));
             canvas.drawCircle(r, r, r, shadow);
         }
 
-//        Paint arc = new Paint();
-//        arc.setStyle(Paint.Style.STROKE);
-//        arc.setShader(new SweepGradient(r, r, R.color.circle_gradient_start, R.color.circle_gradient_end));
-//        arc.setStrokeWidth(11);
-//        canvas.drawArc(new RectF(0, 0, source.getWidth(), source.getHeight()), 360, 360, false, arc);
-
+        /**
+         * recycle bitmap
+         */
         squaredBitmap.recycle();
         return bitmap;
     }

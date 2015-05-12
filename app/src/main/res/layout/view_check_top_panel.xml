@@ -12,10 +12,20 @@
                   android:paddingBottom="12dp"
                   android:gravity="center_horizontal"
             >
-        <ImageView
-                android:id="@+id/task_photo"
-                android:layout_width="48dp" android:layout_height="48dp"
-                />
+        <FrameLayout android:layout_width="48dp" android:layout_height="48dp">
+            <com.lashgo.android.ui.views.GradientImageView
+                    android:id="@+id/check_gradient"
+                    android:layout_width="48dp" android:layout_height="48dp"
+                    android:layout_gravity="center"
+                    app:gradStrokeWidth="2dp"
+                    />
+            <ImageView
+                    android:id="@+id/task_photo"
+                    android:layout_width="40dp" android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    />
+        </FrameLayout>
+
         <com.lashgo.android.ui.views.RobotoTextView
                 android:id="@+id/vote_time"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -39,7 +49,7 @@
                 android:layout_height="wrap_content"
                 app:fontName="@string/medium"
                 android:textSize="16sp"
-                android:textColor="@drawable/check_name"
+                android:textColor="@color/black"
                 />
         <com.lashgo.android.ui.views.RobotoTextView
                 android:id="@+id/check_description"

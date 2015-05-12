@@ -25,7 +25,7 @@ import java.io.File;
  */
 public class CheckFragment extends BaseFragment implements View.OnClickListener, ICheckFragment {
 
-    public static final int CHECH_PHOTO_PADDINGS = 130;
+    public static final int CHECH_PHOTO_PADDINGS = 132;
 
     private CheckDto checkDto;
 
@@ -67,7 +67,7 @@ public class CheckFragment extends BaseFragment implements View.OnClickListener,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        imageSize = PhotoUtils.getScreenWidth(getActivity()) - CHECH_PHOTO_PADDINGS;
+        imageSize = PhotoUtils.getScreenWidth(getActivity()) - PhotoUtils.convertDpToPixels(CHECH_PHOTO_PADDINGS,getActivity());
         final View view = inflater.inflate(R.layout.adt_check_pager, container, false);
         checkImage = (ImageView) view.findViewById(R.id.check_photo);
         btnSend = view.findViewById(R.id.btn_send_photo);

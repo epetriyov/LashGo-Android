@@ -73,6 +73,7 @@ public class CheckPhotosFragment extends BaseFragment implements AdapterView.OnI
             checkDescription.setText(checkDto.getDescription());
             ImageView taskPhoto = (ImageView) view.findViewById(R.id.task_photo);
             PhotoUtils.displayImage(getActivity(), taskPhoto, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), imageSize, R.drawable.ava, false);
+            view.findViewById(R.id.check_gradient).setVisibility(View.GONE);
             photosGallery = (GridView) view.findViewById(R.id.photos_galley);
             int galImageSize = (PhotoUtils.getScreenWidth(getActivity()) - 24) / 3;
             photosGallery.setOnItemClickListener(this);

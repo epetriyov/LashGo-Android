@@ -9,12 +9,14 @@ import android.widget.TextView;
 import com.lashgo.android.LashgoConfig;
 import com.lashgo.android.R;
 import com.lashgo.android.adapters.AdapterBinder;
+import com.lashgo.android.ui.views.GradientImageView;
 import com.lashgo.android.utils.LashGoUtils;
 import com.lashgo.android.utils.PhotoUtils;
 import com.lashgo.android.utils.UiUtils;
 import com.lashgo.model.dto.CheckDto;
 
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Eugene on 14.07.2014.
@@ -38,6 +40,7 @@ public class CheckItemBinder extends AdapterBinder {
         private TextView checkDescription;
         private ImageView checkIcon;
         private TextView checkRemainingTime;
+        public GradientImageView checkGradient;
     }
 
     @Override
@@ -49,6 +52,7 @@ public class CheckItemBinder extends AdapterBinder {
             viewHolder.checkName = (TextView) convertView.findViewById(R.id.check_name);
             viewHolder.checkDescription = (TextView) convertView.findViewById(R.id.check_description);
             viewHolder.checkIcon = (ImageView) convertView.findViewById(R.id.check_icon);
+            viewHolder.checkGradient = (GradientImageView) convertView.findViewById(R.id.check_gradient);
             viewHolder.checkRemainingTime = (TextView) convertView.findViewById(R.id.check_remaining_time);
             convertView.setTag(viewHolder);
         } else {
@@ -57,43 +61,55 @@ public class CheckItemBinder extends AdapterBinder {
         final CheckDto checkDto = (CheckDto) itemData;
         viewHolder.checkName.setText(checkDto.getName());
         viewHolder.checkDescription.setText(checkDto.getDescription());
-        int imageSize = PhotoUtils.convertDpToPixels(48, getContext());
+        int imageSize;
         if (checkDto.getWinnerPhotoDto() != null && !TextUtils.isEmpty(checkDto.getWinnerPhotoDto().getUrl())) {
+            imageSize = PhotoUtils.convertDpToPixels(92, getContext());
+            updateImageLayoutParams(viewHolder.checkIcon, imageSize);
             PhotoUtils.displayImage(getContext(), viewHolder.checkIcon, PhotoUtils.getFullPhotoUrl(checkDto.getWinnerPhotoDto().getUrl()), imageSize, R.drawable.ava, false);
         } else if (!TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
+            imageSize = PhotoUtils.convertDpToPixels(76, getContext());
+            updateImageLayoutParams(viewHolder.checkIcon, imageSize);
             PhotoUtils.displayImage(getContext(), viewHolder.checkIcon, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), imageSize, R.drawable.ava, false);
         } else {
+            imageSize = PhotoUtils.convertDpToPixels(92, getContext());
+            updateImageLayoutParams(viewHolder.checkIcon, imageSize);
             viewHolder.checkIcon.setImageResource(R.drawable.ava);
         }
         LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
+        ExtendedTimerFinishedListener timerFinishedListener = new ExtendedTimerFinishedListener() {
+            @Override
+            public void onTimerFinished() {
+                viewHolder.checkGradient.updateImage(LashGoUtils.getCheckState(checkDto), 1f);
+                if (onCheckStateChangeListener != null) {
+                    onCheckStateChangeListener.onCheckStateChanged();
+                }
+            }
+
+            @Override
+            public void onSecondTick(long millisUntilFinished) {
+                UiUtils.updateCheckTime(millisUntilFinished, viewHolder.checkRemainingTime);
+            }
+
+            @Override
+            public void onMinuteTick(long millisUntilFinished) {
+                long duration = TimeUnit.HOURS.toMillis(checkDto.getDuration());
+                viewHolder.checkGradient.updateImage(LashGoUtils.getCheckState(checkDto), ((float)(duration - millisUntilFinished)) / duration);
+            }
+        };
         switch (checkState) {
             case ACTIVE:
                 Calendar checkActiveCalendar = Calendar.getInstance();
                 checkActiveCalendar.setTime(checkDto.getStartDate());
                 checkActiveCalendar.add(Calendar.HOUR_OF_DAY, checkDto.getDuration());
                 viewHolder.checkRemainingTime.setVisibility(View.VISIBLE);
-                UiUtils.startTimer(checkActiveCalendar.getTimeInMillis(), viewHolder.checkRemainingTime, new TimerFinishedListener() {
-                    @Override
-                    public void onTimerFinished() {
-                        if (onCheckStateChangeListener != null) {
-                            onCheckStateChangeListener.onCheckStateChanged();
-                        }
-                    }
-                });
+                UiUtils.startTimer(checkActiveCalendar.getTimeInMillis(), timerFinishedListener);
                 break;
             case VOTE:
                 viewHolder.checkRemainingTime.setVisibility(View.VISIBLE);
                 Calendar checkVoteCalendar = Calendar.getInstance();
                 checkVoteCalendar.setTime(checkDto.getStartDate());
                 checkVoteCalendar.add(Calendar.HOUR_OF_DAY, checkDto.getDuration() + checkDto.getVoteDuration());
-                UiUtils.startTimer(checkVoteCalendar.getTimeInMillis(), viewHolder.checkRemainingTime, new TimerFinishedListener() {
-                    @Override
-                    public void onTimerFinished() {
-                        if (onCheckStateChangeListener != null) {
-                            onCheckStateChangeListener.onCheckStateChanged();
-                        }
-                    }
-                });
+                UiUtils.startTimer(checkVoteCalendar.getTimeInMillis(), timerFinishedListener);
                 break;
             case FINISHED:
                 viewHolder.checkRemainingTime.setVisibility(View.GONE);
@@ -102,6 +118,13 @@ public class CheckItemBinder extends AdapterBinder {
                 break;
         }
         return convertView;
+    }
+
+    private void updateImageLayoutParams(ImageView imageView, int imageSize) {
+        ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
+        layoutParams.height = imageSize;
+        layoutParams.width = imageSize;
+        imageView.setLayoutParams(layoutParams);
     }
 
 }

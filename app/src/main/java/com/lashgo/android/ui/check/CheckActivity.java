@@ -27,6 +27,7 @@ import com.lashgo.android.ui.ImageAnimation;
 import com.lashgo.android.ui.auth.LoginActivity;
 import com.lashgo.android.ui.dialogs.ErrorDialog;
 import com.lashgo.android.ui.dialogs.MakePhotoDialog;
+import com.lashgo.android.ui.views.GradientImageView;
 import com.lashgo.android.ui.views.PagerContainer;
 import com.lashgo.android.utils.ContextUtils;
 import com.lashgo.android.utils.LashGoUtils;
@@ -37,13 +38,37 @@ import com.lashgo.model.dto.ErrorDto;
 import com.lashgo.model.dto.PhotoDto;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Eugene on 16.06.2014.
  */
-public class CheckActivity extends BaseActivity implements View.OnClickListener, MakePhotoDialog.OnImageDoneListener, AsyncProccessImage.OnPhotoProcessedListener, ICheckActivity {
+public class CheckActivity extends BaseActivity implements View.OnClickListener, MakePhotoDialog.OnImageDoneListener, AsyncProccessImage.OnPhotoProcessedListener, ICheckActivity, ExtendedTimerFinishedListener {
 
+    private static final int CHECK_PADDING = 45;
     private TextView win;
+
+    @Override
+    public void onSecondTick(long millisUntilFinished) {
+        bottomPanel.updateTime(millisUntilFinished);
+    }
+
+    @Override
+    public void onMinuteTick(long millisUntilFinished) {
+        if (checkDto != null) {
+            long duration = TimeUnit.HOURS.toMillis(checkDto.getDuration());
+            gradientImageView.updateImage(LashGoUtils.getCheckState(checkDto), ((float) (duration - millisUntilFinished)) / duration);
+        }
+    }
+
+    @Override
+    public void onTimerFinished() {
+        if (checkDto != null) {
+            gradientImageView.updateImage(LashGoUtils.getCheckState(checkDto), 1f);
+        }
+        bottomPanel.onTimerFinished();
+        onTimerFinished(CheckActivity.TO.VOTE);
+    }
 
     public static enum TO {to, FINISHED, VOTE}
 
@@ -65,6 +90,7 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
     private TextView checkDescription;
     private DialogFragment makePhotoFragment;
     private View voteLayout;
+    private GradientImageView gradientImageView;
 
     @Override
     public void onPhotoProcessed(String imgPath) {
@@ -171,9 +197,15 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
         checkName = ((TextView) findViewById(R.id.check_name));
         checkDescription = ((TextView) findViewById(R.id.task_description));
         win = (TextView) findViewById(R.id.win);
+        gradientImageView = (GradientImageView) findViewById(R.id.check_gradient);
+        int imageSize = PhotoUtils.getScreenWidth(this) - PhotoUtils.convertDpToPixels(CHECK_PADDING * 2, this);
+        ViewGroup.LayoutParams layoutParams = gradientImageView.getLayoutParams();
+        layoutParams.height = imageSize;
+        layoutParams.width = imageSize;
+        gradientImageView.setLayoutParams(layoutParams);
         PagerContainer mContainer = (PagerContainer) findViewById(R.id.pager_container);
         viewPager = mContainer.getViewPager();
-        viewPager.setPageMargin(50);
+        viewPager.setPageMargin(20);
         viewPager.setClipChildren(false);
         mContainer.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, PhotoUtils.getScreenWidth(this) - CheckFragment.CHECH_PHOTO_PADDINGS));
         mContainer.requestLayout();
@@ -199,6 +231,16 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
             openFinishedPerspective();
         } else {
             openActivePerspective();
+        }
+        startCheckTimer();
+    }
+
+    private void startCheckTimer() {
+        if (checkDto.getStartDate() != null) {
+            long finishMillis = checkDto.getStartDate().getTime() + checkDto.getDuration() * DateUtils.HOUR_IN_MILLIS;
+            if (finishMillis > System.currentTimeMillis()) {
+                UiUtils.startTimer(finishMillis, this);
+            }
         }
     }
 
@@ -246,6 +288,10 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
             if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
                 if (BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK.name().equals(action)) {
                     checkDto = (com.lashgo.model.dto.CheckDto) data.getSerializable(BaseIntentHandler.ServiceExtraNames.CHECK_DTO.name());
+                    LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
+                    if (LashgoConfig.CheckState.VOTE.equals(checkState)) {
+                        gradientImageView.updateImage(checkState, 0f);
+                    }
                     if (pagesCount == 2) {
                         ((ICheckFragment) LashGoUtils.findFragmentByPosition(getSupportFragmentManager(), viewPager, pagerAdapter, 1)).updateCheckDto(checkDto);
                     }

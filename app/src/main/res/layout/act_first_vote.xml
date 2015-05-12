@@ -51,8 +51,18 @@
                 />
     </FrameLayout>
 
-    <include layout="@layout/view_check_bottom_panel"
-             android:layout_width="match_parent"
-             android:layout_height="48dp"
-            />
+    <FrameLayout
+            android:layout_width="match_parent" android:layout_height="48dp"
+            >
+        <View
+                android:id="@+id/bottom_photo_bg"
+                android:layout_width="match_parent" android:layout_height="match_parent"
+                android:background="@color/check_description_color_2"
+                />
+        <include layout="@layout/view_check_bottom_panel"
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:layout_gravity="bottom"
+                />
+    </FrameLayout>
 </LinearLayout>

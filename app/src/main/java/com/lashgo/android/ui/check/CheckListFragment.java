@@ -89,11 +89,16 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
         multyTypeAdapter.addBinder(R.layout.adt_check_state, new CheckStateBinder(getActivity()));
         checkListView.setAdapter(multyTypeAdapter);
         checkListView.setOnItemClickListener(this);
-        getActivity().setTitle(R.string.check_list);
         if (StartOptions.LOAD_ON_START.equals(loadOnStart) || !TextUtils.isEmpty(searchText)) {
             refresh();
         }
         return checkListView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getActivity().setTitle(R.string.check_list);
     }
 
     @Override

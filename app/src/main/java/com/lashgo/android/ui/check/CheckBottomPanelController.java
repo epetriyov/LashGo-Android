@@ -1,6 +1,5 @@
 package com.lashgo.android.ui.check;
 
-import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,6 +22,7 @@ import java.text.DateFormat;
  */
 public class CheckBottomPanelController implements View.OnClickListener {
 
+    private View timeLayout;
     private CheckDto checkDto;
 
     private WeakReference<BaseActivity> activity;
@@ -38,6 +38,7 @@ public class CheckBottomPanelController implements View.OnClickListener {
     private PhotoDto photoDto;
     private TextView likesCount;
     private ImageView likesComments;
+    private TextView checkTimeText;
 
     private void commonInit(final BaseActivity activity, final View view) {
         this.activity = new WeakReference<BaseActivity>(activity);
@@ -76,7 +77,7 @@ public class CheckBottomPanelController implements View.OnClickListener {
         commonInit(activity, view);
         this.checkDto = checkDto;
         view.findViewById(R.id.likes_layout).setVisibility(View.GONE);
-        ((TextView)view.findViewById(R.id.start_date)).setText(DateFormat.getDateTimeInstance().format(checkDto.getStartDate()));
+        ((TextView)view.findViewById(R.id.start_date)).setText(DateFormat.getDateTimeInstance(DateFormat.DEFAULT,DateFormat.SHORT).format(checkDto.getStartDate()));
         if (checkDto == null) {
             throw new IllegalArgumentException("Check can't be empty!");
         }
@@ -90,22 +91,8 @@ public class CheckBottomPanelController implements View.OnClickListener {
              * check is active
              */
             view.findViewById(R.id.comments_layout).setVisibility(View.GONE);
-            final TextView checkTimeText = (TextView) view.findViewById(R.id.check_time);
-            if (checkDto.getStartDate() != null) {
-                long finishMillis = checkDto.getStartDate().getTime() + checkDto.getDuration() * DateUtils.HOUR_IN_MILLIS;
-                if (finishMillis > System.currentTimeMillis()) {
-                    UiUtils.startTimer(finishMillis, checkTimeText, new TimerFinishedListener() {
-                        @Override
-                        public void onTimerFinished() {
-                            view.findViewById(R.id.time_layout).setVisibility(View.GONE);
-                            if (CheckBottomPanelController.this.activity.get() != null && CheckBottomPanelController.this.activity.get() instanceof ICheckActivity) {
-                                ((ICheckActivity) CheckBottomPanelController.this.activity.get()).onTimerFinished(CheckActivity.TO.VOTE);
-                            }
-
-                        }
-                    });
-                }
-            }
+            checkTimeText = (TextView) view.findViewById(R.id.check_time);
+            timeLayout = view.findViewById(R.id.time_layout);
         } else {
             /**
              * check is finished
@@ -147,6 +134,14 @@ public class CheckBottomPanelController implements View.OnClickListener {
 
     public void updateLikesCount(int likesCount) {
         this.likesCount.setText(String.valueOf(likesCount));
+    }
+
+    public void onTimerFinished() {
+        timeLayout.setVisibility(View.GONE);
+    }
+
+    public void updateTime(long millisUntilFinished) {
+        UiUtils.updateCheckTime(millisUntilFinished, checkTimeText);
     }
 }
 

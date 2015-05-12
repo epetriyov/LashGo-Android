@@ -6,6 +6,7 @@ import android.text.format.DateUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+import com.lashgo.android.ui.check.ExtendedTimerFinishedListener;
 import com.lashgo.android.ui.check.TimerFinishedListener;
 
 import java.util.concurrent.TimeUnit;
@@ -17,6 +18,21 @@ public final class UiUtils {
 
     private UiUtils() {
 
+    }
+
+    public static void updateCheckTime(long millisUntilFinished, TextView textView) {
+        long remainingHours = TimeUnit.MILLISECONDS.toHours(millisUntilFinished);
+        long remainingMinutes;
+        long remainingSeconds;
+        if (remainingHours > 0) {
+            remainingMinutes = (millisUntilFinished - remainingHours * DateUtils.HOUR_IN_MILLIS) / DateUtils.MINUTE_IN_MILLIS;
+            remainingSeconds = (millisUntilFinished - remainingHours * DateUtils.HOUR_IN_MILLIS - remainingMinutes * DateUtils.MINUTE_IN_MILLIS) / DateUtils.SECOND_IN_MILLIS;
+            textView.setText(String.valueOf(remainingHours) + ":" + (remainingMinutes < 10 ? "0" : "") + String.valueOf(remainingMinutes) + ":" + (remainingSeconds < 10 ? "0" : "") + String.valueOf(remainingSeconds));
+        } else {
+            remainingMinutes = TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished);
+            remainingSeconds = (millisUntilFinished - remainingMinutes * DateUtils.MINUTE_IN_MILLIS) / DateUtils.SECOND_IN_MILLIS;
+            textView.setText(String.valueOf(remainingMinutes) + ":" + (remainingSeconds < 10 ? "0" : "") + String.valueOf(remainingSeconds));
+        }
     }
 
     public static void startTimer(long finishMillis, final TextView textView, final TimerFinishedListener timerFinishedListener) {
@@ -57,6 +73,43 @@ public final class UiUtils {
                 }
             }
         }.start();
+    }
+
+
+    public static void startTimer(final long finishMillis, final ExtendedTimerFinishedListener timerFinishedListener) {
+        if (timerFinishedListener != null) {
+            if (finishMillis <= System.currentTimeMillis()) {
+                if (timerFinishedListener != null) {
+                    timerFinishedListener.onTimerFinished();
+                }
+            }
+            final long allMillis = finishMillis - System.currentTimeMillis();
+            timerFinishedListener.onMinuteTick(allMillis);
+            new CountDownTimer(allMillis, DateUtils.SECOND_IN_MILLIS) {
+
+                private int minuteCounter = 0;
+
+                private boolean isFinished;
+
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    timerFinishedListener.onSecondTick(millisUntilFinished);
+                    minuteCounter++;
+                    if (minuteCounter % TimeUnit.MINUTES.toSeconds(1) == 0) {
+                        timerFinishedListener.onMinuteTick(millisUntilFinished);
+                        minuteCounter = 0;
+                    }
+                }
+
+                @Override
+                public void onFinish() {
+                    if (!isFinished) {
+                        isFinished = true;
+                        timerFinishedListener.onTimerFinished();
+                    }
+                }
+            }.start();
+        }
     }
 
     public static void hideSoftKeyboard(View view) {
