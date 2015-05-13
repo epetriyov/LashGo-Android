@@ -105,12 +105,6 @@ public class ActionListFragment extends BaseFragment {
         return view;
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getActivity().setTitle(R.string.actions_list);
-    }
-
     private class ActionsPagerAdapter extends FragmentPagerAdapter {
 
         private String[] content;

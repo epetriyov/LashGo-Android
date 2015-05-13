@@ -30,9 +30,13 @@ public class RobotoCheckBox extends CheckBox {
     private void setFont(AttributeSet attrs) {
         if (!isInEditMode() && attrs != null) {
             TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.RobotoCheckBox, 0, 0);
-            String fontName = typedArray.getString(R.styleable.RobotoCheckBox_fontName);
-            if (!TextUtils.isEmpty(fontName)) {
-                setTypeface(FontUtils.getRobotoTypeface(getContext(), fontName));
+            try {
+                String fontName = typedArray.getString(R.styleable.RobotoCheckBox_fontName);
+                if (!TextUtils.isEmpty(fontName)) {
+                    setTypeface(FontUtils.getRobotoTypeface(getContext(), fontName));
+                }
+            } finally {
+                typedArray.recycle();
             }
         }
     }

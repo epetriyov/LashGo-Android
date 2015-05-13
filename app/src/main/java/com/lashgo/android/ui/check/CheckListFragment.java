@@ -96,12 +96,6 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getActivity().setTitle(R.string.check_list);
-    }
-
-    @Override
     public void refresh() {
         serviceHelper.getSelfies(searchText);
     }

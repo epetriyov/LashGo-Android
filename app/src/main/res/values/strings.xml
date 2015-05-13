@@ -23,8 +23,8 @@
     <string name="password_recover">ВСПОМНИТЬ</string>
 
     <string-array name="menus_array">
-        <item>Акции</item>
         <item>Чеки</item>
+        <item>Акции</item>
         <item>Новости</item>
         <item>Подписки</item>
     </string-array>

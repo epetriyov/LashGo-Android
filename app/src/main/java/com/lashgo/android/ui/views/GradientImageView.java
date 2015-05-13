@@ -7,14 +7,14 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.SweepGradient;
 import android.util.AttributeSet;
-import android.widget.ImageView;
+import android.view.View;
 import com.lashgo.android.LashgoConfig;
 import com.lashgo.android.R;
 
 /**
  * Created by Eugene on 11.05.2015.
  */
-public class GradientImageView extends ImageView {
+public class GradientImageView extends View {
 
     private static final float DEFAULT_STROKE_WIDTH = 11f;
 
@@ -34,7 +34,6 @@ public class GradientImageView extends ImageView {
 
     private float koef = 0f;
 
-    private boolean showFinishedBorder;
     private Paint finishedPaint;
 
     public GradientImageView(Context context) {
@@ -55,9 +54,13 @@ public class GradientImageView extends ImageView {
     private void init(AttributeSet attrs) {
         if (!isInEditMode() && attrs != null) {
             TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.GradientImageView, 0, 0);
-            strokeWidth = typedArray.getDimension(R.styleable.GradientImageView_gradStrokeWidth, DEFAULT_STROKE_WIDTH);
-            showFinishedBorder = typedArray.getBoolean(R.styleable.GradientImageView_showFinishedBorder, false);
+            try {
+                strokeWidth = typedArray.getDimension(R.styleable.GradientImageView_gradStrokeWidth, DEFAULT_STROKE_WIDTH);
+            } finally {
+                typedArray.recycle();
+            }
         }
+
 
         activePaint = new Paint();
         activePaint.setStyle(Paint.Style.STROKE);
@@ -96,17 +99,15 @@ public class GradientImageView extends ImageView {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        canvas.drawArc(rectF, 0f, 360f, false, finishedPaint);
         if (LashgoConfig.CheckState.VOTE.equals(checkState)) {
             canvas.drawArc(rectF, 0f, 360f, false, votePaint);
         } else if (LashgoConfig.CheckState.ACTIVE.equals(checkState)) {
             canvas.save();
             canvas.rotate(-90f, r, r);
-            canvas.drawArc(rectF, 360f * (1f - koef), 360f, false, activePaint);
+            canvas.drawArc(rectF, 360f * (1f - koef), 360f * koef, false, activePaint);
             canvas.restore();
-        } else if (showFinishedBorder) {
-            canvas.drawArc(rectF, 0f, 360f, false, finishedPaint);
         }
         super.onDraw(canvas);
     }
-
 }

@@ -42,7 +42,7 @@
                     android:layout_marginRight="45dp"
                     android:layout_gravity="center_horizontal|top"
                     app:gradStrokeWidth="11dp"
-                    app:showFinishedBorder="true"
+
                     />
 
             <com.lashgo.android.ui.views.PagerContainer

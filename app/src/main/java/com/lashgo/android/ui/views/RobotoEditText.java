@@ -30,9 +30,13 @@ public class RobotoEditText extends EditText {
     private void setFont(AttributeSet attrs) {
         if (!isInEditMode() && attrs != null) {
             TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.RobotoEditText, 0, 0);
-            String fontName = typedArray.getString(R.styleable.RobotoEditText_fontName);
-            if (!TextUtils.isEmpty(fontName)) {
-                setTypeface(FontUtils.getRobotoTypeface(getContext(), fontName));
+            try {
+                String fontName = typedArray.getString(R.styleable.RobotoEditText_fontName);
+                if (!TextUtils.isEmpty(fontName)) {
+                    setTypeface(FontUtils.getRobotoTypeface(getContext(), fontName));
+                }
+            } finally {
+                typedArray.recycle();
             }
         }
     }
