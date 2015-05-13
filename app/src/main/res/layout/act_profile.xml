@@ -26,7 +26,7 @@
                         android:layout_marginTop="16dp"
                         android:src="@drawable/ava"
                         />
-                <com.lashgo.android.ui.views.RobotoTextView
+                <com.lashgo.mobile.ui.views.RobotoTextView
                         android:id="@+id/user_name"
                         android:layout_width="0dp"
                         android:layout_weight="1"
@@ -54,7 +54,7 @@
                             android:layout_marginRight="16dp"
                             android:id="@+id/user_subscribes_layout"
                             >
-                        <com.lashgo.android.ui.views.RobotoTextView
+                        <com.lashgo.mobile.ui.views.RobotoTextView
                                 android:id="@+id/user_subscribes"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -64,7 +64,7 @@
                                 android:text="0"
                                 android:duplicateParentState="true"
                                 />
-                        <com.lashgo.android.ui.views.RobotoTextView
+                        <com.lashgo.mobile.ui.views.RobotoTextView
                                 android:id="@+id/user_subscribes_text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -87,7 +87,7 @@
                                   android:layout_marginRight="16dp"
                                   android:id="@+id/user_subscribers_layout"
                             >
-                        <com.lashgo.android.ui.views.RobotoTextView
+                        <com.lashgo.mobile.ui.views.RobotoTextView
                                 android:id="@+id/user_subscribers"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -97,7 +97,7 @@
                                 android:text="0"
                                 android:duplicateParentState="true"
                                 />
-                        <com.lashgo.android.ui.views.RobotoTextView
+                        <com.lashgo.mobile.ui.views.RobotoTextView
                                 android:id="@+id/user_subscribers_text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -133,7 +133,7 @@
                     android:paddingTop="5dp"
                     android:paddingRight="20dp"
                     >
-                <com.lashgo.android.ui.views.RobotoTextView
+                <com.lashgo.mobile.ui.views.RobotoTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/checks_count"
@@ -147,7 +147,7 @@
                       android:layout_marginRight="5dp"
                       android:layout_gravity="center_vertical"
                         />
-                <com.lashgo.android.ui.views.RobotoTextView
+                <com.lashgo.mobile.ui.views.RobotoTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/comments_count"

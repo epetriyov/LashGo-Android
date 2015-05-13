@@ -5,7 +5,7 @@
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="48dp">
-    <com.lashgo.android.ui.views.RobotoTextView
+    <com.lashgo.mobile.ui.views.RobotoTextView
             android:id="@+id/start_date"
             android:layout_width="0dp" android:layout_height="match_parent"
             android:gravity="center"
@@ -26,7 +26,7 @@
                 android:layout_width="48dp" android:layout_height="match_parent"
                 android:src="@drawable/ic_like"
                 />
-        <com.lashgo.android.ui.views.RobotoTextView
+        <com.lashgo.mobile.ui.views.RobotoTextView
                 android:id="@+id/likes_count"
                 android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
@@ -49,7 +49,7 @@
                 android:layout_width="48dp" android:layout_height="match_parent"
                 android:src="@drawable/ic_comments"
                 />
-        <com.lashgo.android.ui.views.RobotoTextView
+        <com.lashgo.mobile.ui.views.RobotoTextView
                 android:id="@+id/comments_count"
                 android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
@@ -70,7 +70,7 @@
         <ImageView android:layout_width="20dp" android:layout_height="match_parent"
                    android:src="@drawable/time"
                 />
-        <com.lashgo.android.ui.views.RobotoTextView
+        <com.lashgo.mobile.ui.views.RobotoTextView
                 android:id="@+id/check_time"
                 android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
@@ -94,7 +94,7 @@
                 android:src="@drawable/ic_mob"
 
                 />
-        <com.lashgo.android.ui.views.RobotoTextView
+        <com.lashgo.mobile.ui.views.RobotoTextView
                 android:id="@+id/peoples_count"
                 android:layout_marginLeft="5dp"
                 android:layout_gravity="center_vertical"

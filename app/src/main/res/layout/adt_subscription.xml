@@ -14,7 +14,7 @@
             android:layout_width="40dp" android:layout_height="40dp"
             android:src="@drawable/ava"
             />
-    <com.lashgo.android.ui.views.RobotoTextView
+    <com.lashgo.mobile.ui.views.RobotoTextView
             android:id="@+id/user_name"
             android:layout_width="0dp" android:layout_height="wrap_content"
             android:layout_weight="1"

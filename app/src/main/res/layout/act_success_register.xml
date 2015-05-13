@@ -25,7 +25,7 @@
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                       android:orientation="vertical"
                 >
-            <com.lashgo.android.ui.views.RobotoTextView android:layout_width="wrap_content"
+            <com.lashgo.mobile.ui.views.RobotoTextView android:layout_width="wrap_content"
                                                         android:layout_height="match_parent"
                                                         android:layout_marginLeft="32dp"
                                                         android:layout_marginTop="42dp"
@@ -34,7 +34,7 @@
                                                         android:textSize="24sp"
                                                         android:textColor="@color/black"
                     />
-            <com.lashgo.android.ui.views.RobotoTextView
+            <com.lashgo.mobile.ui.views.RobotoTextView
                     android:id="@+id/user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -44,7 +44,7 @@
                     android:textSize="24sp"
                     android:textColor="@color/black"
                     />
-            <com.lashgo.android.ui.views.RobotoTextView android:layout_width="wrap_content"
+            <com.lashgo.mobile.ui.views.RobotoTextView android:layout_width="wrap_content"
                                                         android:layout_height="match_parent"
                                                         android:layout_marginLeft="32dp"
                                                         android:layout_marginTop="20dp"
@@ -60,7 +60,7 @@
                       android:layout_marginBottom="32dp"
                       android:layout_marginLeft="16dp"
                 >
-            <com.lashgo.android.ui.views.RobotoButton android:layout_width="190dp"
+            <com.lashgo.mobile.ui.views.RobotoButton android:layout_width="190dp"
                                                       android:layout_height="match_parent"
                                                       android:id="@+id/fill_profile"
                                                       android:text="@string/fill_profile"
@@ -70,7 +70,7 @@
                                                       android:textColor="@drawable/btn_pink_text"
                                                       android:background="@drawable/btn_pink_bg"
                     />
-            <com.lashgo.android.ui.views.RobotoButton android:layout_width="130dp"
+            <com.lashgo.mobile.ui.views.RobotoButton android:layout_width="130dp"
                                                       android:layout_height="match_parent"
                                                       android:id="@+id/continue_register"
                                                       android:text="@string/continue_register"

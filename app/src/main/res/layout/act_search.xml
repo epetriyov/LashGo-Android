@@ -41,7 +41,7 @@
             android:background="@android:color/white"
             />
 
-    <com.lashgo.android.ui.views.CustomViewPager
+    <com.lashgo.mobile.ui.views.CustomViewPager
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

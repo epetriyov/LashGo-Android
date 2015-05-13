@@ -17,7 +17,7 @@
                android:layout_height="0dp"
                android:layout_weight="1"
                 />
-        <com.lashgo.android.ui.views.RobotoTextView
+        <com.lashgo.mobile.ui.views.RobotoTextView
                 android:id="@+id/check_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
                      android:id="@+id/check_layout"
                 >
 
-            <com.lashgo.android.ui.views.GradientImageView
+            <com.lashgo.mobile.ui.views.GradientImageView
                     android:id="@+id/check_gradient"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:layout_marginLeft="45dp"
@@ -45,7 +45,7 @@
 
                     />
 
-            <com.lashgo.android.ui.views.PagerContainer
+            <com.lashgo.mobile.ui.views.PagerContainer
                     android:id="@+id/pager_container"
                     android:background="@android:color/transparent"
                     android:layout_width="match_parent"
@@ -62,7 +62,7 @@
                         android:layout_marginLeft="45dp"
                         android:layout_marginRight="45dp"
                         android:layout_gravity="center_horizontal|top"/>
-            </com.lashgo.android.ui.views.PagerContainer>
+            </com.lashgo.mobile.ui.views.PagerContainer>
             <ImageView
                     android:id="@+id/btn_action"
                     android:layout_width="62dp" android:layout_height="62dp"
@@ -80,7 +80,7 @@
                           android:layout_marginBottom="100dp"
                           android:visibility="gone"
                     >
-                <com.lashgo.android.ui.views.RobotoTextView android:layout_width="wrap_content"
+                <com.lashgo.mobile.ui.views.RobotoTextView android:layout_width="wrap_content"
                                                             android:layout_height="wrap_content"
                                                             android:text="@string/vote_is_going"
                                                             android:gravity="center_horizontal"
@@ -98,7 +98,7 @@
                     <ImageView android:layout_width="21dp" android:layout_height="21dp"
                                android:src="@drawable/white_clock"
                             />
-                    <com.lashgo.android.ui.views.RobotoTextView
+                    <com.lashgo.mobile.ui.views.RobotoTextView
                             android:id="@+id/vote_check_time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -114,7 +114,7 @@
         <Space android:layout_width="match_parent" android:layout_height="0dp"
                android:layout_weight="1"
                 />
-        <com.lashgo.android.ui.views.RobotoTextView
+        <com.lashgo.mobile.ui.views.RobotoTextView
                 android:id="@+id/task_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -128,7 +128,7 @@
                 android:textColor="@color/check_description_color_2"
                 />
 
-        <com.lashgo.android.ui.views.RobotoTextView
+        <com.lashgo.mobile.ui.views.RobotoTextView
                 android:id="@+id/win"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

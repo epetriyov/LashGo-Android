@@ -20,7 +20,7 @@
                 android:layout_marginTop="15dp"
                 android:src="@drawable/ava"
                 />
-        <com.lashgo.android.ui.views.RobotoButton
+        <com.lashgo.mobile.ui.views.RobotoButton
                 android:id="@+id/drawer_text"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:paddingBottom="15dp"

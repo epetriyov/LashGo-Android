@@ -23,14 +23,14 @@
             android:layout_width="match_parent" android:layout_height="296dp"
             android:layout_marginTop="8dp"
             />
-    <com.lashgo.android.ui.views.RobotoTextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+    <com.lashgo.mobile.ui.views.RobotoTextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                                                 android:text="@string/cheers"
                                                 android:layout_marginLeft="32dp"
                                                 android:layout_marginTop="27dp"
                                                 android:textSize="24sp"
                                                 app:fontName="@string/regular"
             />
-    <com.lashgo.android.ui.views.RobotoTextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+    <com.lashgo.mobile.ui.views.RobotoTextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                                                 android:text="@string/photo_sent"
                                                 android:layout_marginLeft="32dp"
                                                 android:layout_marginTop="19dp"

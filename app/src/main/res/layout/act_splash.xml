@@ -44,7 +44,7 @@
                       android:layout_marginBottom="20dp"
                       android:layout_alignParentBottom="true"
                 >
-            <com.lashgo.android.ui.views.RobotoButton
+            <com.lashgo.mobile.ui.views.RobotoButton
                     android:layout_width="wrap_content" android:layout_height="match_parent"
                     android:id="@+id/btn_enter"
                     android:text="@string/login"
@@ -56,7 +56,7 @@
                     android:textColor="@drawable/btn_pink_text"
                     android:background="@drawable/btn_pink_bg"
                     />
-            <com.lashgo.android.ui.views.RobotoButton
+            <com.lashgo.mobile.ui.views.RobotoButton
                     android:layout_width="0dp" android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:id="@+id/btn_skip"

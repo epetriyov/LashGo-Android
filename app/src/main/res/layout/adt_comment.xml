@@ -19,7 +19,7 @@
             android:orientation="horizontal"
             >
 
-    <com.lashgo.android.ui.views.RobotoTextView
+    <com.lashgo.mobile.ui.views.RobotoTextView
             android:id="@+id/user_name"
             android:layout_width="0dp" android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -27,7 +27,7 @@
             android:textSize="16sp"
             android:textColor="@color/edit_text_color"
             />
-    <com.lashgo.android.ui.views.RobotoTextView
+    <com.lashgo.mobile.ui.views.RobotoTextView
             android:id="@+id/comment_date"
             android:layout_width="0dp" android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -39,7 +39,7 @@
             />
 
     </LinearLayout>
-    <com.lashgo.android.ui.views.RobotoTextView
+    <com.lashgo.mobile.ui.views.RobotoTextView
             android:id="@+id/comment_text"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:layout_below="@id/comment_line"

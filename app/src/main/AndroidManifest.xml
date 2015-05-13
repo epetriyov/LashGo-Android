@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.lashgo.android"
+          package="com.lashgo.mobile"
           android:versionCode="25"
           android:versionName="2.1"
         >
@@ -16,9 +16,9 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
-    <permission android:name="com.lashgo.android.permission.C2D_MESSAGE"
+    <permission android:name="com.lashgo.mobile.permission.C2D_MESSAGE"
                 android:protectionLevel="signature"/>
-    <uses-permission android:name="com.lashgo.android.permission.C2D_MESSAGE"/>
+    <uses-permission android:name="com.lashgo.mobile.permission.C2D_MESSAGE"/>
 
     <!-- make check photo permissions -->
     <uses-permission android:name="android.permission.CAMERA"/>
@@ -30,7 +30,7 @@
             android:required="false"/>
 
     <application
-            android:name="com.lashgo.android.LashgoApplication"
+            android:name="com.lashgo.mobile.LashgoApplication"
             android:icon="@drawable/ic_lashgo"
             android:logo="@drawable/ic_logo"
             android:label="@string/app_name"
@@ -51,11 +51,11 @@
         <activity android:name="com.vk.sdk.VKOpenAuthActivity"
                 />
 
-        <activity android:name="com.lashgo.android.ui.auth.TwitterAuthActivity"
+        <activity android:name="com.lashgo.mobile.ui.auth.TwitterAuthActivity"
                   android:screenOrientation="portrait"
                 />
 
-        <activity android:name="com.lashgo.android.ui.auth.LoginActivity"
+        <activity android:name="com.lashgo.mobile.ui.auth.LoginActivity"
                   android:launchMode="singleTop"
                   android:label="@string/login_enter"
                   android:screenOrientation="portrait"
@@ -67,7 +67,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.lashgo.android.ui.main.MainActivity"
+        <activity android:name="com.lashgo.mobile.ui.main.MainActivity"
                   android:launchMode="singleTop"
                   android:screenOrientation="portrait">
             <intent-filter>
@@ -77,78 +77,78 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.lashgo.android.ui.auth.PasswordRecoverActivity"
+        <activity android:name="com.lashgo.mobile.ui.auth.PasswordRecoverActivity"
                   android:screenOrientation="portrait"
                 >
 
         </activity>
 
-        <activity android:name="com.lashgo.android.ui.auth.SuccessfulRegisterActivity"
+        <activity android:name="com.lashgo.mobile.ui.auth.SuccessfulRegisterActivity"
                   android:screenOrientation="portrait"
                 />
 
-        <activity android:name="com.lashgo.android.ui.check.PhotoSentActivity"
+        <activity android:name="com.lashgo.mobile.ui.check.PhotoSentActivity"
                   android:screenOrientation="portrait"
                 />
 
-        <activity android:name="com.lashgo.android.ui.profile.ProfileActivity"
+        <activity android:name="com.lashgo.mobile.ui.profile.ProfileActivity"
                   android:theme="@style/Theme.LashGo.TransparentActionBar"
                   android:screenOrientation="portrait"
                 />
 
-        <activity android:name="com.lashgo.android.ui.comments.CommentsActivity"
+        <activity android:name="com.lashgo.mobile.ui.comments.CommentsActivity"
                   android:screenOrientation="portrait"
                   android:label="@string/comments"
                 />
 
-        <activity android:name="com.lashgo.android.ui.profile.EditProfileActivity"
+        <activity android:name="com.lashgo.mobile.ui.profile.EditProfileActivity"
                   android:screenOrientation="portrait"
                   android:label="@string/edit"
                 />
 
-        <activity android:name="com.lashgo.android.ui.subscribes.SubscribesActivity"
+        <activity android:name="com.lashgo.mobile.ui.subscribes.SubscribesActivity"
                   android:screenOrientation="portrait"
                 />
 
-        <activity android:name="com.lashgo.android.ui.search.SearchActivity"
+        <activity android:name="com.lashgo.mobile.ui.search.SearchActivity"
                   android:screenOrientation="portrait"
                   android:windowSoftInputMode="stateVisible"
                 />
 
-        <activity android:name="com.lashgo.android.ui.activity.ActivitiesActivity"
+        <activity android:name="com.lashgo.mobile.ui.activity.ActivitiesActivity"
                   android:screenOrientation="portrait"
                   android:label="@string/activity"
                 />
 
-        <activity android:name="com.lashgo.android.ui.start.SplashActivity"
+        <activity android:name="com.lashgo.mobile.ui.start.SplashActivity"
                   android:screenOrientation="portrait"
                 />
 
-        <activity android:name="com.lashgo.android.ui.photo.PhotoActivity"
+        <activity android:name="com.lashgo.mobile.ui.photo.PhotoActivity"
                   android:label="@string/photo"
                   android:screenOrientation="portrait"
                   android:theme="@style/Theme.LashGo.TransparentActionBar"
                 />
 
-        <activity android:name="com.lashgo.android.ui.check.CheckActivity"
+        <activity android:name="com.lashgo.mobile.ui.check.CheckActivity"
                   android:screenOrientation="portrait"
                   android:label="@string/task">
         </activity>
 
-        <activity android:name="com.lashgo.android.ui.check.CheckPhotoActivity"
+        <activity android:name="com.lashgo.mobile.ui.check.CheckPhotoActivity"
                   android:label="@string/task"
                   android:screenOrientation="portrait"
                 >
         </activity>
 
-        <activity android:name="com.lashgo.android.ui.check.VoteProcessActivity"
+        <activity android:name="com.lashgo.mobile.ui.check.VoteProcessActivity"
                   android:label="@string/task"
                   android:screenOrientation="portrait"
                 >
         </activity>
 
         <activity
-                android:name="com.lashgo.android.ui.start.StartActivity"
+                android:name="com.lashgo.mobile.ui.start.StartActivity"
                 android:label="@string/app_name"
                 android:configChanges="orientation|keyboardHidden|screenSize"
                 android:launchMode="singleTop">
@@ -159,19 +159,19 @@
         </activity>
 
         <receiver
-                android:name="com.lashgo.android.gcm.GcmBroadcastReceiver"
+                android:name="com.lashgo.mobile.gcm.GcmBroadcastReceiver"
                 android:permission="com.google.android.c2dm.permission.SEND"
                 >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
-                <category android:name="com.lashgo.android"/>
+                <category android:name="com.lashgo.mobile"/>
             </intent-filter>
         </receiver>
 
         <service
                 android:exported="false"
-                android:name="com.lashgo.android.service.CheckService"/>
-        <service android:name="com.lashgo.android.gcm.GcmIntentService"
+                android:name="com.lashgo.mobile.service.CheckService"/>
+        <service android:name="com.lashgo.mobile.gcm.GcmIntentService"
                 />
     </application>
 </manifest>

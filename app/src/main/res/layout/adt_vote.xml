@@ -150,7 +150,7 @@
                          android:background="@drawable/balloon_white"
                          android:id="@+id/baloon_hint"
                     >
-                <com.lashgo.android.ui.views.RobotoTextView
+                <com.lashgo.mobile.ui.views.RobotoTextView
                         android:id="@+id/vote_hint"
                         android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
@@ -163,7 +163,7 @@
                         />
             </FrameLayout>
         </FrameLayout>
-        <com.lashgo.android.ui.views.RobotoTextView android:layout_width="match_parent" android:layout_height="31dp"
+        <com.lashgo.mobile.ui.views.RobotoTextView android:layout_width="match_parent" android:layout_height="31dp"
                                                     android:id="@+id/checks_counter"
                                                     app:fontName="@string/condensed_regular"
                                                     android:textSize="14sp"
