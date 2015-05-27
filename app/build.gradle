@@ -41,8 +41,8 @@ android {
         minSdkVersion 14
         targetSdkVersion 21
         applicationId 'com.lashgo.mobile'
-        versionCode 24
-        versionName '2.0'
+        versionCode 26
+        versionName '2.2'
     }
 
         lintOptions {
