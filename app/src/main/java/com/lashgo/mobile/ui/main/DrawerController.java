@@ -41,7 +41,7 @@ public class DrawerController implements View.OnClickListener {
         rootView.addView(itemChecks, params);
         itemActions = new DrawerItemView(rootView.getContext(), rootView.getContext().getString(R.string.actions_list), rootView.getContext().getResources().getDrawable(R.drawable.time));
         itemActions.setOnClickListener(this);
-//        rootView.addView(itemActions, params);
+        rootView.addView(itemActions, params);
         itemNews = new DrawerItemView(rootView.getContext(), rootView.getContext().getString(R.string.news_list), rootView.getContext().getResources().getDrawable(R.drawable.news));
         itemNews.setOnClickListener(this);
         rootView.addView(itemNews, params);

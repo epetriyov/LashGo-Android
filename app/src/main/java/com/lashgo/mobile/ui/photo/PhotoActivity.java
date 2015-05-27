@@ -16,6 +16,7 @@ import com.lashgo.mobile.R;
 import com.lashgo.mobile.service.handlers.BaseIntentHandler;
 import com.lashgo.mobile.ui.BaseActivity;
 import com.lashgo.mobile.ui.BaseFragment;
+import com.lashgo.mobile.ui.check.ActivityReferrer;
 import com.lashgo.mobile.ui.dialogs.ErrorDialog;
 import com.lashgo.mobile.ui.views.PagerContainer;
 import com.lashgo.mobile.utils.ContextUtils;
@@ -46,6 +47,13 @@ public class PhotoActivity extends BaseActivity implements ViewPager.OnPageChang
     public static Intent buildIntent(Context context, long photoId) {
         Intent intent = new Intent(context, PhotoActivity.class);
         intent.putExtra(ExtraNames.PHOTO_ID.name(), photoId);
+        return intent;
+    }
+
+    public static Intent buildVoteIntent(Context context, long photoId) {
+        Intent intent = new Intent(context, PhotoActivity.class);
+        intent.putExtra(ExtraNames.PHOTO_ID.name(), photoId);
+        intent.putExtra(ExtraNames.ACTIVITY_REFERRER.name(), ActivityReferrer.FROM_CHECK_GALLERY.name());
         return intent;
     }
 

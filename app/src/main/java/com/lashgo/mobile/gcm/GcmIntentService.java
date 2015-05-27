@@ -17,13 +17,12 @@
 package com.lashgo.mobile.gcm;
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
@@ -97,17 +96,11 @@ public class GcmIntentService extends IntentService {
         GcmBroadcastReceiver.completeWakefulIntent(intent);
     }
 
-    // Put the message into a notification and post it.
-    // This is just one simple example of what you might choose to do with
-    // a GCM message.
     private void sendNotification(Bundle bundle) {
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
-
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-// Adds the back stack for the Intent (but not the Intent itself)
-        stackBuilder.addParentStack(MainActivity.class);
-// Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addParentStack(CheckActivity.class);
         String checkId = bundle.getString(GCM_CHECK_ID);
         try {
             int checkIntId = Integer.parseInt(checkId);
@@ -138,11 +131,7 @@ public class GcmIntentService extends IntentService {
 
         mBuilder.setContentIntent(resultPendingIntent);
         mBuilder.setAutoCancel(true);
-        mBuilder.setLights(Color.BLUE, 500, 500);
-        long[] pattern = {0, 100, 100, 100, 100, 1000};
-        mBuilder.setVibrate(pattern);
-        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        mBuilder.setSound(alarmSound);
+        mBuilder.setDefaults(Notification.DEFAULT_ALL);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
         } else {

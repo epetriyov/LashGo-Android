@@ -15,6 +15,7 @@ import com.lashgo.mobile.service.handlers.BaseIntentHandler;
 import com.lashgo.mobile.ui.BaseActivity;
 import com.lashgo.mobile.ui.BaseFragment;
 import com.lashgo.mobile.ui.ImageAnimation;
+import com.lashgo.mobile.ui.photo.PhotoActivity;
 import com.lashgo.mobile.utils.PhotoUtils;
 import com.lashgo.model.dto.VoteAction;
 import com.lashgo.model.dto.VotePhoto;
@@ -89,8 +90,7 @@ public class VoteFragment extends BaseFragment implements View.OnClickListener, 
         } else if (votePhotoController.equals(fourthPhotoController)) {
             photoPosition = 3;
         }
-        PhotoUtils.displayFullImage(getActivity(), expandedImageView, PhotoUtils.getFullPhotoUrl(votePhotos.get(photoPosition).getPhotoDto().getUrl()));
-        imageAnimation.zoomImageFromThumb(votePhotoController.getImageView(), getResources().getInteger(android.R.integer.config_shortAnimTime));
+        startActivity(PhotoActivity.buildVoteIntent(getActivity(), votePhotos.get(photoPosition).getPhotoDto().getId()));
     }
 
     @Override

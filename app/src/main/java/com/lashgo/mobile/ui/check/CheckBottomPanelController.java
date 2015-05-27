@@ -77,7 +77,7 @@ public class CheckBottomPanelController implements View.OnClickListener {
         commonInit(activity, view);
         this.checkDto = checkDto;
         view.findViewById(R.id.likes_layout).setVisibility(View.GONE);
-        ((TextView)view.findViewById(R.id.start_date)).setText(DateFormat.getDateTimeInstance(DateFormat.DEFAULT,DateFormat.SHORT).format(checkDto.getStartDate()));
+        ((TextView)view.findViewById(R.id.start_date)).setText(DateFormat.getDateInstance().format(checkDto.getStartDate()));
         if (checkDto == null) {
             throw new IllegalArgumentException("Check can't be empty!");
         }
