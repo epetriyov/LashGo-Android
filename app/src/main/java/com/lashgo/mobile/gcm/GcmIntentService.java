@@ -17,12 +17,10 @@
 package com.lashgo.mobile.gcm;
 
 import android.app.IntentService;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
@@ -65,7 +63,7 @@ public class GcmIntentService extends IntentService {
         // The getMessageType() intent parameter must be the intent you received
         // in your BroadcastReceiver.
         String messageType = gcm.getMessageType(intent);
-        if(!TextUtils.isEmpty(messageType)) {
+        if (!TextUtils.isEmpty(messageType)) {
             Log.d("Message type", messageType);
         }
         if (!extras.isEmpty()) {  // has effect of unparcelling Bundle
@@ -117,21 +115,29 @@ public class GcmIntentService extends IntentService {
                 );
         String checkName = bundle.getString(GCM_CHECK_NAME);
         String actionType = bundle.getString(ACTION_TYPE);
-        int contentTitle;
-        if (actionType != null && actionType.equals(GcmEventType.VOTE_STARTED.name())) {
-            contentTitle = R.string.vote_started;
-        } else {
-            contentTitle = R.string.notification_title;
+        int contentTitle = -1;
+        if (actionType != null) {
+            if (actionType.equals(GcmEventType.VOTE_STARTED.name())) {
+                contentTitle = R.string.vote_started;
+            } else if (actionType.equals(GcmEventType.CHECK_STARTED.name())) {
+                contentTitle = R.string.notification_title;
+            } else {
+                contentTitle = R.string.finished_check;
+            }
         }
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_logo)
-                        .setContentTitle(getResources().getString(contentTitle))
-                        .setContentText(checkName != null ? checkName : "");
+                        .setSmallIcon(R.drawable.ic_logo);
+        if (contentTitle > 0) {
+            mBuilder.setContentTitle(getResources().getString(contentTitle));
+        }
+        mBuilder.setContentText(checkName != null ? checkName : "");
 
         mBuilder.setContentIntent(resultPendingIntent);
         mBuilder.setAutoCancel(true);
-        mBuilder.setDefaults(Notification.DEFAULT_ALL);
+        mBuilder.setVibrate(null);
+        mBuilder.setSound(null);
+        mBuilder.setDefaults(0);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
         } else {

@@ -6,6 +6,14 @@
               android:paddingTop="@dimen/action_bar_height"
         >
 
+    <TextView android:layout_height="wrap_content"
+              android:layout_width="match_parent"
+              android:gravity="center_horizontal"
+              android:layout_margin="16dp"
+              android:textSize="18sp"
+              android:textColor="@color/circle_vote"
+              android:text="@string/actions_text"
+            />
     <com.viewpagerindicator.TabPageIndicator
             android:id="@+id/titles"
             android:layout_width="match_parent"
