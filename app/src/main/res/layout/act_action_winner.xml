@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/bg_check"
+              android:paddingTop="@dimen/action_bar_height"
+              android:paddingBottom="@dimen/action_bar_height"
+        >
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:padding="16dp"
+            >
+        <ImageView
+                android:id="@+id/task_photo"
+                android:layout_width="40dp" android:layout_height="40dp"
+                android:layout_gravity="center"
+                />
+        <com.lashgo.mobile.ui.views.RobotoTextView
+                android:id="@+id/check_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                app:fontName="@string/condensed_regular"
+                android:textSize="24sp"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:layout_marginLeft="16dp"
+                android:textColor="@color/check_name_color"
+                />
+    </LinearLayout>
+    <FrameLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            >
+
+        <com.lashgo.mobile.ui.views.GradientImageView
+                android:id="@+id/check_gradient"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginLeft="45dp"
+                android:layout_marginRight="45dp"
+                android:layout_gravity="center_horizontal|top"
+                app:gradStrokeWidth="11dp"
+
+                />
+        <RelativeLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginTop="21dp"
+                >
+        <ImageView
+                android:id="@+id/check_photo"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                />
+        <com.lashgo.mobile.ui.views.RobotoTextView
+                android:id="@+id/winner_name"
+                android:layout_alignBottom="@id/check_photo"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:textSize="18sp"
+                android:textColor="@drawable/winner_name_color"
+                app:fontName="@string/medium"
+                />
+        </RelativeLayout>
+    </FrameLayout>
+
+    <Space android:layout_width="match_parent" android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+    <com.lashgo.mobile.ui.views.RobotoTextView
+            android:id="@+id/win"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:gravity="center_horizontal"
+            app:fontName="@string/condensed_regular"
+            android:textSize="24sp"
+            android:textColor="@color/drawer_item_counter_pressed"
+            android:text="@string/win"
+            />
+    <Space android:layout_width="match_parent" android:layout_height="0dp"
+           android:layout_weight="1"
+            />
+    <com.lashgo.mobile.ui.views.RobotoTextView
+            android:id="@+id/start_date"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            app:fontName="@string/condensed_regular"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            />
+</LinearLayout>

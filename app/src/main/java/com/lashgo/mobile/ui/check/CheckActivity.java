@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import com.lashgo.mobile.loaders.AsyncProccessImage;
 import com.lashgo.mobile.service.handlers.BaseIntentHandler;
 import com.lashgo.mobile.ui.BaseActivity;
 import com.lashgo.mobile.ui.ImageAnimation;
+import com.lashgo.mobile.ui.actions.ActionWinnerActivity;
 import com.lashgo.mobile.ui.auth.LoginActivity;
 import com.lashgo.mobile.ui.dialogs.ErrorDialog;
 import com.lashgo.mobile.ui.dialogs.MakePhotoDialog;
@@ -33,6 +35,7 @@ import com.lashgo.mobile.utils.ContextUtils;
 import com.lashgo.mobile.utils.LashGoUtils;
 import com.lashgo.mobile.utils.PhotoUtils;
 import com.lashgo.mobile.utils.UiUtils;
+import com.lashgo.model.CheckType;
 import com.lashgo.model.dto.CheckDto;
 import com.lashgo.model.dto.ErrorDto;
 import com.lashgo.model.dto.PhotoDto;
@@ -46,7 +49,7 @@ import java.util.concurrent.TimeUnit;
 public class CheckActivity extends BaseActivity implements View.OnClickListener, MakePhotoDialog.OnImageDoneListener, AsyncProccessImage.OnPhotoProcessedListener, ICheckActivity, ExtendedTimerFinishedListener {
 
     private static final int CHECK_PADDING = 45;
-    private TextView win;
+    private Button win;
 
     @Override
     public void onSecondTick(long millisUntilFinished) {
@@ -196,7 +199,8 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
         actionBtn.setOnClickListener(this);
         checkName = ((TextView) findViewById(R.id.check_name));
         checkDescription = ((TextView) findViewById(R.id.task_description));
-        win = (TextView) findViewById(R.id.win);
+        win = (Button) findViewById(R.id.win);
+        win.setOnClickListener(this);
         gradientImageView = (GradientImageView) findViewById(R.id.check_gradient);
         int imageSize = PhotoUtils.getScreenWidth(this) - PhotoUtils.convertDpToPixels(CHECK_PADDING * 2, this);
         ViewGroup.LayoutParams layoutParams = gradientImageView.getLayoutParams();
@@ -221,7 +225,7 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
         bottomPanel = new CheckBottomPanelController(this, getWindow().getDecorView(), checkDto);
         checkName.setText(checkDto.getName());
         checkDescription.setText(checkDto.getDescription());
-        boolean visible = checkDto.getWinnerInfo() != null && checkDto.getWinnerInfo().getId() == settingsHelper.getUserId();
+        boolean visible = checkDto.getWinnerInfo() != null && checkDto.getWinnerInfo().getId() == settingsHelper.getUserId() && CheckType.ACTION.name().equals(checkDto.getCheckType());
         win.setVisibility(visible ? View.VISIBLE : View.GONE);
         bottomPanel.updatePeoplesCount(checkDto.getPlayersCount());
         LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
@@ -278,6 +282,8 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
                     startActivity(new Intent(this, LoginActivity.class));
                 }
             }
+        } else if (view.getId() == R.id.win) {
+            startActivity(ActionWinnerActivity.buildIntent(this, checkDto));
         }
     }
 

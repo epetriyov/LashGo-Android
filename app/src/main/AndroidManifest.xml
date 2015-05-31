@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.lashgo.mobile"
-          android:versionCode="26"
+          android:versionCode="28"
           android:versionName="2.2"
         >
 
@@ -112,7 +112,7 @@
 
         <activity android:name="com.lashgo.mobile.ui.actions.ActionWinnerActivity"
                   android:screenOrientation="portrait"
-                  android:label="@string/win"
+                  android:label="@string/show_this_screen"
                 />
 
         <activity android:name="com.lashgo.mobile.ui.search.SearchActivity"

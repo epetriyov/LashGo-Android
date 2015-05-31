@@ -81,12 +81,12 @@
                           android:visibility="gone"
                     >
                 <com.lashgo.mobile.ui.views.RobotoTextView android:layout_width="wrap_content"
-                                                            android:layout_height="wrap_content"
-                                                            android:text="@string/vote_is_going"
-                                                            android:gravity="center_horizontal"
-                                                            android:textSize="18sp"
-                                                            android:textColor="@color/white"
-                                                            app:fontName="@string/regular"
+                                                           android:layout_height="wrap_content"
+                                                           android:text="@string/vote_is_going"
+                                                           android:gravity="center_horizontal"
+                                                           android:textSize="18sp"
+                                                           android:textColor="@color/white"
+                                                           app:fontName="@string/regular"
                         />
                 <LinearLayout
                         android:orientation="horizontal"
@@ -128,18 +128,17 @@
                 android:textColor="@color/check_description_color_2"
                 />
 
-        <com.lashgo.mobile.ui.views.RobotoTextView
+        <com.lashgo.mobile.ui.views.RobotoButton
                 android:id="@+id/win"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:paddingLeft="25dp"
-                android:paddingRight="25dp"
-                android:gravity="center_horizontal"
-                app:fontName="@string/condensed_regular"
-                android:textSize="24sp"
-                android:textColor="@color/drawer_item_counter_pressed"
-                android:text="@string/win"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:padding="15dp"
+                android:layout_gravity="center_horizontal"
+                app:fontName="@string/medium"
+                android:textSize="14sp"
+                android:textColor="@drawable/btn_pink_text"
+                android:background="@drawable/btn_pink_bg"
+                android:text="@string/get_price"
                 android:visibility="gone"
                 />
         <Space android:layout_width="match_parent" android:layout_height="0dp"

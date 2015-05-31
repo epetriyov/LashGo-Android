@@ -114,6 +114,8 @@
         компании
     </string>
     <string name="finished_check">Завершился чек</string>
+    <string name="get_price">ПОЛУЧИТЬ ПРИЗ</string>
+    <string name="show_this_screen">Покажи этот экран сотруднику</string>
     <string-array name="make_photo_items">
         <item>Камера</item>
         <item>Галерея</item>
