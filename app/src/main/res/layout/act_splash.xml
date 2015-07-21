@@ -10,17 +10,6 @@
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             />
-    <com.viewpagerindicator.CirclePageIndicator
-            android:id="@+id/circle_indicator"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|bottom"
-            android:layout_marginBottom="9dp"
-            app:fillColor="@color/main_color"
-            app:pageColor="@color/circle_color"
-            app:radius="3dp"
-            app:strokeColor="@color/circle_color"
-            app:strokeWidth="1dp"/>
     <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
         <ImageView android:layout_width="127dp" android:layout_height="46dp"
                    android:src="@drawable/black_logo"
@@ -37,12 +26,23 @@
                    android:layout_below="@id/lashgo_logo"
                    android:layout_marginTop="57dp"
                 />
+        <com.viewpagerindicator.CirclePageIndicator
+                android:id="@+id/circle_indicator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:paddingBottom="9dp"
+                android:paddingTop="9dp"
+                app:fillColor="@color/main_color"
+                app:pageColor="@color/circle_color"
+                app:radius="5dp"
+                app:strokeColor="@color/circle_color"
+                />
         <LinearLayout android:layout_width="match_parent" android:layout_height="51dp"
                       android:orientation="horizontal"
                       android:paddingLeft="46dp"
                       android:paddingRight="46dp"
-                      android:layout_marginBottom="20dp"
-                      android:layout_alignParentBottom="true"
+                      android:layout_above="@id/circle_indicator"
                 >
             <com.lashgo.mobile.ui.views.RobotoButton
                     android:layout_width="wrap_content" android:layout_height="match_parent"
@@ -52,7 +52,7 @@
                     android:paddingRight="16dp"
                     android:gravity="center"
                     app:fontName="@string/medium"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:textColor="@drawable/btn_pink_text"
                     android:background="@drawable/btn_pink_bg"
                     />
@@ -64,7 +64,7 @@
                     android:text="@string/skip"
                     android:gravity="center"
                     app:fontName="@string/medium"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:textColor="@drawable/btn_gray_text"
                     android:background="@drawable/btn_gray_bg"
                     />
