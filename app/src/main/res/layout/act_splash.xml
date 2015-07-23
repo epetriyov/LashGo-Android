@@ -10,7 +10,9 @@
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             />
-    <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                    android:id="@+id/root_layout"
+            >
         <ImageView android:layout_width="127dp" android:layout_height="46dp"
                    android:src="@drawable/black_logo"
                    android:layout_alignParentTop="true"

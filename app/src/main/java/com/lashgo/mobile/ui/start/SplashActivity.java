@@ -12,6 +12,7 @@ import com.lashgo.mobile.R;
 import com.lashgo.mobile.ui.BaseActivity;
 import com.lashgo.mobile.ui.auth.LoginActivity;
 import com.lashgo.mobile.ui.main.MainActivity;
+import com.lashgo.mobile.utils.UiUtils;
 import com.squareup.picasso.Picasso;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -27,6 +28,7 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         getActionBar().hide();
         setContentView(R.layout.act_splash);
+        findViewById(R.id.root_layout).setPadding(0, UiUtils.getStatusBarHeight(this), 0, 0);
         ViewPager viewPager = (ViewPager) findViewById(R.id.splash_pager);
         viewPager.setAdapter(new PagerAdapter() {
             @Override

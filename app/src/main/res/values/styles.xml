@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.LashGo" parent="Theme.LashGo.Parent">
-        <!-- Setting values in the android namespace affects API levels 14+ -->
-        <item name="android:actionBarStyle">@style/Widget.LashGo.ActionBar</item>
-        <item name="vpiTabPageIndicatorStyle">@style/LashGoTabPageIndicator</item>
     </style>
 
     <style name="Theme.LashGo.TransparentActionBar" parent="Theme.LashGo.Parent">
@@ -12,6 +9,8 @@
     </style>
 
     <style name="Theme.LashGo.Parent" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/Widget.LashGo.ActionBar</item>
+        <item name="vpiTabPageIndicatorStyle">@style/LashGoTabPageIndicator</item>
         <item name="android:actionButtonStyle">@style/Widget.LashGo.ActionButton</item>
         <item name="android:actionBarItemBackground">@null</item>
         <item name="android:editTextStyle">@style/Widget.LashGo.EditText</item>
