@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+
 import com.lashgo.mobile.R;
 import com.lashgo.mobile.utils.PhotoUtils;
 import com.lashgo.model.dto.VotePhoto;
@@ -106,7 +107,7 @@ public class VotePhotoController implements View.OnClickListener {
         return photoImg;
     }
 
-    public static interface VotePhotoListener {
+    public interface VotePhotoListener {
         void clearOtherChecks(VotePhotoController votePhotoController);
 
         void openPhotoActivity(VotePhotoController votePhotoController);

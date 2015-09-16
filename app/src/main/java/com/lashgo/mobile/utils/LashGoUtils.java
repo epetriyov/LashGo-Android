@@ -5,7 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import com.lashgo.mobile.LashgoConfig;
+
+import com.lashgo.mobile.LashgoConstants;
 import com.lashgo.model.dto.CheckDto;
 
 import java.util.Calendar;
@@ -19,7 +20,7 @@ public final class LashGoUtils {
 
     }
 
-    public static LashgoConfig.CheckState getCheckState(CheckDto checkDto) {
+    public static LashgoConstants.CheckState getCheckState(CheckDto checkDto) {
         if (checkDto != null) {
             Calendar checkActiveCalendar = Calendar.getInstance();
             Calendar checkVoteCalendar = Calendar.getInstance();
@@ -28,11 +29,11 @@ public final class LashGoUtils {
             checkActiveCalendar.add(Calendar.HOUR_OF_DAY, checkDto.getDuration());
             checkVoteCalendar.add(Calendar.HOUR_OF_DAY, checkDto.getDuration() + checkDto.getVoteDuration());
             if ((checkActiveCalendar.getTimeInMillis() > System.currentTimeMillis())) {
-                return LashgoConfig.CheckState.ACTIVE;
+                return LashgoConstants.CheckState.ACTIVE;
             } else if (checkVoteCalendar.getTimeInMillis() > System.currentTimeMillis()) {
-                return LashgoConfig.CheckState.VOTE;
+                return LashgoConstants.CheckState.VOTE;
             } else {
-                return LashgoConfig.CheckState.FINISHED;
+                return LashgoConstants.CheckState.FINISHED;
             }
         }
         return null;

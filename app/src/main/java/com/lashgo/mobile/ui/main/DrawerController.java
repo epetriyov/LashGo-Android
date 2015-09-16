@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
 import com.lashgo.mobile.R;
 import com.lashgo.mobile.ui.actions.ActionListFragment;
 import com.lashgo.mobile.ui.activity.ActivityFragment;

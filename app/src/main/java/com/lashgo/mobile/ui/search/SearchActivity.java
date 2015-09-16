@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import com.lashgo.mobile.R;
 import com.lashgo.mobile.ui.BaseActivity;
 import com.lashgo.mobile.ui.check.CheckListFragment;

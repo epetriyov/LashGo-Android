@@ -21,7 +21,6 @@
             android:layout_marginLeft="16dp"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="Алия Ахметова"
             app:fontName="@string/regular"
             android:textSize="20sp"
             android:textColor="@drawable/drawer_item_color"

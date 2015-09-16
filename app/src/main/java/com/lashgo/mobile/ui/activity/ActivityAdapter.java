@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.lashgo.mobile.R;
 import com.lashgo.mobile.ui.check.CheckActivity;
 import com.lashgo.mobile.ui.photo.PhotoActivity;
@@ -22,6 +23,7 @@ import com.lashgo.model.DbCodes;
 import com.lashgo.model.dto.EventDto;
 
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 /**
  * Created by Eugene on 20.10.2014.
@@ -38,7 +40,7 @@ public class ActivityAdapter extends ArrayAdapter<EventDto> {
 
     public ActivityAdapter(Context context, int subscibesCount, int userId) {
         super(context, -1);
-        simpleDateFormat = new SimpleDateFormat(EVENT_DATE_PATTERN);
+        simpleDateFormat = new SimpleDateFormat(EVENT_DATE_PATTERN, Locale.US);
         this.subscibesCount = subscibesCount;
         this.userId = userId;
     }

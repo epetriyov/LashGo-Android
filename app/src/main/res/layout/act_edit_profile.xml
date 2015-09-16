@@ -5,7 +5,7 @@
         android:layout_width="match_parent" android:layout_height="wrap_content">
     <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:paddingTop="@dimen/action_bar_height"
             >
         <LinearLayout
@@ -35,8 +35,6 @@
                               android:orientation="horizontal"
                               android:gravity="center_vertical"
                               android:paddingTop="35dp"
-                              android:layout_alignParentLeft="true"
-                              android:layout_alignParentTop="true"
                         >
                     <ImageView android:layout_width="24dp" android:layout_height="24dp"
                                android:src="@drawable/nickname"
@@ -53,8 +51,6 @@
                               android:orientation="horizontal"
                               android:gravity="center_vertical"
                               android:paddingTop="10dp"
-                              android:layout_alignParentLeft="true"
-                              android:layout_alignParentTop="true"
                         >
                     <ImageView android:layout_width="24dp" android:layout_height="24dp"
                                android:src="@drawable/profile_person"
@@ -71,8 +67,6 @@
                               android:orientation="horizontal"
                               android:gravity="center_vertical"
                               android:paddingTop="10dp"
-                              android:layout_alignParentLeft="true"
-                              android:layout_alignParentTop="true"
                         >
                     <ImageView android:layout_width="24dp" android:layout_height="24dp"
                                android:src="@drawable/profile_location"
@@ -88,10 +82,7 @@
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                               android:orientation="horizontal"
                               android:gravity="center_vertical"
-                              android:paddingTop="10dp"
-                              android:layout_alignParentLeft="true"
-                              android:layout_alignParentTop="true"
-                        >
+                              android:paddingTop="10dp">
                     <ImageView android:layout_width="24dp" android:layout_height="24dp"
                                android:src="@drawable/profile_mail"
                             />
@@ -107,10 +98,7 @@
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                               android:orientation="horizontal"
                               android:gravity="center_vertical"
-                              android:paddingTop="10dp"
-                              android:layout_alignParentLeft="true"
-                              android:layout_alignParentTop="true"
-                        >
+                              android:paddingTop="10dp">
                     <ImageView android:layout_width="24dp" android:layout_height="24dp"
                                android:src="@drawable/profile_about"
                             />
@@ -125,10 +113,7 @@
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                               android:orientation="horizontal"
                               android:gravity="center_vertical"
-                              android:paddingTop="10dp"
-                              android:layout_alignParentLeft="true"
-                              android:layout_alignParentTop="true"
-                        >
+                              android:paddingTop="10dp">
                     <ImageView android:layout_width="24dp" android:layout_height="24dp"
                                android:src="@drawable/profile_lock"
                             />

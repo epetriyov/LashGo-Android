@@ -3,12 +3,14 @@ package com.lashgo.mobile.service.handlers;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
 import com.lashgo.model.dto.LoginInfo;
 import com.lashgo.model.dto.RegisterResponse;
 import com.lashgo.model.dto.ResponseObject;
-import retrofit.RetrofitError;
 
 import java.io.IOException;
+
+import retrofit.RetrofitError;
 
 /**
  * Created with IntelliJ IDEA.

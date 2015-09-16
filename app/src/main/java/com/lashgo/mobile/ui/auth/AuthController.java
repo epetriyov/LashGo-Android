@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -17,7 +18,11 @@ import com.lashgo.mobile.social.TwitterHelper;
 import com.lashgo.mobile.ui.BaseActivity;
 import com.lashgo.mobile.utils.Md5Util;
 import com.lashgo.mobile.utils.UiUtils;
-import com.lashgo.model.dto.*;
+import com.lashgo.model.dto.LoginInfo;
+import com.lashgo.model.dto.RegisterResponse;
+import com.lashgo.model.dto.SocialInfo;
+import com.lashgo.model.dto.SocialNames;
+import com.lashgo.model.dto.UserDto;
 import com.vk.sdk.VKSdk;
 
 import java.util.Arrays;
@@ -178,7 +183,7 @@ public class AuthController implements View.OnClickListener {
         return openMode;
     }
 
-    public static interface AuthListener {
+    public interface AuthListener {
         void onLoginSuccessFull();
 
         void onRegisterSuccessFull(UserDto userDto);

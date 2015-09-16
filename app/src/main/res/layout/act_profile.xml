@@ -61,7 +61,6 @@
                                 android:textSize="18sp"
                                 android:textColor="@drawable/profile_text_color"
                                 app:fontName="@string/condensed_regular"
-                                android:text="0"
                                 android:duplicateParentState="true"
                                 />
                         <com.lashgo.mobile.ui.views.RobotoTextView
@@ -94,7 +93,6 @@
                                 android:textSize="18sp"
                                 android:textColor="@drawable/profile_text_color"
                                 app:fontName="@string/condensed_regular"
-                                android:text="0"
                                 android:duplicateParentState="true"
                                 />
                         <com.lashgo.mobile.ui.views.RobotoTextView

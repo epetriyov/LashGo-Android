@@ -4,7 +4,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Adapter for multy type lists
@@ -39,11 +43,11 @@ public class MultyTypeAdapter extends BaseAdapter {
         }
     }
 
-    private Set<Integer> itemTypes = new HashSet<Integer>();
+    private Set<Integer> itemTypes = new HashSet<>();
 
-    private HashMap<Integer, IAdapterBinder> binders = new HashMap<Integer, IAdapterBinder>();
+    private HashMap<Integer, IAdapterBinder> binders = new HashMap<>();
 
-    private List<Item> items = new ArrayList<Item>();
+    private List<Item> items = new ArrayList<>();
 
     public void addBinder(int layout, IAdapterBinder binder) {
         this.binders.put(layout, binder);
@@ -84,7 +88,7 @@ public class MultyTypeAdapter extends BaseAdapter {
             }
         }
         return null;
-    };
+    }
 
     @Override
     public long getItemId(int position) {
@@ -158,5 +162,5 @@ public class MultyTypeAdapter extends BaseAdapter {
                     + " no setted");
         }
         return convertView;
-    };
+    }
 }

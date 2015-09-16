@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
 import com.lashgo.mobile.R;
 import com.lashgo.mobile.ui.BaseActivity;
 

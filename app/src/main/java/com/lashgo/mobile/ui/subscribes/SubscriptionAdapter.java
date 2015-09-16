@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.lashgo.mobile.R;
 import com.lashgo.mobile.settings.SettingsHelper;
 import com.lashgo.mobile.utils.LashGoUtils;
@@ -77,7 +78,7 @@ public class SubscriptionAdapter extends ArrayAdapter<SubscriptionDto> {
         return convertView;
     }
 
-    public static interface ActionBtnClickListener {
+    public interface ActionBtnClickListener {
 
         void onActionBtnClicked(int position);
     }

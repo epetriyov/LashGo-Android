@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+
 import com.lashgo.mobile.R;
 import com.lashgo.mobile.utils.PhotoUtils;
 import com.lashgo.model.dto.PhotoDto;

@@ -106,7 +106,6 @@
                             app:fontName="@string/condensed_regular"
                             android:textSize="16sp"
                             android:textColor="@color/white"
-                            android:text="11:24"
                             />
                 </LinearLayout>
             </LinearLayout>

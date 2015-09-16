@@ -8,13 +8,17 @@ import android.os.Looper;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
-import android.view.*;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.crittercism.app.Crittercism;
 import com.lashgo.mobile.BuildConfig;
 import com.lashgo.mobile.LashgoApplication;
-import com.lashgo.mobile.LashgoConfig;
 import com.lashgo.mobile.R;
 import com.lashgo.mobile.service.ServiceBinder;
 import com.lashgo.mobile.service.ServiceHelper;
@@ -87,7 +91,7 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         if (!BuildConfig.DEBUG) {
-            Crittercism.initialize(getApplicationContext(), LashgoConfig.CRITTERCISM_APP_ID);
+            Crittercism.initialize(getApplicationContext(), BuildConfig.CRITTERCISM_APP_ID);
         }
         super.onCreate(savedInstanceState);
         settingsHelper = LashgoApplication.getInstance().getSettingsHelper();
@@ -236,12 +240,12 @@ public abstract class BaseActivity extends FragmentActivity implements ServiceRe
         }
     }
 
-    public static enum ExtraNames {
+    public enum ExtraNames {
         CHECK_DTO, PHOTO_URL, PROFILE_OWNER, USER_ID, PHOTO_DTO,
         PHOTO_TYPE, USER_DTO, CHECK_ID, PHOTO_ID, FROM, REQUEST_TOKEN,
         TWITTER_URL, CHECK_LIST, OPEN_MODE, PHOTOS_LIST,
         SELECTED_PHOTO, ACTIVITY_REFERRER, LOAD_ON_START, SEARCH_TEXT,
-        VOTE_PHOTOS, POSITION, SIZE, NEW_NEWS_COUNT, SUBSCRIPTION_EVENTS, VOTE_DONE, IMAGE_PATH, TEMP_IMG_PATH;
+        VOTE_PHOTOS, POSITION, SIZE, NEW_NEWS_COUNT, SUBSCRIPTION_EVENTS, VOTE_DONE, IMAGE_PATH, TEMP_IMG_PATH
     }
 
     @Override

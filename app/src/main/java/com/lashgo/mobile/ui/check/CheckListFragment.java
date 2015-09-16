@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
 import com.lashgo.mobile.R;
 import com.lashgo.mobile.adapters.MultyTypeAdapter;
 import com.lashgo.mobile.service.handlers.BaseIntentHandler;
@@ -36,7 +37,7 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
         return fragment;
     }
 
-    public static enum StartOptions {
+    public enum StartOptions {
         LOAD_ON_START, DONT_LOAD_ON_START
     }
 
@@ -190,11 +191,7 @@ public class CheckListFragment extends BaseFragment implements AdapterView.OnIte
                 if (checkActiveCalendar.getTimeInMillis() > System.currentTimeMillis()) {
                     isLastActive = true;
                 } else {
-                    if (checkVoteCalendar.getTimeInMillis() > System.currentTimeMillis()) {
-                        isLastVote = true;
-                    } else {
-                        isLastVote = false;
-                    }
+                    isLastVote = checkVoteCalendar.getTimeInMillis() > System.currentTimeMillis();
                     isLastActive = false;
                 }
                 isFirstIteration = false;

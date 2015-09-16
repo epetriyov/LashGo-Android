@@ -4,12 +4,14 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+
 import com.lashgo.mobile.R;
 import com.lashgo.mobile.ui.BaseActivity;
 import com.lashgo.mobile.ui.auth.TwitterAuthActivity;
 import com.lashgo.mobile.ui.dialogs.ErrorDialog;
 import com.lashgo.model.dto.SocialInfo;
 import com.lashgo.model.dto.SocialNames;
+
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;

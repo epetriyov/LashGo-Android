@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+
 import com.lashgo.mobile.R;
 import com.lashgo.mobile.service.handlers.BaseIntentHandler;
 import com.lashgo.mobile.ui.BaseActivity;

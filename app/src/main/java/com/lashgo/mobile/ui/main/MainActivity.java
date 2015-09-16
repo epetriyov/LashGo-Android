@@ -14,11 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.ImageView;
+
 import com.facebook.CallbackManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.lashgo.mobile.LashgoConfig;
+import com.lashgo.mobile.BuildConfig;
 import com.lashgo.mobile.R;
 import com.lashgo.mobile.service.handlers.BaseIntentHandler;
 import com.lashgo.mobile.social.TwitterHelper;
@@ -307,7 +308,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     if (gcm == null) {
                         gcm = GoogleCloudMessaging.getInstance(MainActivity.this);
                     }
-                    regId = gcm.register(LashgoConfig.GCM_API_KEY);
+                    regId = gcm.register(BuildConfig.GCM_API_KEY);
                     // Persist the regID - no need to register again.
                     settingsHelper.saveRegistrationId(regId);
                 } catch (final IOException ex) {

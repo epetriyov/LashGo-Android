@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.ResultReceiver;
 import android.text.TextUtils;
+
 import com.lashgo.mobile.LashgoApplication;
 import com.lashgo.mobile.R;
 import com.lashgo.mobile.service.transport.RestService;
@@ -15,11 +16,12 @@ import com.lashgo.mobile.utils.NetworkUtils;
 import com.lashgo.model.ErrorCodes;
 import com.lashgo.model.dto.ErrorDto;
 import com.lashgo.model.dto.ResponseObject;
-import retrofit.RetrofitError;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import retrofit.RetrofitError;
 
 /**
  * User: eugene.petriyov
@@ -114,7 +116,7 @@ public abstract class BaseIntentHandler {
         }
     }
 
-    public static enum ServiceActionNames {
+    public enum ServiceActionNames {
         ACTION_LOGIN,
         ACTION_REGISTER, ACTION_SOCIAL_SIGN_IN,
         ACTION_GCM_REGISTER_ID, ACTION_PASSWORD_RECOVER,
@@ -131,10 +133,10 @@ public abstract class BaseIntentHandler {
         ACTION_GET_SUBSCRIPTIONS, ACTION_GET_SUBSCRIBERS,
         ACTION_SUBSCRIBE, ACTION_UNSUBSCRIBE, ACTION_GET_EVENTS,
         ACTION_FIND_USERS, ACTION_GET_CHECK_USERS, ACTION_GET_PHOTO,
-        ACTION_GET_PHOTO_USERS, ACTION_COMPLAIN_PHOTO, ACTION_GET_CHECK_LIST,ACTION_GET_ACTIONS_LIST;
+        ACTION_GET_PHOTO_USERS, ACTION_COMPLAIN_PHOTO, ACTION_GET_CHECK_LIST,ACTION_GET_ACTIONS_LIST
     }
 
-    public static enum ServiceExtraNames {
+    public enum ServiceExtraNames {
         GCM_REGISTRATION,
         KEY_CHECK_DTO_LIST, LAST_NEWS_VIEW_DATE,
         LAST_SUBSCRIPTIONS_VIEW_DATE, MAIN_SCREEN_INFO,

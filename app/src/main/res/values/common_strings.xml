@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">LashGo</string>
+    <string name="facebook_app_id" translatable="false">417722991695914</string>
+    <string name="vkontakte_app_id" translatable="false">4201819</string>
+    <string name="twitter_consumerKey" translatable="false">JjHQisFOu784Ag7HBAcJg</string>
+    <string name="twitter_consumerSecret" translatable="false">pIkZnc7NJ8CW0WG5sCFLgPD5BOrak2Gtca3hmpy5dg</string>
+    <string name="twitter_callback_url" translatable="false">check://twitter</string>
+    <string name="regular" translatable="false">Roboto-Regular</string>
+    <string name="medium" translatable="false">Roboto-Medium</string>
+    <string name="condensed_regular" translatable="false">RobotoCondensed-Regular</string>
+</resources>

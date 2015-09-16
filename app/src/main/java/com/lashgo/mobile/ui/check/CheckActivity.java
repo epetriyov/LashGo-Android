@@ -19,7 +19,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.lashgo.mobile.LashgoConfig;
+
+import com.lashgo.mobile.LashgoConstants;
 import com.lashgo.mobile.R;
 import com.lashgo.mobile.loaders.AsyncProccessImage;
 import com.lashgo.mobile.service.handlers.BaseIntentHandler;
@@ -73,7 +74,7 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
         onTimerFinished(CheckActivity.TO.VOTE);
     }
 
-    public static enum TO {to, FINISHED, VOTE}
+    public enum TO {to, FINISHED, VOTE}
 
     private ImageAnimation imageAnimation;
     private String imgPath;
@@ -177,10 +178,10 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void updatePagesCount() {
-        LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
-        if ((LashgoConfig.CheckState.ACTIVE.equals(checkState) &&
+        LashgoConstants.CheckState checkState = LashGoUtils.getCheckState(checkDto);
+        if ((LashgoConstants.CheckState.ACTIVE.equals(checkState) &&
                 (checkDto.getUserPhotoDto() != null || !TextUtils.isEmpty(imgPath)))
-                || (LashgoConfig.CheckState.FINISHED.equals(checkState) && checkDto.getWinnerPhotoDto() != null)) {
+                || (LashgoConstants.CheckState.FINISHED.equals(checkState) && checkDto.getWinnerPhotoDto() != null)) {
             pagesCount = 2;
         } else {
             pagesCount = 1;
@@ -228,10 +229,10 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
         boolean visible = checkDto.getWinnerInfo() != null && checkDto.getWinnerInfo().getId() == settingsHelper.getUserId() && CheckType.ACTION.name().equals(checkDto.getCheckType());
         win.setVisibility(visible ? View.VISIBLE : View.GONE);
         bottomPanel.updatePeoplesCount(checkDto.getPlayersCount());
-        LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
-        if (LashgoConfig.CheckState.VOTE.equals(checkState)) {
+        LashgoConstants.CheckState checkState = LashGoUtils.getCheckState(checkDto);
+        if (LashgoConstants.CheckState.VOTE.equals(checkState)) {
             openVotePerspective();
-        } else if (LashgoConfig.CheckState.FINISHED.equals(checkState)) {
+        } else if (LashgoConstants.CheckState.FINISHED.equals(checkState)) {
             openFinishedPerspective();
         } else {
             openActivePerspective();
@@ -266,7 +267,7 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
     public void onClick(View view) {
         super.onClick(view);
         if (view.getId() == R.id.btn_action) {
-            if (LashGoUtils.getCheckState(checkDto).equals(LashgoConfig.CheckState.VOTE)) {
+            if (LashGoUtils.getCheckState(checkDto).equals(LashgoConstants.CheckState.VOTE)) {
                 if (settingsHelper.isLoggedIn()) {
                     startActivity(VoteProcessActivity.buildIntent(this, checkDto));
                 } else {
@@ -294,8 +295,8 @@ public class CheckActivity extends BaseActivity implements View.OnClickListener,
             if (resultCode == BaseIntentHandler.SUCCESS_RESPONSE) {
                 if (BaseIntentHandler.ServiceActionNames.ACTION_GET_CHECK.name().equals(action)) {
                     checkDto = (com.lashgo.model.dto.CheckDto) data.getSerializable(BaseIntentHandler.ServiceExtraNames.CHECK_DTO.name());
-                    LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
-                    if (LashgoConfig.CheckState.VOTE.equals(checkState)) {
+                    LashgoConstants.CheckState checkState = LashGoUtils.getCheckState(checkDto);
+                    if (LashgoConstants.CheckState.VOTE.equals(checkState)) {
                         gradientImageView.updateImage(checkState, 0f);
                     }
                     if (pagesCount == 2) {

@@ -12,7 +12,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.lashgo.mobile.LashgoConfig;
+
+import com.lashgo.mobile.LashgoConstants;
 import com.lashgo.mobile.R;
 import com.lashgo.mobile.service.handlers.BaseIntentHandler;
 import com.lashgo.mobile.ui.BaseActivity;
@@ -78,7 +79,7 @@ public class VoteProcessActivity extends BaseActivity implements ViewPager.OnPag
         }
         final TextView voteTime = (TextView) findViewById(R.id.vote_time);
         GradientImageView checkGradient = (GradientImageView) findViewById(R.id.check_gradient);
-        checkGradient.updateImage(LashgoConfig.CheckState.VOTE, 1f);
+        checkGradient.updateImage(LashgoConstants.CheckState.VOTE, 1f);
         Calendar checkVoteCalendar = Calendar.getInstance();
         checkVoteCalendar.setTime(checkDto.getStartDate());
         checkVoteCalendar.add(Calendar.HOUR_OF_DAY, checkDto.getDuration() + checkDto.getVoteDuration());

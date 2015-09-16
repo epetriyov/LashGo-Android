@@ -3,6 +3,7 @@ package com.lashgo.mobile.ui.start;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+
 import com.lashgo.mobile.ui.BaseActivity;
 import com.lashgo.mobile.ui.main.MainActivity;
 

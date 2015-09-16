@@ -8,7 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.lashgo.mobile.LashgoConfig;
+
+import com.lashgo.mobile.LashgoConstants;
 import com.lashgo.mobile.R;
 import com.lashgo.mobile.ui.BaseActivity;
 import com.lashgo.mobile.ui.BaseFragment;
@@ -85,13 +86,13 @@ public class CheckFragment extends BaseFragment implements View.OnClickListener,
             }
         });
         btnSend.setOnClickListener(this);
-        LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
+        LashgoConstants.CheckState checkState = LashGoUtils.getCheckState(checkDto);
         if (position == 0) {
             btnSend.setVisibility(View.GONE);
             winnerMedal.setVisibility(View.GONE);
             winnerName.setVisibility(View.GONE);
             if (!TextUtils.isEmpty(checkDto.getTaskPhotoUrl())) {
-                PhotoUtils.displayImage(getActivity(), checkImage, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), imageSize, true, checkState.equals(LashgoConfig.CheckState.VOTE) ? true : false, new PhotoLoadListener() {
+                PhotoUtils.displayImage(getActivity(), checkImage, PhotoUtils.getFullPhotoUrl(checkDto.getTaskPhotoUrl()), imageSize, true, checkState.equals(LashgoConstants.CheckState.VOTE), new PhotoLoadListener() {
                     @Override
                     public void onPhotoLoaded() {
                         view.setVisibility(View.VISIBLE);
@@ -105,8 +106,8 @@ public class CheckFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void updateSecondPositionView(final View view) {
-        LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
-        if (LashgoConfig.CheckState.ACTIVE.equals(checkState)) {
+        LashgoConstants.CheckState checkState = LashGoUtils.getCheckState(checkDto);
+        if (LashgoConstants.CheckState.ACTIVE.equals(checkState)) {
             if (checkDto.getUserPhotoDto() != null) {
                 btnSend.setVisibility(View.GONE);
             } else {
@@ -129,7 +130,7 @@ public class CheckFragment extends BaseFragment implements View.OnClickListener,
             }
             winnerMedal.setVisibility(View.GONE);
             winnerName.setVisibility(View.GONE);
-        } else if (LashgoConfig.CheckState.FINISHED.equals(checkState)) {
+        } else if (LashgoConstants.CheckState.FINISHED.equals(checkState)) {
             winnerMedal.setVisibility(View.VISIBLE);
             winnerName.setVisibility(View.VISIBLE);
             btnSend.setVisibility(View.GONE);

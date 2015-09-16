@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.lashgo.mobile.R;
 import com.lashgo.mobile.service.handlers.BaseIntentHandler;
 import com.lashgo.mobile.ui.BaseActivity;

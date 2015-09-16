@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+
 import com.lashgo.mobile.R;
 import com.lashgo.mobile.ui.BaseActivity;
 import com.lashgo.mobile.ui.BaseFragment;

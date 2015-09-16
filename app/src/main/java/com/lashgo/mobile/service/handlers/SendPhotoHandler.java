@@ -3,12 +3,14 @@ package com.lashgo.mobile.service.handlers;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
 import com.lashgo.model.dto.SessionInfo;
-import retrofit.RetrofitError;
-import retrofit.mime.TypedFile;
 
 import java.io.File;
 import java.io.IOException;
+
+import retrofit.RetrofitError;
+import retrofit.mime.TypedFile;
 
 /**
  * Created by Eugene on 18.08.2014.

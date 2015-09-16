@@ -8,12 +8,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.lashgo.mobile.R;
 import com.lashgo.mobile.utils.LashGoUtils;
 import com.lashgo.mobile.utils.PhotoUtils;
 import com.lashgo.model.dto.CommentDto;
 
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 /**
  * Created by Eugene on 11.09.2014.
@@ -31,11 +33,11 @@ public class CommentsAdapter extends ArrayAdapter<CommentDto> {
         super(context, -1);
     }
 
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+    private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.US);
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder = null;
+        ViewHolder viewHolder;
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.adt_comment, null);
             viewHolder = new ViewHolder();

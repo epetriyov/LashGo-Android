@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.os.ResultReceiver;
 import android.text.TextUtils;
+
 import com.lashgo.mobile.service.handlers.BaseIntentHandler;
 
 /**

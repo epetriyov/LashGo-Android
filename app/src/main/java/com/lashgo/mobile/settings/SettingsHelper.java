@@ -4,9 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lashgo.mobile.LashgoConfig;
+import com.lashgo.mobile.LashgoConstants;
 import com.lashgo.model.dto.LoginInfo;
 import com.lashgo.model.dto.SessionInfo;
 import com.lashgo.model.dto.SocialInfo;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * User: eugene.petriyov
@@ -64,7 +66,7 @@ public class SettingsHelper {
         SharedPreferences.Editor editor = preferences.edit();
         synchronized (editor) {
             editor.putBoolean(key, value);
-            editor.commit();
+            editor.apply();
         }
     }
 
@@ -72,7 +74,7 @@ public class SettingsHelper {
         SharedPreferences.Editor editor = preferences.edit();
         synchronized (editor) {
             editor.putFloat(key, value);
-            editor.commit();
+            editor.apply();
         }
     }
 
@@ -80,7 +82,7 @@ public class SettingsHelper {
         SharedPreferences.Editor editor = preferences.edit();
         synchronized (editor) {
             editor.putString(key, value);
-            editor.commit();
+            editor.apply();
         }
     }
 
@@ -88,7 +90,7 @@ public class SettingsHelper {
         SharedPreferences.Editor editor = preferences.edit();
         synchronized (editor) {
             editor.putInt(key, value);
-            editor.commit();
+            editor.apply();
         }
     }
 
@@ -96,7 +98,7 @@ public class SettingsHelper {
         SharedPreferences.Editor editor = preferences.edit();
         synchronized (editor) {
             editor.putLong(key, value);
-            editor.commit();
+            editor.apply();
         }
     }
 
@@ -140,7 +142,7 @@ public class SettingsHelper {
         SharedPreferences.Editor editor = preferences.edit();
         synchronized (editor) {
             editor.remove(key);
-            editor.commit();
+            editor.apply();
         }
     }
 
@@ -213,15 +215,15 @@ public class SettingsHelper {
     }
 
     public String getLastNewsView() {
-        return getString(KEY_LAST_NEWS_VIEW, new SimpleDateFormat(LashgoConfig.DATE_FORMAT).format(new Date()));
+        return getString(KEY_LAST_NEWS_VIEW, new SimpleDateFormat(LashgoConstants.DATE_FORMAT, Locale.US).format(new Date()));
     }
 
     public void setLastSubscriptionsView(Date date) {
-        setString(KEY_LAST_SUBSCRIPTIONS_VIEW, new SimpleDateFormat(LashgoConfig.DATE_FORMAT).format(date));
+        setString(KEY_LAST_SUBSCRIPTIONS_VIEW, new SimpleDateFormat(LashgoConstants.DATE_FORMAT, Locale.US).format(date));
     }
 
     public String getLastSubscriptionsView() {
-        return getString(KEY_LAST_SUBSCRIPTIONS_VIEW, new SimpleDateFormat(LashgoConfig.DATE_FORMAT).format(new Date()));
+        return getString(KEY_LAST_SUBSCRIPTIONS_VIEW, new SimpleDateFormat(LashgoConstants.DATE_FORMAT, Locale.US).format(new Date()));
     }
 
     public boolean alreadyVoted() {

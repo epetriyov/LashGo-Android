@@ -1,27 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">LashGo</string>
-
-    <string name="facebook_app_id">417722991695914</string>
-    <string name="vkontakte_app_id">4201819</string>
-    <string name="vkontakte_secret_key">bRUrRkgalTiHE8tliClK</string>
-    <string name="twitter_consumerKey">JjHQisFOu784Ag7HBAcJg</string>
-    <string name="twitter_consumerSecret">pIkZnc7NJ8CW0WG5sCFLgPD5BOrak2Gtca3hmpy5dg</string>
-    <string name="twitter_callback_url">check://twitter</string>
-    <string name="regular">Roboto-Regular</string>
-    <string name="medium">Roboto-Medium</string>
-    <string name="condensed_regular">RobotoCondensed-Regular</string>
-
-
-    <!-- login screen strings -->
-    <string name="login">ВХОД</string>
+    <!-- login screen -->
+    <string name="login_enter">Вход</string>
     <string name="register">РЕГИСТРАЦИЯ</string>
     <string name="hint_password">Пароль</string>
     <string name="error_no_internet">Нет интернет соединения</string>
     <string name="hint_email">Email</string>
     <string name="server_is_unavailable">Сервер недоступен</string>
     <string name="password_recover">ВСПОМНИТЬ</string>
+    <string name="social_login">Войти через соцсети</string>
+    <string name="error_empty_email">Введите email</string>
+    <string name="error_empty_password">Введите пароль</string>
+    <string name="twitter_error">Ошибка авторизации через Twitter</string>
 
+    <!-- password recover -->
+    <string name="recover_email">Адрес для восстановления пароля</string>
+    <string name="password_was_reset">Новый пароль отправлен вам на email</string>
+    <string name="confirm">Принять</string>
+
+    <!-- navigation drawer -->
     <string-array name="menus_array">
         <item>Чеки</item>
         <item>Акции</item>
@@ -34,93 +31,114 @@
     <string name="actions_list">Акции</string>
     <string name="news_list">Новости</string>
     <string name="subscribes_list">Подписки</string>
-    <string name="social_login">Войти через соцсети</string>
-    <string name="password_was_reset">Новый пароль отправлен вам на email</string>
-    <string name="ready">Готово</string>
+    <string name="login_or_register">Войдите или зарегистрируйтесь</string>
+
+    <!-- checks list -->
     <string name="active_checks">Активные</string>
     <string name="finished_checks">Завершенные</string>
-    <string name="login_or_register">Войдите или зарегистрируйтесь</string>
-    <string name="task">Чек</string>
-    <string name="empty_image_was_chosen">Выбрана пустая фотография</string>
+
+    <!-- success registration screen -->
     <string name="congratulations">Поздравляем!</string>
     <string name="now_you_are_with_us">Теперь вы с нами.</string>
     <string name="fill_profile">ЗАПОЛНИТЬ ПРОФИЛЬ</string>
     <string name="continue_register">ПРОДОЛЖИТЬ</string>
-    <string name="error_empty_email">Введите email</string>
-    <string name="error_empty_password">Введите пароль</string>
+
+    <!-- check screen -->
+    <string name="task">Чек</string>
+    <string name="empty_image_was_chosen">Выбрана пустая фотография</string>
     <string name="error_send_photo">Произошла ошибка. Сделайте фото ещё раз.</string>
-    <string name="choose_photo">Выберите одну\nиз четырёх фото</string>
     <string name="error_empty_check">Пустой чек</string>
-    <string name="now_this_button">Теперь эту кнопочку</string>
-    <string name="go_to_next_partition">Перейти к\nследующей партии</string>
-    <string name="vote_is_going">Идёт\nголосование</string>
     <string name="cheers">Ура!</string>
     <string name="photo_sent">Ваше фото успешно отправлено.\n\nЖдите результат голосования</string>
+    <string name="error_load_photo">Ошибка загрузки фотографии. Попробуйте загрузить ещё раз</string>
     <string name="i_want">Я хочу:</string>
     <string name="take_picture">СДЕЛАТЬ ФОТО</string>
     <string name="choose_from_gallery">ВЫБРАТЬ ФОТО ИЗ ГАЛЕРЕИ</string>
+    <string name="get_price">ПОЛУЧИТЬ ПРИЗ</string>
+
+    <!-- vote screen -->
+    <string name="choose_photo">Выберите одну\nиз четырёх фото</string>
+    <string name="now_this_button">Теперь эту кнопочку</string>
+    <string name="go_to_next_partition">Перейти к\nследующей партии</string>
+    <string name="vote_is_going">Идёт\nголосование</string>
+
+    <!-- splash screen -->
+    <string name="skip">ПРОПУСТИТЬ</string>
+    <string name="login">ВХОД</string>
+
+    <!-- edit profile screen -->
     <string name="hint_fio">Фамилия Имя Отчество</string>
     <string name="hint_location">Город</string>
     <string name="hint_about">О себе</string>
     <string name="hint_change_password">Сменить пароль</string>
     <string name="profile_saved">Профиль успешно сохранён</string>
     <string name="edit">Редактировать</string>
-    <string name="skip">ПРОПУСТИТЬ</string>
-    <string name="login_enter">Вход</string>
+    <string name="hint_user_name">Имя пользователя</string>
+
+    <!-- comments screen -->
     <string name="comments">Комментарии</string>
     <string name="hint_comment">Оставьте комментарий</string>
     <string name="error_empty_comment">Комментарий не может быть пустым</string>
-    <string name="recover_email">Адрес для восстановления пароля</string>
-    <string name="confirm">Принять</string>
+
+
+    <!-- actionBar -->
     <string name="search">Поиск</string>
     <string name="refresh">Обновить</string>
-    <string name="settings">Настройки</string>
-    <string name="help">Помощь</string>
     <string name="exit">Выход</string>
     <string name="notifications">Уведомления</string>
-    <string name="avatar_saved">Аватар сохранён</string>
-    <string name="hint_user_name">Имя пользователя</string>
+
+    <!-- news screen -->
     <string name="no_news">У вас пока нет новостей</string>
-    <string name="all_photos_seen">Вы просмотрели все фото чека</string>
+
+    <!-- server errors -->
     <string name="user_not_found">Пользователь с таким логином не существует</string>
     <string name="user_already_exist">Пользователь с таким логином уже существует</string>
     <string name="send_invalid_data">Переданы некорректные данные</string>
     <string name="photo_alredy_exist">Вы уже отправили фото для данного чека</string>
     <string name="server_error">Ошибка сервера</string>
     <string name="email_already_exist">Пользователь с таким email уже существует</string>
+
+    <!-- notification bar-->
     <string name="notification_title">Начался новый чек</string>
+    <string name="vote_started">Началось голосование</string>
+    <string name="finished_check">Завершился чек</string>
+
+    <!-- error dialog-->
     <string name="ok">OK</string>
+
+    <!-- photo screen -->
     <string name="photo">Фото</string>
+    <string name="complain_sent">Ваша жалоба отправлена</string>
+
+    <!-- subscribes list -->
     <string name="subscribers_list">Подписчики</string>
     <string name="no_result">Список пуст</string>
+    <string name="users">Пользователи</string>
+
+    <!-- activities list -->
     <string name="signed_up">подписан на вас</string>
     <string name="commented">прокомментировал фото</string>
     <string name="won">победили в чеке</string>
-    <string name="you">Вы</string>
-    <string name="activity">Активность</string>
-    <string name="peoples">ЛЮДЕЙ</string>
-    <string name="checks">ЧЕКОВ</string>
-    <string name="users">Пользователи</string>
-    <string name="search_with_points">Поиск...</string>
     <string name="vote_for">проголосовал за фото</string>
     <string name="participate_check">принял участие в чеке</string>
-    <string name="complain_sent">Ваша жалоба отправлена</string>
-    <string name="vote_started">Началось голосование</string>
-    <string name="error_load_photo">Ошибка загрузки фотографии. Попробуйте загрузить ещё раз</string>
-    <string name="twitter_error">Ошибка авторизации через Twitter</string>
-    <string name="active">Активные</string>
+    <string name="you">Вы</string>
+    <string name="activity">Активность</string>
+
+    <!-- search screen -->
+    <string name="peoples">ЛЮДЕЙ</string>
+    <string name="checks">ЧЕКОВ</string>
+    <string name="search_with_points">Поиск…</string>
+
+    <!-- action winner screen -->
+    <string name="show_this_screen">Покажи этот экран сотруднику</string>
     <string name="win">ПОБЕДИТЕЛЬ!</string>
+
+    <!-- actions screen -->
     <string name="actions_text">Участвуй в акциях. Набирай наибольшее количество голосов. Забирай приз у сотрудника
         компании
     </string>
-    <string name="finished_check">Завершился чек</string>
-    <string name="get_price">ПОЛУЧИТЬ ПРИЗ</string>
-    <string name="show_this_screen">Покажи этот экран сотруднику</string>
-    <string-array name="make_photo_items">
-        <item>Камера</item>
-        <item>Галерея</item>
-    </string-array>
 
+    <!-- profile screen -->
     <plurals name="number_of_checks">
         <item quantity="one">1 чек</item>
         <item quantity="few">%d чека</item>

@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.CheckBox;
+
 import com.lashgo.mobile.R;
 import com.lashgo.mobile.utils.FontUtils;
 

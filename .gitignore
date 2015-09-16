@@ -6,3 +6,11 @@ gen
 workspace.xml
 .gradle
 build
+
+.idea
+
+/LashGo-Android.iml
+
+/app/app.iml
+
+/lashgo.keystore

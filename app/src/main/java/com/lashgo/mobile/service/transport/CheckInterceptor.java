@@ -1,13 +1,15 @@
 package com.lashgo.mobile.service.transport;
 
 import android.text.TextUtils;
-import com.lashgo.mobile.LashgoConfig;
+
+import com.lashgo.mobile.BuildConfig;
 import com.lashgo.mobile.settings.SettingsHelper;
 import com.lashgo.model.CheckApiHeaders;
 import com.lashgo.model.dto.SessionInfo;
-import retrofit.RequestInterceptor;
 
 import java.util.UUID;
+
+import retrofit.RequestInterceptor;
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,7 +30,7 @@ public class CheckInterceptor implements RequestInterceptor {
     @Override
     public void intercept(RequestFacade requestFacade) {
         requestFacade.addHeader(CheckApiHeaders.uuid.name(), UUID.randomUUID().toString());
-        requestFacade.addHeader(CheckApiHeaders.client_type.name(), LashgoConfig.CLIENT_TYPE);
+        requestFacade.addHeader(CheckApiHeaders.client_type.name(), BuildConfig.CLIENT_TYPE);
         SessionInfo session = settingsHelper.getSessionInfo();
         if (session != null && !TextUtils.isEmpty(session.getSessionId())) {
             requestFacade.addHeader(CheckApiHeaders.session_id.name(), session.getSessionId());

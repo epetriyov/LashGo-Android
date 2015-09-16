@@ -3,11 +3,12 @@ package com.lashgo.mobile.service.handlers;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import retrofit.RetrofitError;
-import retrofit.mime.TypedFile;
 
 import java.io.File;
 import java.io.IOException;
+
+import retrofit.RetrofitError;
+import retrofit.mime.TypedFile;
 
 /**
  * Created by Eugene on 10.09.2014.

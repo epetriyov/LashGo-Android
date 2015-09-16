@@ -1,19 +1,18 @@
 package com.lashgo.mobile.service.transport;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
+
 import retrofit.converter.ConversionException;
 import retrofit.converter.Converter;
 import retrofit.mime.TypedByteArray;
 import retrofit.mime.TypedInput;
 import retrofit.mime.TypedOutput;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Type;
 
 public class JacksonConverter implements Converter {
     private static final String MIME_TYPE = "application/json; charset=UTF-8";
@@ -29,8 +28,6 @@ public class JacksonConverter implements Converter {
         try {
             JavaType javaType = objectMapper.getTypeFactory().constructType(type);
             return objectMapper.readValue(body.in(), javaType);
-        } catch (JsonParseException | JsonMappingException e) {
-            throw new ConversionException(e);
         } catch (IOException e) {
             throw new ConversionException(e);
         }

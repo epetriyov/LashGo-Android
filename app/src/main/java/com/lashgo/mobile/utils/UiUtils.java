@@ -6,6 +6,7 @@ import android.text.format.DateUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+
 import com.lashgo.mobile.ui.check.ExtendedTimerFinishedListener;
 import com.lashgo.mobile.ui.check.TimerFinishedListener;
 

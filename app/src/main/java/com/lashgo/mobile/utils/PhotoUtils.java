@@ -6,7 +6,11 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
@@ -17,7 +21,9 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.ImageView;
-import com.lashgo.mobile.LashgoConfig;
+
+import com.lashgo.mobile.BuildConfig;
+import com.lashgo.mobile.LashgoConstants;
 import com.lashgo.mobile.ui.check.CheckActivity;
 import com.lashgo.mobile.ui.images.CircleTransformation;
 import com.lashgo.mobile.ui.photo.PhotoLoadListener;
@@ -39,7 +45,7 @@ public final class PhotoUtils {
     }
 
     public static String getFullPhotoUrl(String photoName) {
-        return new StringBuilder(LashgoConfig.BASE_URL).append(LashgoConfig.PHOTO_BASE_URI).append(photoName).toString();
+        return new StringBuilder(BuildConfig.BASE_URL).append(LashgoConstants.PHOTO_BASE_URI).append(photoName).toString();
     }
 
     public static int convertDpToPixels(float dp, Context context) {
@@ -103,7 +109,6 @@ public final class PhotoUtils {
      *
      * @param context The context.
      * @param uri     The Uri to query.
-     * @author paulburke
      */
     @SuppressLint("NewApi")
     public static String getPath(final Context context, final Uri uri) {
@@ -426,7 +431,7 @@ public final class PhotoUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        FileOutputStream out = null;
+        FileOutputStream out;
         String filename = getFilename();
         try {
             out = new FileOutputStream(filename);
@@ -468,8 +473,7 @@ public final class PhotoUtils {
         if (!file.exists()) {
             file.mkdirs();
         }
-        String uriSting = (file.getAbsolutePath() + "/" + System.currentTimeMillis() + ".jpg");
-        return uriSting;
+        return file.getAbsolutePath() + "/" + System.currentTimeMillis() + ".jpg";
 
     }
 

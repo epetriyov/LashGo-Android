@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
 import com.lashgo.mobile.R;
 import com.lashgo.mobile.service.handlers.BaseIntentHandler;
 import com.lashgo.mobile.ui.BaseActivity;
@@ -34,7 +35,7 @@ public class SubscribesFragment extends BaseFragment implements AdapterView.OnIt
         return fragment;
     }
 
-    public static enum ScreenType {
+    public enum ScreenType {
         SUBSCRIPTIONS, SUBSCRIBERS, CHECK_USERS, VOTE_USERS, SEARCH_USERS
     }
 
@@ -134,7 +135,7 @@ public class SubscribesFragment extends BaseFragment implements AdapterView.OnIt
                     updateAdapter(subscriptionDtos);
                 }
             } else if (action.equals(BaseIntentHandler.ServiceActionNames.ACTION_SUBSCRIBE.name()) || action.equals(BaseIntentHandler.ServiceActionNames.ACTION_UNSUBSCRIBE.name())) {
-                if (screenType.name().equals(ScreenType.SUBSCRIPTIONS) && action.equals(BaseIntentHandler.ServiceActionNames.ACTION_UNSUBSCRIBE.name())) {
+                if (ScreenType.SUBSCRIPTIONS.name().equals(screenType.name()) && action.equals(BaseIntentHandler.ServiceActionNames.ACTION_UNSUBSCRIBE.name())) {
                     adapter.remove(adapter.getItem(position));
                 } else {
                     adapter.getItem(position).setAmISubscribed(!adapter.getItem(position).isAmISubscribed());

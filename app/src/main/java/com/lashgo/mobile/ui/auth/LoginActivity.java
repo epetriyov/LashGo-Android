@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+
 import com.facebook.CallbackManager;
 import com.lashgo.mobile.R;
 import com.lashgo.mobile.service.handlers.BaseIntentHandler;
@@ -136,7 +137,7 @@ public class LoginActivity extends BaseActivity implements AuthController.AuthLi
         startActivity(SuccessfulRegisterActivity.buildIntent(this, registerResponse, openMode));
     }
 
-    public static enum OpenMode {
+    public enum OpenMode {
         FROM_SPLASH, FROM_CHECK
     }
 

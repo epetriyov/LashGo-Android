@@ -9,7 +9,8 @@ import android.view.Menu;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.lashgo.mobile.LashgoConfig;
+
+import com.lashgo.mobile.LashgoConstants;
 import com.lashgo.mobile.R;
 import com.lashgo.mobile.ui.BaseActivity;
 import com.lashgo.mobile.ui.views.GradientImageView;
@@ -57,7 +58,7 @@ public class ActionWinnerActivity extends BaseActivity {
         layoutParams.height = imageSize;
         layoutParams.width = imageSize;
         checkGradient.setLayoutParams(layoutParams);
-        checkGradient.updateImage(LashgoConfig.CheckState.VOTE, 1f);
+        checkGradient.updateImage(LashgoConstants.CheckState.VOTE, 1f);
         imageSize = PhotoUtils.getScreenWidth(this) - PhotoUtils.convertDpToPixels(CHECH_PHOTO_PADDINGS,this);
         ImageView checkImage = (ImageView) findViewById(R.id.check_photo);
         if (checkDto.getWinnerPhotoDto() != null && !TextUtils.isEmpty(checkDto.getWinnerPhotoDto().getUrl())) {

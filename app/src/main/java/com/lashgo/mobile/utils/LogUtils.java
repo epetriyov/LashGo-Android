@@ -1,6 +1,7 @@
 package com.lashgo.mobile.utils;
 
 import android.util.Log;
+
 import com.lashgo.mobile.BuildConfig;
 
 /**

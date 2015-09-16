@@ -8,7 +8,8 @@ import android.graphics.RectF;
 import android.graphics.SweepGradient;
 import android.util.AttributeSet;
 import android.view.View;
-import com.lashgo.mobile.LashgoConfig;
+
+import com.lashgo.mobile.LashgoConstants;
 import com.lashgo.mobile.R;
 
 /**
@@ -24,7 +25,7 @@ public class GradientImageView extends View {
 
     private float r;
 
-    private LashgoConfig.CheckState checkState;
+    private LashgoConstants.CheckState checkState;
 
     private Paint activePaint;
 
@@ -89,8 +90,8 @@ public class GradientImageView extends View {
         super.onSizeChanged(w, h, oldw, oldh);
     }
 
-    public void updateImage(LashgoConfig.CheckState checkState, float koef) {
-        if (this.checkState == null || LashgoConfig.CheckState.ACTIVE.equals(checkState) || !this.checkState.equals(checkState)) {
+    public void updateImage(LashgoConstants.CheckState checkState, float koef) {
+        if (this.checkState == null || LashgoConstants.CheckState.ACTIVE.equals(checkState) || !this.checkState.equals(checkState)) {
             this.checkState = checkState;
             this.koef = koef;
             invalidate();
@@ -100,9 +101,9 @@ public class GradientImageView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawArc(rectF, 0f, 360f, false, finishedPaint);
-        if (LashgoConfig.CheckState.VOTE.equals(checkState)) {
+        if (LashgoConstants.CheckState.VOTE.equals(checkState)) {
             canvas.drawArc(rectF, 0f, 360f, false, votePaint);
-        } else if (LashgoConfig.CheckState.ACTIVE.equals(checkState)) {
+        } else if (LashgoConstants.CheckState.ACTIVE.equals(checkState)) {
             canvas.save();
             canvas.rotate(-90f, r, r);
             canvas.drawArc(rectF, 360f * (1f - koef), 360f * koef, false, activePaint);

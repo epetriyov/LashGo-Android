@@ -1,8 +1,35 @@
 package com.lashgo.mobile.service.transport;
 
 import com.lashgo.model.Path;
-import com.lashgo.model.dto.*;
-import retrofit.http.*;
+import com.lashgo.model.dto.CheckCounters;
+import com.lashgo.model.dto.CheckDto;
+import com.lashgo.model.dto.CommentDto;
+import com.lashgo.model.dto.EventDto;
+import com.lashgo.model.dto.GcmRegistrationDto;
+import com.lashgo.model.dto.LoginInfo;
+import com.lashgo.model.dto.MainScreenInfoDto;
+import com.lashgo.model.dto.PhotoDto;
+import com.lashgo.model.dto.PhotoPath;
+import com.lashgo.model.dto.RecoverInfo;
+import com.lashgo.model.dto.RegisterResponse;
+import com.lashgo.model.dto.ResponseList;
+import com.lashgo.model.dto.ResponseObject;
+import com.lashgo.model.dto.SessionInfo;
+import com.lashgo.model.dto.SocialInfo;
+import com.lashgo.model.dto.SubscribeDto;
+import com.lashgo.model.dto.SubscriptionDto;
+import com.lashgo.model.dto.UserDto;
+import com.lashgo.model.dto.VoteAction;
+import com.lashgo.model.dto.VotePhoto;
+
+import retrofit.http.Body;
+import retrofit.http.DELETE;
+import retrofit.http.GET;
+import retrofit.http.Multipart;
+import retrofit.http.POST;
+import retrofit.http.PUT;
+import retrofit.http.Part;
+import retrofit.http.Query;
 import retrofit.mime.TypedFile;
 
 /**

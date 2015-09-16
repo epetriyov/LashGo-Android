@@ -3,6 +3,7 @@ package com.lashgo.mobile;
 
 import android.app.Application;
 import android.os.StrictMode;
+
 import com.facebook.FacebookSdk;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,9 +13,11 @@ import com.lashgo.mobile.service.transport.CheckInterceptor;
 import com.lashgo.mobile.service.transport.JacksonConverter;
 import com.lashgo.mobile.service.transport.RestService;
 import com.lashgo.mobile.settings.SettingsHelper;
-import retrofit.RestAdapter;
 
 import java.text.SimpleDateFormat;
+import java.util.Locale;
+
+import retrofit.RestAdapter;
 
 /**
  * Created by Eugene on 18.02.14.
@@ -87,9 +90,9 @@ public class LashgoApplication extends Application {
                 if (restService == null) {
                     ObjectMapper objectMapper = new ObjectMapper();
                     objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-                    objectMapper.setDateFormat(new SimpleDateFormat(LashgoConfig.DATE_FORMAT));
+                    objectMapper.setDateFormat(new SimpleDateFormat(LashgoConstants.DATE_FORMAT, Locale.US));
                     RestAdapter restAdapter = new RestAdapter.Builder()
-                            .setEndpoint(LashgoConfig.BASE_URL)
+                            .setEndpoint(BuildConfig.BASE_URL)
                             .setConverter(new JacksonConverter(objectMapper))
                             .setErrorHandler(new CheckErrorHandler())
                             .setLogLevel(RestAdapter.LogLevel.FULL)

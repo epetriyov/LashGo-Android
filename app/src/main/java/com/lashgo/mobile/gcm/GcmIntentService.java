@@ -27,6 +27,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 import android.util.Log;
+
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.lashgo.mobile.R;
 import com.lashgo.mobile.ui.check.CheckActivity;

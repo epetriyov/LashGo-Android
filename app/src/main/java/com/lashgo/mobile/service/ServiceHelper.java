@@ -5,9 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+
 import com.lashgo.mobile.service.handlers.BaseIntentHandler;
 import com.lashgo.model.CheckType;
-import com.lashgo.model.dto.*;
+import com.lashgo.model.dto.GcmRegistrationDto;
+import com.lashgo.model.dto.LoginInfo;
+import com.lashgo.model.dto.SocialInfo;
+import com.lashgo.model.dto.SubscribeDto;
+import com.lashgo.model.dto.UserDto;
+import com.lashgo.model.dto.VoteAction;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;

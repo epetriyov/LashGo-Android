@@ -3,7 +3,8 @@ package com.lashgo.mobile.ui.check;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.lashgo.mobile.LashgoConfig;
+
+import com.lashgo.mobile.LashgoConstants;
 import com.lashgo.mobile.R;
 import com.lashgo.mobile.ui.BaseActivity;
 import com.lashgo.mobile.ui.comments.CommentsActivity;
@@ -41,7 +42,7 @@ public class CheckBottomPanelController implements View.OnClickListener {
     private TextView checkTimeText;
 
     private void commonInit(final BaseActivity activity, final View view) {
-        this.activity = new WeakReference<BaseActivity>(activity);
+        this.activity = new WeakReference<>(activity);
         btnPeoplesCount = (ImageView) view.findViewById(R.id.btn_peoples_count);
         btnPeoplesCount.setOnClickListener(this);
         peoplesCount = ((TextView) view.findViewById(R.id.peoples_count));
@@ -82,11 +83,11 @@ public class CheckBottomPanelController implements View.OnClickListener {
             throw new IllegalArgumentException("Check can't be empty!");
         }
         updatePeoplesCount(checkDto.getPlayersCount());
-        LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
+        LashgoConstants.CheckState checkState = LashGoUtils.getCheckState(checkDto);
         /**
          * we are at check screen
          */
-        if (LashgoConfig.CheckState.ACTIVE.equals(checkState)) {
+        if (LashgoConstants.CheckState.ACTIVE.equals(checkState)) {
             /**
              * check is active
              */

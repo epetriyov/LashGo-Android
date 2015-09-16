@@ -6,7 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.lashgo.mobile.LashgoConfig;
+
+import com.lashgo.mobile.LashgoConstants;
 import com.lashgo.mobile.R;
 import com.lashgo.mobile.adapters.AdapterBinder;
 import com.lashgo.mobile.ui.views.GradientImageView;
@@ -23,7 +24,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class CheckItemBinder extends AdapterBinder {
 
-    public static interface OnCheckStateChangeListener {
+    public interface OnCheckStateChangeListener {
         void onCheckStateChanged();
     }
 
@@ -75,7 +76,7 @@ public class CheckItemBinder extends AdapterBinder {
             updateImageLayoutParams(viewHolder.checkIcon, imageSize);
             viewHolder.checkIcon.setImageResource(R.drawable.ava);
         }
-        LashgoConfig.CheckState checkState = LashGoUtils.getCheckState(checkDto);
+        LashgoConstants.CheckState checkState = LashGoUtils.getCheckState(checkDto);
         ExtendedTimerFinishedListener timerFinishedListener = new ExtendedTimerFinishedListener() {
             @Override
             public void onTimerFinished() {

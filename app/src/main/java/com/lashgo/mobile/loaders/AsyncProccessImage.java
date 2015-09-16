@@ -1,6 +1,7 @@
 package com.lashgo.mobile.loaders;
 
 import android.os.AsyncTask;
+
 import com.lashgo.mobile.utils.PhotoUtils;
 
 /**
@@ -34,7 +35,7 @@ public class AsyncProccessImage extends AsyncTask<Void, Void, String> {
         }
     }
 
-    public static interface OnPhotoProcessedListener {
+    public interface OnPhotoProcessedListener {
         void onPhotoProcessed(String imgPath);
 
         void onErrorOccured();
