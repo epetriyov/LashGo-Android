@@ -14,3 +14,10 @@ build
 /app/app.iml
 
 /lashgo.keystore
+
+.idea
+
+/lashgo.keystore
+/LashGo-Android.iml
+
+/app/app.iml
