@@ -45,7 +45,7 @@
 
     <!-- check screen -->
     <string name="task">Чек</string>
-    <string name="empty_image_was_chosen">Выбрана пустая фотография</string>
+    <string name="empty_image_was_chosen">Произошла ошибка при выборе фото. Повторите попытку</string>
     <string name="error_send_photo">Произошла ошибка. Сделайте фото ещё раз.</string>
     <string name="error_empty_check">Пустой чек</string>
     <string name="cheers">Ура!</string>
