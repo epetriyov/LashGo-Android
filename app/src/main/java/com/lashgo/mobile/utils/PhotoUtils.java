@@ -61,47 +61,6 @@ public final class PhotoUtils {
         return displaymetrics.widthPixels;
     }
 
-    public static int getScreenHeight(Activity context) {
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        context.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        return displaymetrics.heightPixels;
-    }
-
-    public static Bitmap decodeFile(String path) {
-        try {
-            // Decode image size
-            BitmapFactory.Options o = new BitmapFactory.Options();
-            o.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(path, o);
-            // The new size we want to scale to
-            final int REQUIRED_SIZE = 70;
-
-            // Find the correct scale value. It should be the power of
-            // 2.
-            int scale = 1;
-            while (o.outWidth / scale / 2 >= REQUIRED_SIZE
-                    && o.outHeight / scale / 2 >= REQUIRED_SIZE)
-                scale *= 2;
-
-            // Decode with inSampleSize
-            BitmapFactory.Options o2 = new BitmapFactory.Options();
-            o2.inSampleSize = scale;
-            return BitmapFactory.decodeFile(path, o2);
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static String sanitizeURI(String uri) {
-        String filePathOriginal = uri;
-        // Local storage
-        if (uri.startsWith("file://")) {
-            filePathOriginal = uri.substring(7);
-        }
-        return filePathOriginal;
-    }
-
     /**
      * Get a file path from a Uri. This will get the the path for Storage Access
      * Framework Documents, as well as the _data field for the MediaStore and

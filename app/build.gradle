@@ -28,7 +28,7 @@ android {
         applicationId 'com.lashgo.mobile'
         versionCode 28
         versionName '2.2'
-        buildConfigField "String", "BASE_URL", "\"http://lashgo.com:8080/lashgo-api\""
+        buildConfigField "String", "BASE_URL", "\"http://78.47.39.245:8080/lashgo-api\""
         buildConfigField "String", "CRITTERCISM_APP_ID", "\"541aa4390729df3292000002\""
         buildConfigField "String", "GCM_API_KEY", "\"226352210286\""
         buildConfigField "String", "CLIENT_TYPE", "\"ANDROID\""

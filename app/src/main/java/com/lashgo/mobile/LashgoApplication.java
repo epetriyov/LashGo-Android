@@ -25,6 +25,12 @@ import retrofit.RestAdapter;
 public class LashgoApplication extends Application {
 
     private static LashgoApplication instance;
+    //TODO hack
+    private String imgPath;
+    private boolean wasSent;
+    private volatile RestService restService;
+    private ServiceHelper serviceHelper;
+    private SettingsHelper settingsHelper;
 
     public static LashgoApplication getInstance() {
         return instance;
@@ -46,24 +52,13 @@ public class LashgoApplication extends Application {
         this.wasSent = wasSent;
     }
 
-    //TODO hack
-    private String imgPath;
-
-    private boolean wasSent;
-
-    private volatile RestService restService;
-
     public ServiceHelper getServiceHelper() {
         return serviceHelper;
     }
 
-    private ServiceHelper serviceHelper;
-
     public SettingsHelper getSettingsHelper() {
         return settingsHelper;
     }
-
-    private SettingsHelper settingsHelper;
 
     @Override
     public void onCreate() {
